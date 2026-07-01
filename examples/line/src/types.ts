@@ -1,27 +1,6 @@
 import type { webhook } from "@line/bot-sdk";
 
-export type DurableObjectStateLike = {
-  storage: {
-    get<T>(key: string): Promise<T | undefined>;
-    put<T>(key: string, value: T): Promise<void>;
-  };
-};
-
-export type Env = {
-  CHANNEL_SECRET: string;
-  CHANNEL_ACCESS_TOKEN: string;
-  ZETA_INIT_SECRET?: string;
-  ZETA_ACCESS_TOKEN?: string;
-  ZETA_REFRESH_TOKEN?: string;
-  ZETA_DEVICE_ID?: string;
-  ZETA_STATE: DurableObjectNamespace;
-};
-
-export type LineWebhookPayload = {
-  destination?: string;
-  events?: webhook.Event[];
-};
-
+export type LineWebhookPayload = webhook.CallbackRequest
 export type LineEvent = webhook.Event;
 export type LineSource = webhook.Source;
 export type LineTextMessage = webhook.TextMessageContent;

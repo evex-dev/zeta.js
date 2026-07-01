@@ -20,8 +20,6 @@ import {
 } from "./messages.ts";
 import type {
   ConversationBinding,
-  DurableObjectStateLike,
-  Env,
   LineEvent,
   LineSource,
   LineTextMessage,
@@ -39,7 +37,7 @@ const GROUP_LAST_BOT_MESSAGE_IDS_KEY = "groupLastBotMessageIds";
 export class ZetaState {
   private queue: Promise<void> = Promise.resolve();
 
-  constructor(private readonly state: DurableObjectStateLike, private readonly env: Env) { }
+  constructor(private readonly state: DurableObjectState, private readonly env: CloudflareBindings) { }
 
   async fetch(request: Request): Promise<Response> {
     const url = new URL(request.url);
@@ -320,9 +318,9 @@ export class ZetaState {
 
   private async createZetaClient(): Promise<ZetaClient> {
     const stored = await this.state.storage.get<ZetaTokens>(TOKENS_KEY);
-    const accessToken = stored?.accessToken ?? this.env.ZETA_ACCESS_TOKEN;
-    const refreshToken = stored?.refreshToken ?? this.env.ZETA_REFRESH_TOKEN;
-    const deviceId = stored?.deviceId ?? this.env.ZETA_DEVICE_ID;
+    const accessToken = stored?.accessToken;
+    const refreshToken = stored?.refreshToken;
+    const deviceId = stored?.deviceId;
 
     if (!accessToken && !refreshToken) {
       throw new Error("ZETA_ACCESS_TOKEN or stored Zeta token is required.");

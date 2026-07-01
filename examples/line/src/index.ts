@@ -1,11 +1,11 @@
 import { validateSignature } from "@line/bot-sdk";
 import { Hono } from "hono";
-import type { Env, LineWebhookPayload, ProcessPayload, ZetaCredentialInput } from "./types.ts";
+import type { LineWebhookPayload, ProcessPayload, ZetaCredentialInput } from "./types.ts";
 export { ZetaState } from "./zeta-state.ts";
 
 const STATE_OBJECT_NAME = "line-zeta-state";
 
-const app = new Hono<{ Bindings: Env }>();
+const app = new Hono<{ Bindings: CloudflareBindings }>();
 
 app.get("/", (c) => c.text("LINE Zeta bot is running."));
 

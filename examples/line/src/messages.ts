@@ -16,6 +16,7 @@ export function buildPlotCarouselMessage(
   keyword: string,
   plots: Plot[],
   displayName: string,
+  relatedKeywords: string[],
 ): messagingApi.FlexMessage {
   return {
     type: "flex",
@@ -26,6 +27,7 @@ export function buildPlotCarouselMessage(
         buildPlotBubble(conversationId, plot, displayName),
       ),
     },
+    quickReply: recommendedQuickReply(relatedKeywords),
   };
 }
 

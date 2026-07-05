@@ -310,8 +310,29 @@ export class ZetaState {
       return;
     }
 
+    const [related, recommended] = await Promise.all([
+      zeta.search
+        .getRelatedKeywords({ keyword, limit: 10 })
+        .then((result) => result.data.relatedKeywords ?? [])
+        .catch(() => []),
+      zeta.search
+        .getRecommendedKeywords({ keyword, limit: 10 })
+        .then((result) => result.data.keywords ?? [])
+        .catch(() => []),
+    ]);
+
+    const relatedKeywords = [...new Set([...related, ...recommended])].map(
+      (related) => `${keyword} ${related}`,
+    );
+
     await this.replyAndRemember(replyToken, source, [
-      buildPlotCarouselMessage(conversationId, keyword, plots, displayName),
+      buildPlotCarouselMessage(
+        conversationId,
+        keyword,
+        plots,
+        displayName,
+        relatedKeywords,
+      ),
     ]);
   }
 

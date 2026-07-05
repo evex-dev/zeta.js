@@ -263,6 +263,11 @@ export class ZetaState {
       return;
     }
 
+    const bindings = await this.getBindings();
+    if (bindings[conversationId]) {
+      return await this.replyAndRemember(event.replyToken, source, [textMessage("すでにリンク済みです。先ずリンク解除してください")])
+    }
+
     await this.bindPlot(event.replyToken, conversationId, source, plotId);
   }
 

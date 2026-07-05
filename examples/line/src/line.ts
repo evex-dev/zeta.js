@@ -15,7 +15,10 @@ export class LineService {
     this.client = new messagingApi.MessagingApiClient({ channelAccessToken });
   }
 
-  async replyMessage(replyToken: string, messages: LineMessage[]): Promise<string[]> {
+  async replyMessage(
+    replyToken: string,
+    messages: LineMessage[],
+  ): Promise<string[]> {
     if (messages.length === 0) return [];
     const response = await this.client.replyMessage({
       replyToken,
@@ -24,7 +27,10 @@ export class LineService {
     return response.sentMessages.map((message) => message.id);
   }
 
-  async pushMessages(to: string | undefined, messages: LineMessage[]): Promise<string[]> {
+  async pushMessages(
+    to: string | undefined,
+    messages: LineMessage[],
+  ): Promise<string[]> {
     if (!to || messages.length === 0) return [];
     const sentMessageIds: string[] = [];
     for (let index = 0; index < messages.length; index += 5) {
@@ -32,12 +38,17 @@ export class LineService {
         to,
         messages: messages.slice(index, index + 5),
       });
-      sentMessageIds.push(...response.sentMessages.map((message) => message.id));
+      sentMessageIds.push(
+        ...response.sentMessages.map((message) => message.id),
+      );
     }
     return sentMessageIds;
   }
 
-  async showLoadingAnimation(userId: string, loadingSeconds = 20): Promise<void> {
+  async showLoadingAnimation(
+    userId: string,
+    loadingSeconds = 20,
+  ): Promise<void> {
     await this.client.showLoadingAnimation({ chatId: userId, loadingSeconds });
   }
 
@@ -52,11 +63,17 @@ export class LineService {
     }
 
     if (source.type === "group") {
-      return await this.client.getGroupMemberProfile(source.groupId, source.userId);
+      return await this.client.getGroupMemberProfile(
+        source.groupId,
+        source.userId,
+      );
     }
 
     if (source.type === "room") {
-      return await this.client.getRoomMemberProfile(source.roomId, source.userId);
+      return await this.client.getRoomMemberProfile(
+        source.roomId,
+        source.userId,
+      );
     }
 
     return await this.client.getProfile(source.userId);
@@ -67,7 +84,9 @@ export class LineService {
   }
 }
 
-export function conversationIdFromSource(source: LineSource | undefined): string | undefined {
+export function conversationIdFromSource(
+  source: LineSource | undefined,
+): string | undefined {
   if (!source) return undefined;
   if (source.type === "user") return `user:${source.userId}`;
   if (source.type === "group") return `group:${source.groupId}`;
@@ -83,7 +102,9 @@ export function toLineTo(source: LineSource | undefined): string | undefined {
   return undefined;
 }
 
-export function conversationLabelFromSource(source: LineSource | undefined): string {
+export function conversationLabelFromSource(
+  source: LineSource | undefined,
+): string {
   if (source?.type === "user") return "1:1";
   if (source?.type === "group") return "group";
   if (source?.type === "room") return "room";

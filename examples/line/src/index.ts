@@ -1,6 +1,10 @@
 import { validateSignature } from "@line/bot-sdk";
 import { Hono } from "hono";
-import type { LineWebhookPayload, ProcessPayload, ZetaCredentialInput } from "./types.ts";
+import type {
+  LineWebhookPayload,
+  ProcessPayload,
+  ZetaCredentialInput,
+} from "./types.ts";
 export { ZetaState } from "./zeta-state.ts";
 
 const STATE_OBJECT_NAME = "line-zeta-state";
@@ -18,18 +22,27 @@ app.post("/webhook", async (c) => {
   }
 
   const payload = JSON.parse(body) as LineWebhookPayload;
-  const stub = c.env.ZETA_STATE.get(c.env.ZETA_STATE.idFromName(STATE_OBJECT_NAME));
-  const task = stub.fetch("https://line-zeta-state/process", {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify({ payload } satisfies ProcessPayload),
-  }).then(async (response) => {
-    if (!response.ok) {
-      console.error("LINE webhook processing failed", response.status, await response.text());
-    }
-  }).catch((error) => {
-    console.error("LINE webhook processing failed", describeError(error));
-  });
+  const stub = c.env.ZETA_STATE.get(
+    c.env.ZETA_STATE.idFromName(STATE_OBJECT_NAME),
+  );
+  const task = stub
+    .fetch("https://line-zeta-state/process", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ payload } satisfies ProcessPayload),
+    })
+    .then(async (response) => {
+      if (!response.ok) {
+        console.error(
+          "LINE webhook processing failed",
+          response.status,
+          await response.text(),
+        );
+      }
+    })
+    .catch((error) => {
+      console.error("LINE webhook processing failed", describeError(error));
+    });
 
   c.executionCtx.waitUntil(task);
   return c.json({});
@@ -45,7 +58,9 @@ app.post("/admin/zeta-cred", async (c) => {
   }
 
   const credential = await c.req.json<ZetaCredentialInput>();
-  const stub = c.env.ZETA_STATE.get(c.env.ZETA_STATE.idFromName(STATE_OBJECT_NAME));
+  const stub = c.env.ZETA_STATE.get(
+    c.env.ZETA_STATE.idFromName(STATE_OBJECT_NAME),
+  );
   const response = await stub.fetch("https://line-zeta-state/zeta-cred", {
     method: "POST",
     headers: { "content-type": "application/json" },
@@ -54,7 +69,10 @@ app.post("/admin/zeta-cred", async (c) => {
 
   return new Response(response.body, {
     status: response.status,
-    headers: { "content-type": response.headers.get("content-type") ?? "application/json" },
+    headers: {
+      "content-type":
+        response.headers.get("content-type") ?? "application/json",
+    },
   });
 });
 

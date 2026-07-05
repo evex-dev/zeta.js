@@ -1,5 +1,14 @@
-import { ZetaClient, type Message as ZetaMessage, type Plot, type TokenPair } from "../../../index.ts";
-import { LineService, conversationIdFromSource, conversationLabelFromSource } from "./line.ts";
+import {
+  ZetaClient,
+  type Message as ZetaMessage,
+  type Plot,
+  type TokenPair,
+} from "../../../index.ts";
+import {
+  LineService,
+  conversationIdFromSource,
+  conversationLabelFromSource,
+} from "./line.ts";
 import {
   MAX_FLEX_CAROUSEL_BUBBLES,
   MAX_LINE_MESSAGES,
@@ -11,6 +20,7 @@ import {
   plotDisplayName,
   plotPersona,
   readIntroMessages,
+  recommendedQuickReply,
   segmentsToCompactLineMessages,
   speakerProfilesFromApi,
   speakerProfilesFromPlot,
@@ -36,20 +46,24 @@ const GROUP_LAST_BOT_MESSAGE_IDS_KEY = "groupLastBotMessageIds";
 
 export class ZetaState {
   private queue: Promise<void> = Promise.resolve();
+  private zeta?: ZetaClient;
 
-  constructor(private readonly state: DurableObjectState, private readonly env: CloudflareBindings) { }
+  constructor(
+    private readonly state: DurableObjectState,
+    private readonly env: CloudflareBindings,
+  ) {}
 
   async fetch(request: Request): Promise<Response> {
     const url = new URL(request.url);
     if (url.pathname === "/process" && request.method === "POST") {
-      const { payload } = await request.json() as ProcessPayload;
+      const { payload } = (await request.json()) as ProcessPayload;
       this.queue = this.queue.then(() => this.processWebhook(payload));
       await this.queue;
       return Response.json({ ok: true });
     }
 
     if (url.pathname === "/zeta-cred" && request.method === "POST") {
-      const credential = await request.json() as ZetaCredentialInput;
+      const credential = (await request.json()) as ZetaCredentialInput;
       await this.setInitialZetaCredential(credential);
       return Response.json({ ok: true });
     }
@@ -60,19 +74,56 @@ export class ZetaState {
   private async processWebhook(payload: LineWebhookPayload): Promise<void> {
     const events = payload.events ?? [];
     for (const event of events) {
-      await this.processEvent(event, payload.destination).catch(async (error) => {
-        console.error("LINE event failed", describeError(error));
-        if ("replyToken" in event && event.replyToken) {
-          await this.replyAndRemember(event.replyToken, event.source, [textMessage("処理中にエラーが発生しました。もう一度お試しください。")]).catch(() => undefined);
-        }
-      });
+      await this.processEvent(event, payload.destination).catch(
+        async (error) => {
+          console.error("LINE event failed", describeError(error));
+          if ("replyToken" in event && event.replyToken) {
+            await this.replyAndRemember(event.replyToken, event.source, [
+              textMessage(
+                "処理中にエラーが発生しました。もう一度お試しください。",
+              ),
+            ]).catch(() => undefined);
+          }
+        },
+      );
     }
   }
 
-  private async processEvent(event: LineEvent, botUserId: string | undefined): Promise<void> {
+  private async getRecommendations(): Promise<string[]> {
+    const zeta = await this.createZetaClient();
+
+    return [
+      ...new Set(
+        [
+          ...(await Promise.all([
+            zeta.search
+              .getRecommendedPlaceholder()
+              .then((result) => result.data.recommendedQueryList ?? [])
+              .catch(() => []),
+            zeta.search
+              .getRecommendedKeywords()
+              .then((result) => result.data.keywords ?? [])
+              .catch(() => []),
+          ])),
+        ].flat(),
+      ),
+    ];
+  }
+
+  private async processEvent(
+    event: LineEvent,
+    botUserId: string | undefined,
+  ): Promise<void> {
     if (event.type === "follow" || event.type === "join") {
       if (event.replyToken) {
-        await this.replyAndRemember(event.replyToken, event.source, [textMessage("こんにちは。使いたいプロット名やキーワードを送ってください。")]);
+        await this.replyAndRemember(event.replyToken, event.source, [
+          {
+            ...textMessage(
+              "こんにちは。使いたいプロット名やキーワードを送ってください。",
+            ),
+            quickReply: recommendedQuickReply(await this.getRecommendations()),
+          },
+        ]);
       }
       return;
     }
@@ -86,10 +137,20 @@ export class ZetaState {
       return;
     }
 
-    await this.handleTextMessage(event.replyToken, event.source, event.message, botUserId);
+    await this.handleTextMessage(
+      event.replyToken,
+      event.source,
+      event.message,
+      botUserId,
+    );
   }
 
-  private async handleTextMessage(replyToken: string | undefined, source: LineSource | undefined, message: LineTextMessage, botUserId: string | undefined): Promise<void> {
+  private async handleTextMessage(
+    replyToken: string | undefined,
+    source: LineSource | undefined,
+    message: LineTextMessage,
+    botUserId: string | undefined,
+  ): Promise<void> {
     const conversationId = conversationIdFromSource(source);
     if (!source || !conversationId || !replyToken) {
       return;
@@ -101,32 +162,54 @@ export class ZetaState {
     const mentionsBot = isGroupLike && messageMentionsBot(message, botUserId);
     const bindings = await this.getBindings();
     const binding = bindings[conversationId];
-    const quotesBot = isGroupLike && await this.isQuotedLastBotMessage(conversationId, message);
+    const quotesBot =
+      isGroupLike &&
+      (await this.isQuotedLastBotMessage(conversationId, message));
     if (isGroupLike && !mentionsBot && !quotesBot) {
       return;
     }
 
     const text = stripBotMentions(message, botUserId).trim();
     if (!text) {
-      await this.replyAndRemember(replyToken, source, [textMessage("メンションに続けてメッセージを入力してください。")]);
+      await this.replyAndRemember(replyToken, source, [
+        textMessage("メンションに続けてメッセージを入力してください。"),
+      ]);
       return;
     }
 
     if (isUserChat && fromUserId) {
-      await this.line.showLoadingAnimation(fromUserId, 20).catch(() => undefined);
+      await this.line
+        .showLoadingAnimation(fromUserId, 20)
+        .catch(() => undefined);
     }
 
     if (!binding) {
       const displayName = await this.displayNameForSource(source);
-      await this.searchPlots(replyToken, source, conversationId, text, displayName);
+      await this.searchPlots(
+        replyToken,
+        source,
+        conversationId,
+        text,
+        displayName,
+      );
       return;
     }
 
     const displayName = await this.displayNameForSource(source);
-    await this.replyFromTalk(replyToken, conversationId, binding, source, text, displayName, message.markAsReadToken);
+    await this.replyFromTalk(
+      replyToken,
+      conversationId,
+      binding,
+      source,
+      text,
+      displayName,
+      message.markAsReadToken,
+    );
   }
 
-  private async handlePostback(event: Extract<LineEvent, { type: "postback" }>): Promise<void> {
+  private async handlePostback(
+    event: Extract<LineEvent, { type: "postback" }>,
+  ): Promise<void> {
     const source = event.source;
     const conversationId = conversationIdFromSource(source);
     if (!conversationId || !event.replyToken) {
@@ -140,13 +223,26 @@ export class ZetaState {
       const binding = bindings[conversationId];
       if (binding?.userChatProfileId) {
         const zeta = await this.createZetaClient();
-        await zeta.profile.chatProfiles.fromId(binding.userChatProfileId).delete().catch((error) => {
-          console.error("failed to delete zeta chat profile", describeError(error));
-        });
+        await zeta.profile.chatProfiles
+          .fromId(binding.userChatProfileId)
+          .delete()
+          .catch((error) => {
+            console.error(
+              "failed to delete zeta chat profile",
+              describeError(error),
+            );
+          });
       }
       delete bindings[conversationId];
       await this.putBindings(bindings);
-      await this.replyAndRemember(event.replyToken, source, [textMessage("プロットとの紐づけを解除しました。次のメッセージでまた検索できます。")]);
+      await this.replyAndRemember(event.replyToken, source, [
+        {
+          ...textMessage(
+            "プロットとの紐づけを解除しました。次のメッセージでまた検索できます。",
+          ),
+          quickReply: recommendedQuickReply(await this.getRecommendations()),
+        },
+      ]);
       return;
     }
 
@@ -156,32 +252,73 @@ export class ZetaState {
 
     const plotId = data.get("plotId");
     if (!plotId) {
-      await this.replyAndRemember(event.replyToken, source, [textMessage("選択したプロットIDを取得できませんでした。もう一度検索してください。")]);
+      await this.replyAndRemember(event.replyToken, source, [
+        {
+          ...textMessage(
+            "選択したプロットIDを取得できませんでした。もう一度検索してください。",
+          ),
+          quickReply: recommendedQuickReply(await this.getRecommendations()),
+        },
+      ]);
       return;
     }
 
     await this.bindPlot(event.replyToken, conversationId, source, plotId);
   }
 
-  private async searchPlots(replyToken: string, source: LineSource, conversationId: string, keyword: string, displayName: string): Promise<void> {
+  private async searchPlots(
+    replyToken: string,
+    source: LineSource,
+    conversationId: string,
+    keyword: string,
+    displayName: string,
+  ): Promise<void> {
     const zeta = await this.createZetaClient();
-    const result = await zeta.search.searchPlots({ keyword, limit: MAX_FLEX_CAROUSEL_BUBBLES });
-    const searchPlots = (result.data.plots ?? []).filter((plot): plot is Plot => Boolean(plot?.id ?? plot?.plotId));
-    const plots = await Promise.all(searchPlots.map((plot) => this.hydratePlot(zeta, plot)));
+    const result = await zeta.search.searchPlots({
+      keyword,
+      limit: MAX_FLEX_CAROUSEL_BUBBLES,
+    });
+    const searchPlots = (result.data.plots ?? []).filter((plot): plot is Plot =>
+      Boolean(plot?.id ?? plot?.plotId),
+    );
+    const plots = await Promise.all(
+      searchPlots.map((plot) => this.hydratePlot(zeta, plot)),
+    );
 
     if (plots.length === 0) {
-      await this.replyAndRemember(replyToken, source, [textMessage(`「${keyword}」に合うプロットが見つかりませんでした。別のキーワードで試してください。`)]);
+      await this.replyAndRemember(replyToken, source, [
+        {
+          ...textMessage(
+            `「${keyword}」に合うプロットが見つかりませんでした。別のキーワードで試してください。`,
+          ),
+          quickReply: recommendedQuickReply(await this.getRecommendations()),
+        },
+      ]);
       return;
     }
 
-    await this.replyAndRemember(replyToken, source, [buildPlotCarouselMessage(conversationId, keyword, plots, displayName)]);
+    await this.replyAndRemember(replyToken, source, [
+      buildPlotCarouselMessage(conversationId, keyword, plots, displayName),
+    ]);
   }
 
-  private async bindPlot(replyToken: string, conversationId: string, source: LineSource | undefined, plotId: string): Promise<void> {
+  private async bindPlot(
+    replyToken: string,
+    conversationId: string,
+    source: LineSource | undefined,
+    plotId: string,
+  ): Promise<void> {
     const zeta = await this.createZetaClient();
-    const plot = await zeta.plots.get(plotId).then((resource) => resource.data).catch(() => undefined);
+    const plot = await zeta.plots
+      .get(plotId)
+      .then((resource) => resource.data)
+      .catch(() => undefined);
     const profileName = await this.chatProfileNameForSource(source);
-    const chatProfile = await this.createChatProfile(zeta, profileName, conversationLabelFromSource(source));
+    const chatProfile = await this.createChatProfile(
+      zeta,
+      profileName,
+      conversationLabelFromSource(source),
+    );
     const userChatProfileId = chatProfile.id;
 
     let talk: Awaited<ReturnType<ZetaClient["talk"]["create"]>>;
@@ -221,20 +358,47 @@ export class ZetaState {
     const intros = await this.collectIntroMessages(zeta, talk.id);
     const introSegments = intros.flatMap((intro) => messageToSegments(intro));
     const messages = [
-      textMessage(`「${plotName}」に紐づけました。${source?.type === "user" ? "このまま話しかけてください。" : "以降はBotへのメンション付きメッセージか、Botのメッセージへのリプライを送ってください。"}`),
+      textMessage(
+        `「${plotName}」に紐づけました。${source?.type === "user" ? "このまま話しかけてください。" : "以降はBotへのメンション付きメッセージか、Botのメッセージへのリプライを送ってください。"}`,
+      ),
       ...(plot ? [buildPlotInfoMessage(plot, displayName)] : []),
-      ...segmentsToCompactLineMessages(binding, introSegments, displayName, "最初のメッセージ").slice(0, plot ? 3 : 4),
+      ...segmentsToCompactLineMessages(
+        binding,
+        introSegments,
+        displayName,
+        plotName,
+      ).slice(0, plot ? 3 : 4),
     ];
-    await this.replyAndRemember(replyToken, source, messages.slice(0, MAX_LINE_MESSAGES));
+    await this.replyAndRemember(
+      replyToken,
+      source,
+      messages.slice(0, MAX_LINE_MESSAGES),
+    );
   }
 
-  private async replyFromTalk(replyToken: string, conversationId: string, binding: ConversationBinding, source: LineSource, text: string, displayName: string, markAsReadToken: string | undefined): Promise<void> {
+  private async replyFromTalk(
+    replyToken: string,
+    conversationId: string,
+    binding: ConversationBinding,
+    source: LineSource,
+    text: string,
+    displayName: string,
+    markAsReadToken: string | undefined,
+  ): Promise<void> {
     const zeta = await this.createZetaClient();
-    await this.updateChatProfileNameIfChanged(zeta, conversationId, binding, source);
+    await this.updateChatProfileNameIfChanged(
+      zeta,
+      conversationId,
+      binding,
+      source,
+    );
     await this.ensureSpeakerProfiles(zeta, conversationId, binding);
 
     await this.line.markAsRead(markAsReadToken).catch((error) => {
-      console.error("failed to mark LINE message as read", describeError(error));
+      console.error(
+        "failed to mark LINE message as read",
+        describeError(error),
+      );
     });
     const stream = await zeta.talk.fromId(binding.talkId).sendTextMessage(text);
     let latestSegments: TextSegment[] = [];
@@ -250,24 +414,52 @@ export class ZetaState {
       }
     }
 
-    const replySegments = completedSegments.length > 0 ? completedSegments : latestSegments;
-    const messages = segmentsToCompactLineMessages(binding, replySegments, displayName, binding.plotName);
+    const replySegments =
+      completedSegments.length > 0 ? completedSegments : latestSegments;
+    const messages = segmentsToCompactLineMessages(
+      binding,
+      replySegments,
+      displayName,
+      binding.plotName,
+    );
     if (messages.length === 0) {
-      await this.replyAndRemember(replyToken, source, [textMessage("Zetaが空の応答を返しました。")]);
+      await this.replyAndRemember(replyToken, source, [
+        textMessage("Zetaが空の応答を返しました。"),
+      ]);
       return;
     }
 
-    await this.replyAndRemember(replyToken, source, messages.slice(0, MAX_LINE_MESSAGES));
+    await this.replyAndRemember(
+      replyToken,
+      source,
+      messages.slice(0, MAX_LINE_MESSAGES),
+    );
   }
 
-  private async ensureSpeakerProfiles(zeta: ZetaClient, conversationId: string, binding: ConversationBinding): Promise<void> {
-    if (binding.speakerProfiles && binding.speakerProfiles.length > 0 && binding.speakerProfiles.some((profile) => profile.avatarUrl)) {
+  private async ensureSpeakerProfiles(
+    zeta: ZetaClient,
+    conversationId: string,
+    binding: ConversationBinding,
+  ): Promise<void> {
+    if (
+      binding.speakerProfiles &&
+      binding.speakerProfiles.length > 0 &&
+      binding.speakerProfiles.some((profile) => profile.avatarUrl)
+    ) {
       return;
     }
 
-    const plot = await zeta.plots.get(binding.plotId).then((resource) => resource.data).catch(() => undefined);
+    const plot = await zeta.plots
+      .get(binding.plotId)
+      .then((resource) => resource.data)
+      .catch(() => undefined);
     const speakerProfiles = mergeSpeakerProfiles(
-      speakerProfilesFromApi(await zeta.talk.fromId(binding.talkId).getSpeakerProfiles().catch(() => [])),
+      speakerProfilesFromApi(
+        await zeta.talk
+          .fromId(binding.talkId)
+          .getSpeakerProfiles()
+          .catch(() => []),
+      ),
       plot ? speakerProfilesFromPlot(plot) : [],
       binding.speakerProfiles ?? [],
     );
@@ -282,19 +474,31 @@ export class ZetaState {
     await this.putBindings(bindings);
   }
 
-  private async collectIntroMessages(zeta: ZetaClient, talkId: string): Promise<ZetaMessage[]> {
+  private async collectIntroMessages(
+    zeta: ZetaClient,
+    talkId: string,
+  ): Promise<ZetaMessage[]> {
     const talk = zeta.talk.fromId(talkId);
-    const fromCreate = await talk.createIntro().then((result) => readIntroMessages(result.data)).catch(() => []);
+    const fromCreate = await talk
+      .createIntro()
+      .then((result) => readIntroMessages(result.data))
+      .catch(() => []);
     if (fromCreate.length > 0) {
       return fromCreate;
     }
 
-    const beforeSelection = await talk.getIntroBeforeSelection().then((result) => readIntroMessages(result.data)).catch(() => []);
+    const beforeSelection = await talk
+      .getIntroBeforeSelection()
+      .then((result) => readIntroMessages(result.data))
+      .catch(() => []);
     if (beforeSelection.length > 0) {
       return beforeSelection;
     }
 
-    const messages = await talk.listMessages({ limit: 10 }).then((result) => result.data.messages).catch(() => []);
+    const messages = await talk
+      .listMessages({ limit: 10 })
+      .then((result) => result.data.messages)
+      .catch(() => []);
     return messages.filter((message) => message.isIntro);
   }
 
@@ -304,10 +508,15 @@ export class ZetaState {
       return plot;
     }
 
-    return await zeta.plots.get(plotId).then((resource) => resource.data ?? plot).catch(() => plot);
+    return await zeta.plots
+      .get(plotId)
+      .then((resource) => resource.data ?? plot)
+      .catch(() => plot);
   }
 
-  private async displayNameForSource(source: LineSource | undefined): Promise<string> {
+  private async displayNameForSource(
+    source: LineSource | undefined,
+  ): Promise<string> {
     if (!source || !("userId" in source) || !source.userId) {
       return "あなた";
     }
@@ -317,6 +526,8 @@ export class ZetaState {
   }
 
   private async createZetaClient(): Promise<ZetaClient> {
+    if (this.zeta) return this.zeta;
+
     const stored = await this.state.storage.get<ZetaTokens>(TOKENS_KEY);
     const accessToken = stored?.accessToken;
     const refreshToken = stored?.refreshToken;
@@ -326,7 +537,7 @@ export class ZetaState {
       throw new Error("ZETA_ACCESS_TOKEN or stored Zeta token is required.");
     }
 
-    return new ZetaClient({
+    this.zeta = new ZetaClient({
       token: accessToken,
       refreshToken,
       deviceId,
@@ -334,9 +545,13 @@ export class ZetaState {
       userLanguage: "JAPANESE",
       onTokenUpdate: async (tokens) => this.updateZetaTokens(tokens, deviceId),
     });
+    return this.zeta;
   }
 
-  private async updateZetaTokens(tokens: TokenPair, previousDeviceId: string | undefined): Promise<void> {
+  private async updateZetaTokens(
+    tokens: TokenPair,
+    previousDeviceId: string | undefined,
+  ): Promise<void> {
     const previous = await this.state.storage.get<ZetaTokens>(TOKENS_KEY);
     await this.state.storage.put<ZetaTokens>(TOKENS_KEY, {
       accessToken: tokens.accessToken,
@@ -346,13 +561,20 @@ export class ZetaState {
     });
   }
 
-  private async setInitialZetaCredential(credential: ZetaCredentialInput): Promise<void> {
+  private async setInitialZetaCredential(
+    credential: ZetaCredentialInput,
+  ): Promise<void> {
     const accessToken = firstText(credential.accessToken, credential.token);
-    const refreshToken = firstText(credential.refreshToken, credential.refresh_token);
+    const refreshToken = firstText(
+      credential.refreshToken,
+      credential.refresh_token,
+    );
     const deviceId = firstText(credential.deviceId, credential.device_id);
 
     if (!accessToken || !refreshToken || !deviceId) {
-      throw new Error("Zeta credential must include token, refresh_token, and device_id.");
+      throw new Error(
+        "Zeta credential must include token, refresh_token, and device_id.",
+      );
     }
 
     await this.state.storage.put<ZetaTokens>(TOKENS_KEY, {
@@ -364,14 +586,25 @@ export class ZetaState {
   }
 
   private async getBindings(): Promise<Record<string, ConversationBinding>> {
-    return (await this.state.storage.get<Record<string, ConversationBinding>>(BINDINGS_KEY)) ?? {};
+    return (
+      (await this.state.storage.get<Record<string, ConversationBinding>>(
+        BINDINGS_KEY,
+      )) ?? {}
+    );
   }
 
-  private async putBindings(bindings: Record<string, ConversationBinding>): Promise<void> {
+  private async putBindings(
+    bindings: Record<string, ConversationBinding>,
+  ): Promise<void> {
     await this.state.storage.put(BINDINGS_KEY, bindings);
   }
 
-  private async updateChatProfileNameIfChanged(zeta: ZetaClient, conversationId: string, binding: ConversationBinding, source: LineSource): Promise<void> {
+  private async updateChatProfileNameIfChanged(
+    zeta: ZetaClient,
+    conversationId: string,
+    binding: ConversationBinding,
+    source: LineSource,
+  ): Promise<void> {
     if (!binding.userChatProfileId) {
       return;
     }
@@ -381,10 +614,18 @@ export class ZetaState {
       return;
     }
 
-    await zeta.profile.chatProfiles.fromId(binding.userChatProfileId).update({ name: nextName }).catch(async (error) => {
-      console.error("failed to update zeta chat profile name", describeError(error));
-      await zeta.profile.chatProfiles.fromId(binding.userChatProfileId!).update({ name: "LINE User" });
-    });
+    await zeta.profile.chatProfiles
+      .fromId(binding.userChatProfileId)
+      .update({ name: nextName })
+      .catch(async (error) => {
+        console.error(
+          "failed to update zeta chat profile name",
+          describeError(error),
+        );
+        await zeta.profile.chatProfiles
+          .fromId(binding.userChatProfileId!)
+          .update({ name: "LINE User" });
+      });
     binding.userChatProfileName = nextName;
     binding.updatedAt = new Date().toISOString();
     const bindings = await this.getBindings();
@@ -392,12 +633,19 @@ export class ZetaState {
     await this.putBindings(bindings);
   }
 
-  private async replyAndRemember(replyToken: string, source: LineSource | undefined, messages: Parameters<LineService["replyMessage"]>[1]): Promise<void> {
+  private async replyAndRemember(
+    replyToken: string,
+    source: LineSource | undefined,
+    messages: Parameters<LineService["replyMessage"]>[1],
+  ): Promise<void> {
     const sentMessageIds = await this.line.replyMessage(replyToken, messages);
     await this.rememberLastGroupBotMessageId(source, sentMessageIds.at(-1));
   }
 
-  private async rememberLastGroupBotMessageId(source: LineSource | undefined, messageId: string | undefined): Promise<void> {
+  private async rememberLastGroupBotMessageId(
+    source: LineSource | undefined,
+    messageId: string | undefined,
+  ): Promise<void> {
     const conversationId = conversationIdFromSource(source);
     if (!messageId || !conversationId || !source || source.type === "user") {
       return;
@@ -408,7 +656,10 @@ export class ZetaState {
     await this.state.storage.put(GROUP_LAST_BOT_MESSAGE_IDS_KEY, ids);
   }
 
-  private async isQuotedLastBotMessage(conversationId: string, message: LineTextMessage): Promise<boolean> {
+  private async isQuotedLastBotMessage(
+    conversationId: string,
+    message: LineTextMessage,
+  ): Promise<boolean> {
     if (!message.quotedMessageId) {
       return false;
     }
@@ -418,17 +669,25 @@ export class ZetaState {
   }
 
   private async getLastGroupBotMessageIds(): Promise<Record<string, string>> {
-    return (await this.state.storage.get<Record<string, string>>(GROUP_LAST_BOT_MESSAGE_IDS_KEY)) ?? {};
+    return (
+      (await this.state.storage.get<Record<string, string>>(
+        GROUP_LAST_BOT_MESSAGE_IDS_KEY,
+      )) ?? {}
+    );
   }
 
-  private async chatProfileNameForSource(source: LineSource | undefined): Promise<string> {
+  private async chatProfileNameForSource(
+    source: LineSource | undefined,
+  ): Promise<string> {
     if (!source) {
       return "LINE";
     }
 
     let rawName: string;
     if (source.type === "group") {
-      const summary = await this.line.getGroupSummary(source.groupId).catch(() => undefined);
+      const summary = await this.line
+        .getGroupSummary(source.groupId)
+        .catch(() => undefined);
       rawName = summary?.groupName?.trim() || "LINE Group";
     } else {
       rawName = await this.displayNameForSource(source);
@@ -437,17 +696,26 @@ export class ZetaState {
     return sanitizeZetaChatProfileName(rawName);
   }
 
-  private async createChatProfile(zeta: ZetaClient, name: string, sourceLabel: string) {
-    return await zeta.profile.chatProfiles.create({
-      name,
-      description: `LINE ${sourceLabel} 用`,
-    }).catch(async (error) => {
-      console.error("failed to create zeta chat profile with source name", describeError(error));
-      return await zeta.profile.chatProfiles.create({
-        name: "LINE User",
+  private async createChatProfile(
+    zeta: ZetaClient,
+    name: string,
+    sourceLabel: string,
+  ) {
+    return await zeta.profile.chatProfiles
+      .create({
+        name,
         description: `LINE ${sourceLabel} 用`,
+      })
+      .catch(async (error) => {
+        console.error(
+          "failed to create zeta chat profile with source name",
+          describeError(error),
+        );
+        return await zeta.profile.chatProfiles.create({
+          name: "LINE User",
+          description: `LINE ${sourceLabel} 用`,
+        });
       });
-    });
   }
 
   private get line(): LineService {
@@ -455,18 +723,35 @@ export class ZetaState {
   }
 }
 
-function messageMentionsBot(message: LineTextMessage, botUserId: string | undefined): boolean {
+function messageMentionsBot(
+  message: LineTextMessage,
+  botUserId: string | undefined,
+): boolean {
   return (message.mention?.mentionees ?? []).some((mentionee) => {
     if (mentionee.type === "all") return true;
-    return Boolean(botUserId && "userId" in mentionee && mentionee.userId === botUserId);
+    return Boolean(
+      botUserId && "userId" in mentionee && mentionee.userId === botUserId,
+    );
   });
 }
 
-function stripBotMentions(message: LineTextMessage, botUserId: string | undefined): string {
+function stripBotMentions(
+  message: LineTextMessage,
+  botUserId: string | undefined,
+): string {
   let text = message.text;
   const mentionees = [...(message.mention?.mentionees ?? [])]
-    .filter((mentionee) => mentionee.type === "all" || (botUserId && "userId" in mentionee && mentionee.userId === botUserId))
-    .flatMap((mentionee) => typeof mentionee.index === "number" && typeof mentionee.length === "number" ? [{ index: mentionee.index, length: mentionee.length }] : [])
+    .filter(
+      (mentionee) =>
+        mentionee.type === "all" ||
+        (botUserId && "userId" in mentionee && mentionee.userId === botUserId),
+    )
+    .flatMap((mentionee) =>
+      typeof mentionee.index === "number" &&
+      typeof mentionee.length === "number"
+        ? [{ index: mentionee.index, length: mentionee.length }]
+        : [],
+    )
     .sort((a, b) => b.index - a.index);
 
   for (const mentionee of mentionees) {

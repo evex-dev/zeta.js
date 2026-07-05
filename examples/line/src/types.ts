@@ -1,6 +1,6 @@
 import type { webhook } from "@line/bot-sdk";
 
-export type LineWebhookPayload = webhook.CallbackRequest
+export type LineWebhookPayload = webhook.CallbackRequest;
 export type LineEvent = webhook.Event;
 export type LineSource = webhook.Source;
 export type LineTextMessage = webhook.TextMessageContent;

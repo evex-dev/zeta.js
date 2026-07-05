@@ -321,9 +321,7 @@ export class ZetaState {
         .catch(() => []),
     ]);
 
-    const relatedKeywords = [...new Set([...related, ...recommended])].map(
-      (related) => `${keyword} ${related}`,
-    );
+    const relatedKeywords = [...new Set([...related, ...recommended])];
 
     await this.replyAndRemember(replyToken, source, [
       buildPlotCarouselMessage(

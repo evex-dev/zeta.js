@@ -27,7 +27,16 @@ export function buildPlotCarouselMessage(
         buildPlotBubble(conversationId, plot, displayName),
       ),
     },
-    quickReply: recommendedQuickReply(relatedKeywords),
+    quickReply: {
+      items: relatedKeywords.slice(0, MAX_QUICK_REPLY).map((related) => ({
+        type: "action",
+        action: {
+          type: "message",
+          label: `+${related}`,
+          text: `${keyword} ${related}`,
+        },
+      })),
+    },
   };
 }
 

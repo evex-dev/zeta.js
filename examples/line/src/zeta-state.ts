@@ -14,6 +14,7 @@ import {
   MAX_LINE_MESSAGES,
   buildPlotCarouselMessage,
   buildPlotInfoMessage,
+  buildUnlinkMessage,
   firstText,
   mergeSpeakerProfiles,
   messageToSegments,
@@ -266,10 +267,13 @@ export class ZetaState {
 
     const bindings = await this.getBindings();
     if (bindings[conversationId]) {
-      return await this.replyAndRemember(event.replyToken, source, [{
-        ...textMessage("すでにリンク済みです。先ずリンク解除してください"),
-        quickReply: unlinkQuickReply(),
-      }])
+      return await this.replyAndRemember(event.replyToken, source, [
+        {
+          type: "flex",
+          contents: buildUnlinkMessage(),
+          altText: "紐づけを解除してください",
+        },
+      ]);
     }
 
     await this.bindPlot(event.replyToken, conversationId, source, plotId);

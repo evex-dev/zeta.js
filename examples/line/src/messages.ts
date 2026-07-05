@@ -179,6 +179,34 @@ function buildPlotBubble(
   return bubble;
 }
 
+export function buildUnlinkMessage(): messagingApi.FlexBubble {
+  return {
+    type: "bubble",
+    body: {
+      type: "box",
+      layout: "vertical",
+      contents: [
+        {
+          type: "text",
+          text: "すでにリンク済みです。先ずリンク解除してください",
+          size: "md",
+          weight: "regular",
+          wrap: true,
+        },
+        {
+          type: "button",
+          action: {
+            type: "postback",
+            label: "紐づけ解除",
+            data: new URLSearchParams({ action: "unlink" }).toString(),
+          },
+          style: "secondary",
+        },
+      ],
+    },
+  };
+}
+
 export function segmentsToCompactLineMessages(
   binding: ConversationBinding,
   segments: TextSegment[],

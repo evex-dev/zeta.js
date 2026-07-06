@@ -53,7 +53,7 @@ export class ZetaState {
   constructor(
     private readonly state: DurableObjectState,
     private readonly env: CloudflareBindings,
-  ) {}
+  ) { }
 
   async fetch(request: Request): Promise<Response> {
     const url = new URL(request.url);
@@ -127,6 +127,14 @@ export class ZetaState {
           },
         ]);
       }
+      return;
+    }
+
+    if (event.type === "unfollow") {
+      const { source } = event
+      const conversationId = conversationIdFromSource(source);
+      if (!source || !conversationId) return;
+      await this.unlink(conversationId);
       return;
     }
 
@@ -209,6 +217,27 @@ export class ZetaState {
     );
   }
 
+  private async unlink(conversationId: string) {
+    const bindings = await this.getBindings();
+    if (!bindings[conversationId]) return;
+
+    const binding = bindings[conversationId];
+    if (binding?.userChatProfileId) {
+      const zeta = await this.createZetaClient();
+      await zeta.profile.chatProfiles
+        .fromId(binding.userChatProfileId)
+        .delete()
+        .catch((error) => {
+          console.error(
+            "failed to delete zeta chat profile",
+            describeError(error),
+          );
+        });
+    }
+    delete bindings[conversationId];
+    await this.putBindings(bindings);
+  }
+
   private async handlePostback(
     event: Extract<LineEvent, { type: "postback" }>,
   ): Promise<void> {
@@ -221,22 +250,7 @@ export class ZetaState {
     const data = new URLSearchParams(event.postback.data ?? "");
     const action = data.get("action");
     if (action === "unlink") {
-      const bindings = await this.getBindings();
-      const binding = bindings[conversationId];
-      if (binding?.userChatProfileId) {
-        const zeta = await this.createZetaClient();
-        await zeta.profile.chatProfiles
-          .fromId(binding.userChatProfileId)
-          .delete()
-          .catch((error) => {
-            console.error(
-              "failed to delete zeta chat profile",
-              describeError(error),
-            );
-          });
-      }
-      delete bindings[conversationId];
-      await this.putBindings(bindings);
+      await this.unlink(conversationId)
       await this.replyAndRemember(event.replyToken, source, [
         {
           ...textMessage(
@@ -780,7 +794,7 @@ function stripBotMentions(
     )
     .flatMap((mentionee) =>
       typeof mentionee.index === "number" &&
-      typeof mentionee.length === "number"
+        typeof mentionee.length === "number"
         ? [{ index: mentionee.index, length: mentionee.length }]
         : [],
     )

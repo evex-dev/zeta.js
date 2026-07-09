@@ -19,6 +19,7 @@ import type {
   MessageListResponse,
   MessageUpdateRequest,
   ModelSetting,
+  MultipartImageBody,
   Room,
   RoomBookmarkListResponse,
   RoomBookmarkUsageResponse,
@@ -36,6 +37,8 @@ import type {
   SavedRoomStatusResponse,
   SnapshotImageReactionRequest,
   TalkSpeakerProfile,
+  UserChatProfileSelectionRequest,
+  UserPersona,
   UserPlotChatProfile,
   UserPlotChatProfileDraftRequest,
   UserPlotChatProfileListResponse,
@@ -201,6 +204,32 @@ export class Talk {
 
   getSelectedUserPlotChatProfileCharacterIds() {
     return this.api.getSelectedUserPlotChatProfileCharacterIds(this.id);
+  }
+
+  getMyUserPlotChatProfile() {
+    return this.api.getMyUserPlotChatProfile(this.id);
+  }
+
+  updateMyUserPlotChatProfile(body?: UserPlotChatProfileDraftRequest) {
+    return this.api.updateMyUserPlotChatProfile(this.id, body);
+  }
+
+  createAndSelectUserPlotChatProfile(body?: UserPlotChatProfileDraftRequest) {
+    return this.api.createAndSelectUserPlotChatProfile(this.id, body);
+  }
+
+  selectUserChatProfile(id: string, body?: Omit<UserChatProfileSelectionRequest, "roomId">) {
+    return this.api.selectUserChatProfile(this.id, id, body);
+  }
+
+  getSelectedUserPersona(plotId = this.roomData?.plotId ?? this.roomData?.plot?.id ?? this.roomData?.plot?.plotId) {
+    if (!plotId) {
+      throw new ApiError("Cannot get selected user persona because plotId is missing.", {
+        code: "MissingPlotId",
+        data: this.roomData,
+      });
+    }
+    return this.api.getSelectedUserPersona(plotId, this.id);
   }
 
   save(body?: RoomSaveRequest) {
@@ -442,19 +471,19 @@ export class TalkApi {
   }
 
   getCyoaEditSetting(roomId: string) {
-    return this.client.get<ModelSetting>("/v1/rooms/:roomId/settings/cyoa-edit", { path: { roomId } });
+    return this.client.get<ModelSetting>("/v1/rooms/:roomId/settings/cyoa", { path: { roomId } });
   }
 
   updateCyoaEditSetting(roomId: string, body?: ModelSetting) {
-    return this.client.put<ModelSetting, ModelSetting | undefined>("/v1/rooms/:roomId/settings/cyoa-edit", body, { path: { roomId } });
+    return this.client.put<ModelSetting, ModelSetting | undefined>("/v1/rooms/:roomId/settings/cyoa", body, { path: { roomId } });
   }
 
   getInfoBoxCharacterSetting(roomId: string) {
-    return this.client.get<ModelSetting>("/v1/rooms/:roomId/settings/info-box-character", { path: { roomId } });
+    return this.client.get<ModelSetting>("/v1/rooms/:roomId/settings/info-box", { path: { roomId } });
   }
 
   updateInfoBoxCharacterSetting(roomId: string, body?: ModelSetting) {
-    return this.client.put<ModelSetting, ModelSetting | undefined>("/v1/rooms/:roomId/settings/info-box-character", body, { path: { roomId } });
+    return this.client.put<ModelSetting, ModelSetting | undefined>("/v1/rooms/:roomId/settings/info-box", body, { path: { roomId } });
   }
 
   listUserPlotChatProfiles(roomId: string, query?: ChatProfileListQuery) {
@@ -475,6 +504,30 @@ export class TalkApi {
 
   getSelectedUserPlotChatProfileCharacterIds(roomId: string) {
     return this.client.get<{ selectedCharacterIds?: string[]; [key: string]: unknown }>("/v1/rooms/:roomId/user-plot-chat-profiles/selectedCharacterIds", { path: { roomId } });
+  }
+
+  getMyUserPlotChatProfile(roomId: string) {
+    return this.client.get<UserPlotChatProfile>("/v1/rooms/:roomId/user-plot-chat-profiles/me", { path: { roomId } });
+  }
+
+  updateMyUserPlotChatProfile(roomId: string, body?: UserPlotChatProfileDraftRequest) {
+    return this.client.patch<UserPlotChatProfile, UserPlotChatProfileDraftRequest | undefined>("/v1/rooms/:roomId/user-plot-chat-profiles/me", body, { path: { roomId } });
+  }
+
+  createAndSelectUserPlotChatProfile(roomId: string, body?: UserPlotChatProfileDraftRequest) {
+    return this.client.post<UserPlotChatProfile, UserPlotChatProfileDraftRequest | undefined>("/v1/rooms/:roomId/user-plot-chat-profiles/selected", body, { path: { roomId } });
+  }
+
+  selectUserChatProfile(roomId: string, id: string, body?: Omit<UserChatProfileSelectionRequest, "roomId">) {
+    return this.client.put<void, UserChatProfileSelectionRequest>("/v1/user-chat-profiles/:id/selected", { ...body, roomId }, { path: { id } });
+  }
+
+  getSelectedUserPersona(plotId: string, roomId: string) {
+    return this.client.get<UserPersona>("/v1/plots/:plotId/rooms/:roomId/user-personas/selected", { path: { plotId, roomId } });
+  }
+
+  uploadUserPlotChatProfileImage(body: MultipartImageBody) {
+    return this.client.post("/v1/user-plot-chat-profiles/images", body, { multipart: true });
   }
 
   saveRoom(roomId: string, body?: RoomSaveRequest) {

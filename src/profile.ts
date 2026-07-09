@@ -11,6 +11,7 @@ import type {
   ProfileUpdateRequest,
   ReportRequest,
   User,
+  UserChatProfileSelectionRequest,
   UserBlockRequest,
   UserListQuery,
   UserListResponse,
@@ -25,6 +26,7 @@ export type UsernameResponse = AnyData & {
 
 export type ChatProfilesResponse = AnyData & {
   chatProfiles?: ChatProfile[];
+  userChatProfiles?: ChatProfile[];
   profiles?: ChatProfile[];
   nextCursor?: string | null;
 };
@@ -103,8 +105,8 @@ export class ChatProfileResource {
     return this.api.setDefaultChatProfile(this.id);
   }
 
-  select() {
-    return this.api.setSelectedChatProfile(this.id);
+  select(body?: UserChatProfileSelectionRequest) {
+    return this.api.setSelectedChatProfile(this.id, body);
   }
 }
 
@@ -132,6 +134,10 @@ export class ChatProfilesApi {
   async selected(query?: ChatProfileListQuery): Promise<ChatProfileResource> {
     const result = await this.api.getSelectedChatProfile(query);
     return this.api.fromChatProfileData(result.data);
+  }
+
+  select(id: string, body?: UserChatProfileSelectionRequest) {
+    return this.api.setSelectedChatProfile(id, body);
   }
 
   uploadImage(body: MultipartImageBody) {
@@ -235,8 +241,8 @@ export class ProfileApi {
     return this.client.put("/v1/user-chat-profiles/:id/default", undefined, { path: { id } });
   }
 
-  setSelectedChatProfile(id: string) {
-    return this.client.put("/v1/user-chat-profiles/:id/selected", undefined, { path: { id } });
+  setSelectedChatProfile(id: string, body?: UserChatProfileSelectionRequest) {
+    return this.client.put<void, UserChatProfileSelectionRequest | undefined>("/v1/user-chat-profiles/:id/selected", body, { path: { id } });
   }
 
   getSelectedChatProfile(query?: ChatProfileListQuery) {

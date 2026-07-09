@@ -15,6 +15,7 @@ import type {
   PlotListQuery,
   RoomCreateRequest,
   RoomListQuery,
+  UserChatProfileSelectionRequest,
   UserListQuery,
 } from "./src/domainTypes.ts";
 
@@ -142,6 +143,10 @@ export class ChatProfilesCollection {
 
   selected(query?: ChatProfileListQuery) {
     return this.api.chatProfiles.selected(query);
+  }
+
+  select(id: string, body?: UserChatProfileSelectionRequest) {
+    return this.api.chatProfiles.select(id, body);
   }
 
   uploadImage(body: MultipartImageBody) {

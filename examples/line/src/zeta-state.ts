@@ -28,7 +28,6 @@ import {
   streamEventToSegments,
   textMessage,
   truncate,
-  unlinkQuickReply,
 } from "./messages.ts";
 import type {
   ConversationBinding,
@@ -53,7 +52,7 @@ export class ZetaState {
   constructor(
     private readonly state: DurableObjectState,
     private readonly env: CloudflareBindings,
-  ) { }
+  ) {}
 
   async fetch(request: Request): Promise<Response> {
     const url = new URL(request.url);
@@ -131,7 +130,7 @@ export class ZetaState {
     }
 
     if (event.type === "unfollow") {
-      const { source } = event
+      const { source } = event;
       const conversationId = conversationIdFromSource(source);
       if (!source || !conversationId) return;
       await this.unlink(conversationId);
@@ -250,7 +249,7 @@ export class ZetaState {
     const data = new URLSearchParams(event.postback.data ?? "");
     const action = data.get("action");
     if (action === "unlink") {
-      await this.unlink(conversationId)
+      await this.unlink(conversationId);
       await this.replyAndRemember(event.replyToken, source, [
         {
           ...textMessage(
@@ -359,19 +358,45 @@ export class ZetaState {
       .get(plotId)
       .then((resource) => resource.data)
       .catch(() => undefined);
+
     const profileName = await this.chatProfileNameForSource(source);
     const chatProfile = await this.createChatProfile(
       zeta,
       profileName,
       conversationLabelFromSource(source),
     );
-    const userChatProfileId = chatProfile.id;
+    const userChatProfileId = chatProfile.data?.id;
+    if (!userChatProfileId) {
+      throw new Error("Created Zeta chat profile did not include an id.");
+    }
 
     let talk: Awaited<ReturnType<ZetaClient["talk"]["create"]>>;
     try {
-      talk = await zeta.talk.create({ plotId, userChatProfileId });
+      talk = await zeta.talk.create({
+        plotId,
+        chatProfile: {
+          type: "userChatProfileId",
+          id: userChatProfileId,
+        },
+      });
+      await zeta.profile.chatProfiles
+        .select(userChatProfileId, { plotId, roomId: talk.id })
+        .catch((error) => {
+          console.error(
+            "failed to select zeta chat profile for new room",
+            describeError(error),
+          );
+        });
     } catch (error) {
-      await chatProfile.delete().catch(() => undefined);
+      await zeta.profile.chatProfiles
+        .fromId(userChatProfileId)
+        .delete()
+        .catch((deleteError) => {
+          console.error(
+            "failed to delete zeta chat profile after room creation failure",
+            describeError(deleteError),
+          );
+        });
       throw error;
     }
 
@@ -794,7 +819,7 @@ function stripBotMentions(
     )
     .flatMap((mentionee) =>
       typeof mentionee.index === "number" &&
-        typeof mentionee.length === "number"
+      typeof mentionee.length === "number"
         ? [{ index: mentionee.index, length: mentionee.length }]
         : [],
     )

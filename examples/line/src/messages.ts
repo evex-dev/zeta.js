@@ -251,7 +251,6 @@ export function segmentsToCompactLineMessages(
               displayName,
             )
           : plotPersonaFallback;
-        const text = replaceProfileNamePlaceholder(rawText, displayName);
         const rowContents: messagingApi.FlexComponent[] = [];
 
         if (persona.avatarUrl?.startsWith("https://")) {
@@ -278,7 +277,7 @@ export function segmentsToCompactLineMessages(
               color: "#333333",
               wrap: true,
             },
-            ...richTextComponents(truncate(text, 900), {
+            ...richTextComponents(truncate(rawText, 900), {
               size: "sm",
               color: "#555555",
             }),

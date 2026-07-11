@@ -1,0 +1,22 @@
+{
+  "name": "zetaloop",
+  "module": "src/loop.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "init": "bun run src/init.ts",
+    "loop": "bun run src/loop.ts",
+    "typecheck": "bun x tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "slice-ansi": "^7.1.2",
+    "string-width": "^7.2.0",
+    "wrap-ansi": "^9.0.2"
+  }
+}

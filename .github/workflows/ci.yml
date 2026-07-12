@@ -7,7 +7,7 @@ on:
       - main
 
 jobs:
-  test:
+  bun:
     runs-on: ubuntu-latest
 
     steps:
@@ -26,6 +26,52 @@ jobs:
       - name: Test package
         run: bun test packages/zeta.js
 
+      - name: Runtime smoke test
+        working-directory: packages/zeta.js
+        run: bun run test:runtime
+
       - name: JSR dry run
         working-directory: packages/zeta.js
         run: bunx jsr publish --dry-run
+
+  node:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.0
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2.2.0
+
+      - name: Setup Node
+        uses: actions/setup-node@v6.4.0
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Bundle runtime smoke test
+        run: bun build packages/zeta.js/scripts/runtime-node.ts --target=node --outfile=/tmp/zeta-runtime-node.test.mjs
+
+      - name: Runtime smoke test
+        run: node --test /tmp/zeta-runtime-node.test.mjs
+
+  deno:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.0
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2.0.3
+        with:
+          deno-version: v2.x
+
+      - name: Check package entry
+        run: deno check packages/zeta.js/index.ts
+
+      - name: Runtime smoke test
+        run: deno test packages/zeta.js/scripts/runtime-deno.ts

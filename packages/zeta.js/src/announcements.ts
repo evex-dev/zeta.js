@@ -1,4 +1,5 @@
 import type { BaseClient } from "./core/client.ts";
+import type { ApiResult } from "./core/types.ts";
 import type {
   Announcement,
   AnnouncementBannerResponse,
@@ -9,19 +10,19 @@ import type {
 export class AnnouncementsApi {
   constructor(private readonly client: BaseClient) {}
 
-  listAnnouncements(query?: AnnouncementQuery) {
+  listAnnouncements(query?: AnnouncementQuery): Promise<ApiResult<AnnouncementListResponse>> {
     return this.client.get<AnnouncementListResponse>("/v1/announcements/", { query });
   }
 
-  getAnnouncement(announcementId: string) {
+  getAnnouncement(announcementId: string): Promise<ApiResult<Announcement>> {
     return this.client.get<Announcement>("/v1/announcements/:announcementId", { path: { announcementId } });
   }
 
-  getAnnouncementBanner() {
+  getAnnouncementBanner(): Promise<ApiResult<AnnouncementBannerResponse>> {
     return this.client.get<AnnouncementBannerResponse>("/v1/announcements/banner");
   }
 
-  listSupportAnnouncements(query?: AnnouncementQuery) {
+  listSupportAnnouncements(query?: AnnouncementQuery): Promise<ApiResult<SupportAnnouncementListResponse>> {
     return this.client.get<SupportAnnouncementListResponse>("/v1/support-announcements", { query });
   }
 }

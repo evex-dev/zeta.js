@@ -10,7 +10,8 @@
   "scripts": {
     "test": "bun test",
     "typecheck": "bun x tsc --noEmit",
-    "publish:check": "bunx jsr publish --dry-run --allow-slow-types --allow-dirty"
+    "fix:slow-types": "bun scripts/annotate-public-types.ts",
+    "publish:check": "bunx jsr publish --dry-run --allow-dirty"
   },
   "devDependencies": {
     "typescript": "^5"

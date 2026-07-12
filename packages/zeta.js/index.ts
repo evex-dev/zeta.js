@@ -1,21 +1,25 @@
 import { BaseClient, webClientOptions } from "./src/core/client.ts";
-import type { ZetaClientOptions } from "./src/core/types.ts";
-import type { LorebooksApi } from "./src/lorebooks.ts";
-import type { PlotsApi } from "./src/plots.ts";
-import type { ProfileApi } from "./src/profile.ts";
-import type { TalkApi } from "./src/talk.ts";
+import type { ApiResult, TokenPair, ZetaClientOptions } from "./src/core/types.ts";
+import type { LorebookResource, LorebooksApi } from "./src/lorebooks.ts";
+import type { PlotResource, PlotsApi } from "./src/plots.ts";
+import type { ChatProfileResource, ChatProfilesResponse, ImageResponse, ProfileApi, UserResource } from "./src/profile.ts";
+import type { Talk, TalkApi } from "./src/talk.ts";
 import type {
   ChatProfileAbusingCheckRequest,
   ChatProfileDraftRequest,
   ChatProfileListQuery,
   LorebookDraftRequest,
+  LorebookListResponse,
   LorebookListQuery,
   MultipartImageBody,
   PlotDraftRequest,
+  PlotListResponse,
   PlotListQuery,
   RoomCreateRequest,
+  RoomListResponse,
   RoomListQuery,
   UserChatProfileSelectionRequest,
+  UserListResponse,
   UserListQuery,
 } from "./src/domainTypes.ts";
 
@@ -49,19 +53,19 @@ export { Talk, TalkApi } from "./src/talk.ts";
 export class TalkCollection {
   constructor(private readonly api: TalkApi) { }
 
-  create(body: RoomCreateRequest) {
+  create(body: RoomCreateRequest): Promise<Talk> {
     return this.api.create(body);
   }
 
-  fromId(roomId: string) {
+  fromId(roomId: string): Talk {
     return this.api.fromId(roomId);
   }
 
-  list(query?: RoomListQuery) {
+  list(query?: RoomListQuery): Promise<ApiResult<RoomListResponse>> {
     return this.api.listRooms(query);
   }
 
-  listSaved(query?: RoomListQuery) {
+  listSaved(query?: RoomListQuery): Promise<ApiResult<RoomListResponse>> {
     return this.api.listSavedRooms(query);
   }
 }
@@ -69,27 +73,27 @@ export class TalkCollection {
 export class PlotsCollection {
   constructor(private readonly api: PlotsApi) { }
 
-  create(body?: PlotDraftRequest) {
+  create(body?: PlotDraftRequest): Promise<PlotResource> {
     return this.api.create(body);
   }
 
-  get(plotId: string) {
+  get(plotId: string): Promise<PlotResource> {
     return this.api.get(plotId);
   }
 
-  fromId(plotId: string) {
+  fromId(plotId: string): PlotResource {
     return this.api.fromId(plotId);
   }
 
-  list(query?: PlotListQuery) {
+  list(query?: PlotListQuery): Promise<ApiResult<PlotListResponse>> {
     return this.api.listPlots(query);
   }
 
-  listCreator(query?: PlotListQuery) {
+  listCreator(query?: PlotListQuery): Promise<ApiResult<PlotListResponse>> {
     return this.api.listCreatorPlots(query);
   }
 
-  listLiked(query?: PlotListQuery) {
+  listLiked(query?: PlotListQuery): Promise<ApiResult<PlotListResponse>> {
     return this.api.listLikedPlots(query);
   }
 }
@@ -97,27 +101,27 @@ export class PlotsCollection {
 export class LorebooksCollection {
   constructor(private readonly api: LorebooksApi) { }
 
-  create(body?: LorebookDraftRequest) {
+  create(body?: LorebookDraftRequest): Promise<LorebookResource> {
     return this.api.create(body);
   }
 
-  get(lorebookId: string) {
+  get(lorebookId: string): Promise<LorebookResource> {
     return this.api.get(lorebookId);
   }
 
-  fromId(lorebookId: string) {
+  fromId(lorebookId: string): LorebookResource {
     return this.api.fromId(lorebookId);
   }
 
-  list(query?: LorebookListQuery) {
+  list(query?: LorebookListQuery): Promise<ApiResult<LorebookListResponse>> {
     return this.api.listLorebooks(query);
   }
 
-  listCreator(query?: LorebookListQuery) {
+  listCreator(query?: LorebookListQuery): Promise<ApiResult<LorebookListResponse>> {
     return this.api.listCreatorLorebooks(query);
   }
 
-  search(query?: LorebookListQuery) {
+  search(query?: LorebookListQuery): Promise<ApiResult<LorebookListResponse>> {
     return this.api.searchLorebooks(query);
   }
 }
@@ -125,35 +129,35 @@ export class LorebooksCollection {
 export class ChatProfilesCollection {
   constructor(private readonly api: ProfileApi) { }
 
-  list(query?: ChatProfileListQuery) {
+  list(query?: ChatProfileListQuery): Promise<ApiResult<ChatProfilesResponse>> {
     return this.api.listChatProfiles(query);
   }
 
-  create(body?: ChatProfileDraftRequest) {
+  create(body?: ChatProfileDraftRequest): Promise<ChatProfileResource> {
     return this.api.chatProfiles.create(body);
   }
 
-  get(id: string) {
+  get(id: string): Promise<ChatProfileResource> {
     return this.api.chatProfiles.get(id);
   }
 
-  fromId(id: string) {
+  fromId(id: string): ChatProfileResource {
     return this.api.chatProfile(id);
   }
 
-  selected(query?: ChatProfileListQuery) {
+  selected(query?: ChatProfileListQuery): Promise<ChatProfileResource> {
     return this.api.chatProfiles.selected(query);
   }
 
-  select(id: string, body?: UserChatProfileSelectionRequest) {
+  select(id: string, body?: UserChatProfileSelectionRequest): Promise<ApiResult<void>> {
     return this.api.chatProfiles.select(id, body);
   }
 
-  uploadImage(body: MultipartImageBody) {
+  uploadImage(body: MultipartImageBody): Promise<ApiResult<ImageResponse>> {
     return this.api.uploadChatProfileImage(body);
   }
 
-  checkAbusing(body?: ChatProfileAbusingCheckRequest) {
+  checkAbusing(body?: ChatProfileAbusingCheckRequest): Promise<ApiResult<unknown>> {
     return this.api.checkChatProfileAbusing(body);
   }
 }
@@ -165,27 +169,27 @@ export class ProfileCollection {
     this.chatProfiles = new ChatProfilesCollection(api);
   }
 
-  me() {
+  me(): Promise<UserResource> {
     return this.api.me();
   }
 
-  user(userId: string) {
+  user(userId: string): UserResource {
     return this.api.user(userId);
   }
 
-  uploadImage(body: MultipartImageBody) {
+  uploadImage(body: MultipartImageBody): Promise<ApiResult<ImageResponse>> {
     return this.api.uploadProfileImage(body);
   }
 
-  deleteImage() {
+  deleteImage(): Promise<ApiResult<unknown>> {
     return this.api.deleteProfileImage();
   }
 
-  listBlockedUsers(query?: UserListQuery) {
+  listBlockedUsers(query?: UserListQuery): Promise<ApiResult<UserListResponse>> {
     return this.api.listBlockedUsers(query);
   }
 
-  getPreferredGenres() {
+  getPreferredGenres(): Promise<ApiResult<{ [key: string]: unknown; genres?: string[]; genreKeys?: string[]; }>> {
     return this.api.getPreferredGenres();
   }
 }
@@ -235,11 +239,11 @@ export class ZetaClient {
     return this.baseClient.refreshToken;
   }
 
-  refreshTokens(refreshToken = this.baseClient.refreshToken, deviceId = this.baseClient.session.deviceId) {
+  refreshTokens(refreshToken: string | undefined = this.baseClient.refreshToken, deviceId: string | undefined = this.baseClient.session.deviceId): Promise<TokenPair> {
     return this.baseClient.refreshTokens(refreshToken, deviceId);
   }
 
-  startAnonymousSession(deviceId = this.baseClient.session.deviceId) {
+  startAnonymousSession(deviceId: string | undefined = this.baseClient.session.deviceId): Promise<TokenPair> {
     return this.baseClient.startAnonymousSession(deviceId);
   }
 }

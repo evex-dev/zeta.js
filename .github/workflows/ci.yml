@@ -28,4 +28,4 @@ jobs:
 
       - name: JSR dry run
         working-directory: packages/zeta.js
-        run: bunx jsr publish --dry-run --allow-slow-types
+        run: bunx jsr publish --dry-run

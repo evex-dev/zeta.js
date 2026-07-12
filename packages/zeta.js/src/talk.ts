@@ -1,4 +1,6 @@
 import type { BaseClient } from "./core/client.ts";
+import type { StreamEvent } from "./core/stream.ts";
+import type { ApiResult } from "./core/types.ts";
 import { ApiError } from "./core/types.ts";
 import type {
   ActiveRoomIdQuery,
@@ -55,29 +57,29 @@ export class Talk {
     return this.roomData;
   }
 
-  async refresh() {
+  async refresh(): Promise<ApiResult<Room>> {
     const result = await this.api.getRoom(this.id);
     this.roomData = result.data;
     return result;
   }
 
-  getSpeakerProfiles() {
+  getSpeakerProfiles(): Promise<TalkSpeakerProfile[]> {
     return this.api.getSpeakerProfiles(this.id);
   }
 
-  update(body?: RoomUpdateRequest) {
+  update(body?: RoomUpdateRequest): Promise<ApiResult<Room>> {
     return this.api.updateRoom(this.id, body);
   }
 
-  delete() {
+  delete(): Promise<ApiResult<unknown>> {
     return this.api.deleteRoom(this.id);
   }
 
-  pin() {
+  pin(): Promise<ApiResult<unknown>> {
     return this.api.pinRoom(this.id);
   }
 
-  unpin() {
+  unpin(): Promise<ApiResult<unknown>> {
     return this.api.unpinRoom(this.id);
   }
 
@@ -86,143 +88,143 @@ export class Talk {
     return this.api.fromRoom(result.data);
   }
 
-  getPlotId() {
+  getPlotId(): Promise<ApiResult<IdResponse>> {
     return this.api.getRoomPlotId(this.id);
   }
 
-  listMessages(query?: MessageListQuery) {
+  listMessages(query?: MessageListQuery): Promise<ApiResult<MessageListResponse>> {
     return this.api.listMessages(this.id, query);
   }
 
-  updateMessage(messageId: string, body?: MessageUpdateRequest) {
+  updateMessage(messageId: string, body?: MessageUpdateRequest): Promise<ApiResult<Message>> {
     return this.api.updateMessage(this.id, messageId, body);
   }
 
-  deleteMessages(body?: DeleteRoomMessagesRequest) {
+  deleteMessages(body?: DeleteRoomMessagesRequest): Promise<ApiResult<unknown>> {
     return this.api.deleteRoomMessages(this.id, body);
   }
 
-  streamMessage<T = ChatStreamEvent>(body: ChatSendMessageRequest) {
+  streamMessage<T = ChatStreamEvent>(body: ChatSendMessageRequest): Promise<AsyncGenerator<StreamEvent<T>, any, any>> {
     return this.api.streamMessage<T>(this.id, body);
   }
 
-  sendTextMessage(text: string, extra?: Omit<ChatTextRequest, "type" | "text">) {
+  sendTextMessage(text: string, extra?: Omit<ChatTextRequest, "type" | "text">): Promise<AsyncGenerator<StreamEvent<ChatStreamEvent>, any, any>> {
     return this.api.sendTextMessage(this.id, text, extra);
   }
 
-  streamCandidate<T = ChatStreamEvent>(messageId: string, body?: ChatSendMessageRequest) {
+  streamCandidate<T = ChatStreamEvent>(messageId: string, body?: ChatSendMessageRequest): Promise<AsyncGenerator<StreamEvent<T>, any, any>> {
     return this.api.streamCandidate<T>(this.id, messageId, body);
   }
 
-  streamOptions<T = ChatStreamEvent>(body?: ChatOptionsStreamRequest) {
+  streamOptions<T = ChatStreamEvent>(body?: ChatOptionsStreamRequest): Promise<AsyncGenerator<StreamEvent<T>, any, any>> {
     return this.api.streamOptions<T>(this.id, body);
   }
 
-  streamMoreOptions<T = ChatStreamEvent>(body?: ChatOptionsStreamRequest) {
+  streamMoreOptions<T = ChatStreamEvent>(body?: ChatOptionsStreamRequest): Promise<AsyncGenerator<StreamEvent<T>, any, any>> {
     return this.api.streamMoreOptions<T>(this.id, body);
   }
 
-  listCandidates(messageId: string, query?: CandidateListQuery) {
+  listCandidates(messageId: string, query?: CandidateListQuery): Promise<ApiResult<CandidateListResponse>> {
     return this.api.listCandidates(this.id, messageId, query);
   }
 
-  selectOption(id: string, body?: ChatOptionSelectRequest) {
+  selectOption(id: string, body?: ChatOptionSelectRequest): Promise<ApiResult<unknown>> {
     return this.api.selectOption(this.id, id, body);
   }
 
-  getModelSetting() {
+  getModelSetting(): Promise<ApiResult<ModelSetting>> {
     return this.api.getModelSetting(this.id);
   }
 
-  updateModelSetting(body?: ModelSetting) {
+  updateModelSetting(body?: ModelSetting): Promise<ApiResult<ModelSetting>> {
     return this.api.updateModelSetting(this.id, body);
   }
 
-  getIntroBeforeSelection() {
+  getIntroBeforeSelection(): Promise<ApiResult<RoomIntroBeforeSelectionResponse>> {
     return this.api.getIntroBeforeSelection(this.id);
   }
 
-  createIntro() {
+  createIntro(): Promise<ApiResult<RoomIntroResponse>> {
     return this.api.createIntro(this.id);
   }
 
-  listBookmarks(query?: MessageListQuery) {
+  listBookmarks(query?: MessageListQuery): Promise<ApiResult<RoomBookmarkListResponse>> {
     return this.api.listBookmarks(this.id, query);
   }
 
-  getBookmarkCount() {
+  getBookmarkCount(): Promise<ApiResult<{ [key: string]: unknown; count?: number; }>> {
     return this.api.getBookmarkCount(this.id);
   }
 
-  getBookmarkUsage() {
+  getBookmarkUsage(): Promise<ApiResult<RoomBookmarkUsageResponse>> {
     return this.api.getBookmarkUsage(this.id);
   }
 
-  deleteBookmark(bookmarkId: string) {
+  deleteBookmark(bookmarkId: string): Promise<ApiResult<unknown>> {
     return this.api.deleteBookmark(this.id, bookmarkId);
   }
 
-  createRecommendedMessages(body?: RoomRecommendedMessagesRequest) {
+  createRecommendedMessages(body?: RoomRecommendedMessagesRequest): Promise<ApiResult<unknown>> {
     return this.api.createRecommendedMessages(this.id, body);
   }
 
-  markRecommendedMessagesPurchaseHandled(body?: RoomRecommendedMessagesRequest) {
+  markRecommendedMessagesPurchaseHandled(body?: RoomRecommendedMessagesRequest): Promise<ApiResult<unknown>> {
     return this.api.markRecommendedMessagesPurchaseHandled(this.id, body);
   }
 
-  getCyoaEditSetting() {
+  getCyoaEditSetting(): Promise<ApiResult<ModelSetting>> {
     return this.api.getCyoaEditSetting(this.id);
   }
 
-  updateCyoaEditSetting(body?: ModelSetting) {
+  updateCyoaEditSetting(body?: ModelSetting): Promise<ApiResult<ModelSetting>> {
     return this.api.updateCyoaEditSetting(this.id, body);
   }
 
-  getInfoBoxCharacterSetting() {
+  getInfoBoxCharacterSetting(): Promise<ApiResult<ModelSetting>> {
     return this.api.getInfoBoxCharacterSetting(this.id);
   }
 
-  updateInfoBoxCharacterSetting(body?: ModelSetting) {
+  updateInfoBoxCharacterSetting(body?: ModelSetting): Promise<ApiResult<ModelSetting>> {
     return this.api.updateInfoBoxCharacterSetting(this.id, body);
   }
 
-  listUserPlotChatProfiles(query?: ChatProfileListQuery) {
+  listUserPlotChatProfiles(query?: ChatProfileListQuery): Promise<ApiResult<UserPlotChatProfileListResponse>> {
     return this.api.listUserPlotChatProfiles(this.id, query);
   }
 
-  createUserPlotChatProfile(body?: UserPlotChatProfileDraftRequest) {
+  createUserPlotChatProfile(body?: UserPlotChatProfileDraftRequest): Promise<ApiResult<UserPlotChatProfile>> {
     return this.api.createUserPlotChatProfile(this.id, body);
   }
 
-  selectUserPlotChatProfile(id: string) {
+  selectUserPlotChatProfile(id: string): Promise<ApiResult<UserPlotChatProfile>> {
     return this.api.selectUserPlotChatProfile(this.id, id);
   }
 
-  getSelectedUserPlotChatProfile() {
+  getSelectedUserPlotChatProfile(): Promise<ApiResult<UserPlotChatProfile>> {
     return this.api.getSelectedUserPlotChatProfile(this.id);
   }
 
-  getSelectedUserPlotChatProfileCharacterIds() {
+  getSelectedUserPlotChatProfileCharacterIds(): Promise<ApiResult<{ [key: string]: unknown; selectedCharacterIds?: string[]; }>> {
     return this.api.getSelectedUserPlotChatProfileCharacterIds(this.id);
   }
 
-  getMyUserPlotChatProfile() {
+  getMyUserPlotChatProfile(): Promise<ApiResult<UserPlotChatProfile>> {
     return this.api.getMyUserPlotChatProfile(this.id);
   }
 
-  updateMyUserPlotChatProfile(body?: UserPlotChatProfileDraftRequest) {
+  updateMyUserPlotChatProfile(body?: UserPlotChatProfileDraftRequest): Promise<ApiResult<UserPlotChatProfile>> {
     return this.api.updateMyUserPlotChatProfile(this.id, body);
   }
 
-  createAndSelectUserPlotChatProfile(body?: UserPlotChatProfileDraftRequest) {
+  createAndSelectUserPlotChatProfile(body?: UserPlotChatProfileDraftRequest): Promise<ApiResult<UserPlotChatProfile>> {
     return this.api.createAndSelectUserPlotChatProfile(this.id, body);
   }
 
-  selectUserChatProfile(id: string, body?: Omit<UserChatProfileSelectionRequest, "roomId">) {
+  selectUserChatProfile(id: string, body?: Omit<UserChatProfileSelectionRequest, "roomId">): Promise<ApiResult<void>> {
     return this.api.selectUserChatProfile(this.id, id, body);
   }
 
-  getSelectedUserPersona(plotId = this.roomData?.plotId ?? this.roomData?.plot?.id ?? this.roomData?.plot?.plotId) {
+  getSelectedUserPersona(plotId: string | undefined = this.roomData?.plotId ?? this.roomData?.plot?.id ?? this.roomData?.plot?.plotId): Promise<ApiResult<UserPersona>> {
     if (!plotId) {
       throw new ApiError("Cannot get selected user persona because plotId is missing.", {
         code: "MissingPlotId",
@@ -232,15 +234,15 @@ export class Talk {
     return this.api.getSelectedUserPersona(plotId, this.id);
   }
 
-  save(body?: RoomSaveRequest) {
+  save(body?: RoomSaveRequest): Promise<ApiResult<unknown>> {
     return this.api.saveRoom(this.id, body);
   }
 
-  load(body?: RoomLoadRequest) {
+  load(body?: RoomLoadRequest): Promise<ApiResult<Room>> {
     return this.api.loadRoom(this.id, body);
   }
 
-  deleteSaved() {
+  deleteSaved(): Promise<ApiResult<unknown>> {
     return this.api.deleteSavedRoom(this.id);
   }
 }
@@ -248,7 +250,7 @@ export class Talk {
 export class TalkApi {
   constructor(private readonly client: BaseClient) {}
 
-  fromRoom(room: Room) {
+  fromRoom(room: Room): Talk {
     const id = room.id;
     if (typeof id !== "string" || id.length === 0) {
       throw new ApiError("Cannot create Talk because room.id is missing.", {
@@ -259,7 +261,7 @@ export class TalkApi {
     return new Talk(this, id, room);
   }
 
-  fromId(roomId: string) {
+  fromId(roomId: string): Talk {
     return new Talk(this, roomId);
   }
 
@@ -268,15 +270,15 @@ export class TalkApi {
     return this.fromRoom(result.data);
   }
 
-  listRooms(query?: RoomListQuery) {
+  listRooms(query?: RoomListQuery): Promise<ApiResult<RoomListResponse>> {
     return this.client.get<RoomListResponse>("/v1/rooms", { query });
   }
 
-  createRoom(body: RoomCreateRequest) {
+  createRoom(body: RoomCreateRequest): Promise<ApiResult<Room>> {
     return this.client.post<Room, RoomCreateRequest>("/v1/rooms", body);
   }
 
-  getRoom(roomId: string) {
+  getRoom(roomId: string): Promise<ApiResult<Room>> {
     return this.client.get<Room>("/v1/rooms/:roomId", { path: { roomId } });
   }
 
@@ -330,223 +332,223 @@ export class TalkApi {
     return speakers;
   }
 
-  updateRoom(roomId: string, body?: RoomUpdateRequest) {
+  updateRoom(roomId: string, body?: RoomUpdateRequest): Promise<ApiResult<Room>> {
     return this.client.put<Room, RoomUpdateRequest | undefined>("/v1/rooms/:roomId", body, { path: { roomId } });
   }
 
-  deleteRoom(roomId: string) {
+  deleteRoom(roomId: string): Promise<ApiResult<unknown>> {
     return this.client.delete("/v1/rooms/:roomId", { path: { roomId } });
   }
 
-  pinRoom(roomId: string) {
+  pinRoom(roomId: string): Promise<ApiResult<unknown>> {
     return this.client.post("/v1/rooms/:roomId/pin", undefined, { path: { roomId } });
   }
 
-  unpinRoom(roomId: string) {
+  unpinRoom(roomId: string): Promise<ApiResult<unknown>> {
     return this.client.delete("/v1/rooms/:roomId/pin", { path: { roomId } });
   }
 
-  cloneRoom(roomId: string, body?: RoomCloneRequest) {
+  cloneRoom(roomId: string, body?: RoomCloneRequest): Promise<ApiResult<Room>> {
     return this.client.post<Room, RoomCloneRequest | undefined>("/v1/rooms/:roomId/clone", body, { path: { roomId } });
   }
 
-  purgeRooms(body?: RoomPurgeRequest) {
+  purgeRooms(body?: RoomPurgeRequest): Promise<ApiResult<unknown>> {
     return this.client.post("/v1/rooms/purge", body);
   }
 
-  getRoomPlotId(roomId: string) {
+  getRoomPlotId(roomId: string): Promise<ApiResult<IdResponse>> {
     return this.client.get<IdResponse>("/v1/rooms/:roomId/plot-id", { path: { roomId } });
   }
 
-  getActiveRoomId(query?: ActiveRoomIdQuery) {
+  getActiveRoomId(query?: ActiveRoomIdQuery): Promise<ApiResult<IdResponse>> {
     return this.client.get<IdResponse>("/v1/rooms/active-room-id", { query });
   }
 
-  listMessages(roomId: string, query?: MessageListQuery) {
+  listMessages(roomId: string, query?: MessageListQuery): Promise<ApiResult<MessageListResponse>> {
     return this.client.get<MessageListResponse>("/v1/rooms/:roomId/messages", { path: { roomId }, query });
   }
 
-  updateMessage(roomId: string, messageId: string, body?: MessageUpdateRequest) {
+  updateMessage(roomId: string, messageId: string, body?: MessageUpdateRequest): Promise<ApiResult<Message>> {
     return this.client.put<Message, MessageUpdateRequest | undefined>("/v1/rooms/:roomId/messages/:messageId", body, { path: { roomId, messageId } });
   }
 
-  deleteRoomMessages(roomId: string, body?: DeleteRoomMessagesRequest) {
+  deleteRoomMessages(roomId: string, body?: DeleteRoomMessagesRequest): Promise<ApiResult<unknown>> {
     return this.client.request("DELETE", "/v1/rooms/:roomId/room-messages", { path: { roomId }, body });
   }
 
-  streamMessage<T = ChatStreamEvent>(roomId: string, body: ChatSendMessageRequest) {
+  streamMessage<T = ChatStreamEvent>(roomId: string, body: ChatSendMessageRequest): Promise<AsyncGenerator<StreamEvent<T>, any, any>> {
     return this.client.stream<T, ChatSendMessageRequest>("/v1/rooms/:roomId/messages/stream", body, { path: { roomId } });
   }
 
-  sendTextMessage(roomId: string, text: string, extra?: Omit<ChatTextRequest, "type" | "text">) {
+  sendTextMessage(roomId: string, text: string, extra?: Omit<ChatTextRequest, "type" | "text">): Promise<AsyncGenerator<StreamEvent<ChatStreamEvent>, any, any>> {
     return this.client.stream<ChatStreamEvent, ChatTextRequest>("/v1/rooms/:roomId/messages/stream", { ...extra, type: "TEXT", text }, { path: { roomId } });
   }
 
-  streamCandidate<T = ChatStreamEvent>(roomId: string, messageId: string, body?: ChatSendMessageRequest) {
+  streamCandidate<T = ChatStreamEvent>(roomId: string, messageId: string, body?: ChatSendMessageRequest): Promise<AsyncGenerator<StreamEvent<T>, any, any>> {
     return this.client.stream<T, ChatSendMessageRequest | undefined>("/v1/rooms/:roomId/messages/:messageId/candidates/stream", body, { path: { roomId, messageId } });
   }
 
-  streamOptions<T = ChatStreamEvent>(roomId: string, body?: ChatOptionsStreamRequest) {
+  streamOptions<T = ChatStreamEvent>(roomId: string, body?: ChatOptionsStreamRequest): Promise<AsyncGenerator<StreamEvent<T>, any, any>> {
     return this.client.stream<T, ChatOptionsStreamRequest | undefined>("/v1/rooms/:roomId/options/stream", body, { path: { roomId } });
   }
 
-  streamMoreOptions<T = ChatStreamEvent>(roomId: string, body?: ChatOptionsStreamRequest) {
+  streamMoreOptions<T = ChatStreamEvent>(roomId: string, body?: ChatOptionsStreamRequest): Promise<AsyncGenerator<StreamEvent<T>, any, any>> {
     return this.client.stream<T, ChatOptionsStreamRequest | undefined>("/v1/rooms/:roomId/options/stream/more", body, { path: { roomId } });
   }
 
-  listCandidates(roomId: string, messageId: string, query?: CandidateListQuery) {
+  listCandidates(roomId: string, messageId: string, query?: CandidateListQuery): Promise<ApiResult<CandidateListResponse>> {
     return this.client.get<CandidateListResponse>("/v1/rooms/:roomId/messages/:messageId/candidates", { path: { roomId, messageId }, query });
   }
 
-  updateCandidate(roomId: string, messageId: string, candidateId: string, body?: CandidateUpdateRequest) {
+  updateCandidate(roomId: string, messageId: string, candidateId: string, body?: CandidateUpdateRequest): Promise<ApiResult<unknown>> {
     return this.client.put("/v1/rooms/:roomId/messages/:messageId/candidates/:candidateId", body, { path: { roomId, messageId, candidateId } });
   }
 
-  sendCandidateFeedback(roomId: string, messageId: string, candidateId: string, body?: CandidateFeedbackRequest) {
+  sendCandidateFeedback(roomId: string, messageId: string, candidateId: string, body?: CandidateFeedbackRequest): Promise<ApiResult<unknown>> {
     return this.client.post("/v1/rooms/:roomId/messages/:messageId/candidates/:candidateId/feedback", body, { path: { roomId, messageId, candidateId } });
   }
 
-  sendCandidateFeedbackModal(roomId: string, messageId: string, candidateId: string, body?: CandidateFeedbackRequest) {
+  sendCandidateFeedbackModal(roomId: string, messageId: string, candidateId: string, body?: CandidateFeedbackRequest): Promise<ApiResult<unknown>> {
     return this.client.post("/v1/rooms/:roomId/messages/:messageId/candidates/:candidateId/feedback-modal", body, { path: { roomId, messageId, candidateId } });
   }
 
-  rateCandidateSnapshotImage(roomId: string, messageId: string, candidateId: string, snapshotImageId: string, body?: SnapshotImageReactionRequest) {
+  rateCandidateSnapshotImage(roomId: string, messageId: string, candidateId: string, snapshotImageId: string, body?: SnapshotImageReactionRequest): Promise<ApiResult<unknown>> {
     return this.client.post("/v1/rooms/:roomId/messages/:messageId/candidates/:candidateId/snapshot-images/:snapshotImageId/ratings", body, { path: { roomId, messageId, candidateId, snapshotImageId } });
   }
 
-  sendCandidateSnapshotImageOpinion(roomId: string, messageId: string, candidateId: string, snapshotImageId: string, body?: SnapshotImageReactionRequest) {
+  sendCandidateSnapshotImageOpinion(roomId: string, messageId: string, candidateId: string, snapshotImageId: string, body?: SnapshotImageReactionRequest): Promise<ApiResult<unknown>> {
     return this.client.post("/v1/rooms/:roomId/messages/:messageId/candidates/:candidateId/snapshot-images/:snapshotImageId/opinion", body, { path: { roomId, messageId, candidateId, snapshotImageId } });
   }
 
-  reportCandidateSnapshotImage(roomId: string, messageId: string, candidateId: string, snapshotImageId: string, body?: SnapshotImageReactionRequest) {
+  reportCandidateSnapshotImage(roomId: string, messageId: string, candidateId: string, snapshotImageId: string, body?: SnapshotImageReactionRequest): Promise<ApiResult<unknown>> {
     return this.client.post("/v1/rooms/:roomId/messages/:messageId/candidates/:candidateId/snapshot-images/:snapshotImageId/reports", body, { path: { roomId, messageId, candidateId, snapshotImageId } });
   }
 
-  reportMessage(roomId: string, messageId: string, body?: CandidateFeedbackRequest) {
+  reportMessage(roomId: string, messageId: string, body?: CandidateFeedbackRequest): Promise<ApiResult<unknown>> {
     return this.client.post("/v1/rooms/:roomId/messages/:messageId/reports", body, { path: { roomId, messageId } });
   }
 
-  selectOption(roomId: string, id: string, body?: ChatOptionSelectRequest) {
+  selectOption(roomId: string, id: string, body?: ChatOptionSelectRequest): Promise<ApiResult<unknown>> {
     return this.client.post("/v1/rooms/:roomId/options/:id", body, { path: { roomId, id } });
   }
 
-  getModelSetting(roomId: string) {
+  getModelSetting(roomId: string): Promise<ApiResult<ModelSetting>> {
     return this.client.get<ModelSetting>("/v1/rooms/:roomId/model-setting", { path: { roomId } });
   }
 
-  updateModelSetting(roomId: string, body?: ModelSetting) {
+  updateModelSetting(roomId: string, body?: ModelSetting): Promise<ApiResult<ModelSetting>> {
     return this.client.put<ModelSetting, ModelSetting | undefined>("/v1/rooms/:roomId/model-setting", body, { path: { roomId } });
   }
 
-  getIntroBeforeSelection(roomId: string) {
+  getIntroBeforeSelection(roomId: string): Promise<ApiResult<RoomIntroBeforeSelectionResponse>> {
     return this.client.get<RoomIntroBeforeSelectionResponse>("/v1/rooms/:roomId/intros/before-selection", { path: { roomId } });
   }
 
-  createIntro(roomId: string) {
+  createIntro(roomId: string): Promise<ApiResult<RoomIntroResponse>> {
     return this.client.post<RoomIntroResponse>("/v1/rooms/:roomId/intros", undefined, { path: { roomId } });
   }
 
-  listBookmarks(roomId: string, query?: MessageListQuery) {
+  listBookmarks(roomId: string, query?: MessageListQuery): Promise<ApiResult<RoomBookmarkListResponse>> {
     return this.client.get<RoomBookmarkListResponse>("/v1/rooms/:roomId/bookmarks", { path: { roomId }, query });
   }
 
-  getBookmarkCount(roomId: string) {
+  getBookmarkCount(roomId: string): Promise<ApiResult<{ [key: string]: unknown; count?: number; }>> {
     return this.client.get<{ count?: number; [key: string]: unknown }>("/v1/rooms/:roomId/bookmarks/count", { path: { roomId } });
   }
 
-  getBookmarkUsage(roomId: string) {
+  getBookmarkUsage(roomId: string): Promise<ApiResult<RoomBookmarkUsageResponse>> {
     return this.client.get<RoomBookmarkUsageResponse>("/v1/rooms/:roomId/bookmarks/usage", { path: { roomId } });
   }
 
-  deleteBookmark(roomId: string, bookmarkId: string) {
+  deleteBookmark(roomId: string, bookmarkId: string): Promise<ApiResult<unknown>> {
     return this.client.delete("/v1/rooms/:roomId/bookmarks/:bookmarkId", { path: { roomId, bookmarkId } });
   }
 
-  createRecommendedMessages(roomId: string, body?: RoomRecommendedMessagesRequest) {
+  createRecommendedMessages(roomId: string, body?: RoomRecommendedMessagesRequest): Promise<ApiResult<unknown>> {
     return this.client.post("/v1/rooms/:roomId/recommended-messages/multi", body, { path: { roomId } });
   }
 
-  markRecommendedMessagesPurchaseHandled(roomId: string, body?: RoomRecommendedMessagesRequest) {
+  markRecommendedMessagesPurchaseHandled(roomId: string, body?: RoomRecommendedMessagesRequest): Promise<ApiResult<unknown>> {
     return this.client.post("/v1/rooms/:roomId/recommended-messages/purchase-already-handled", body, { path: { roomId } });
   }
 
-  getCyoaEditSetting(roomId: string) {
+  getCyoaEditSetting(roomId: string): Promise<ApiResult<ModelSetting>> {
     return this.client.get<ModelSetting>("/v1/rooms/:roomId/settings/cyoa", { path: { roomId } });
   }
 
-  updateCyoaEditSetting(roomId: string, body?: ModelSetting) {
+  updateCyoaEditSetting(roomId: string, body?: ModelSetting): Promise<ApiResult<ModelSetting>> {
     return this.client.put<ModelSetting, ModelSetting | undefined>("/v1/rooms/:roomId/settings/cyoa", body, { path: { roomId } });
   }
 
-  getInfoBoxCharacterSetting(roomId: string) {
+  getInfoBoxCharacterSetting(roomId: string): Promise<ApiResult<ModelSetting>> {
     return this.client.get<ModelSetting>("/v1/rooms/:roomId/settings/info-box", { path: { roomId } });
   }
 
-  updateInfoBoxCharacterSetting(roomId: string, body?: ModelSetting) {
+  updateInfoBoxCharacterSetting(roomId: string, body?: ModelSetting): Promise<ApiResult<ModelSetting>> {
     return this.client.put<ModelSetting, ModelSetting | undefined>("/v1/rooms/:roomId/settings/info-box", body, { path: { roomId } });
   }
 
-  listUserPlotChatProfiles(roomId: string, query?: ChatProfileListQuery) {
+  listUserPlotChatProfiles(roomId: string, query?: ChatProfileListQuery): Promise<ApiResult<UserPlotChatProfileListResponse>> {
     return this.client.get<UserPlotChatProfileListResponse>("/v1/rooms/:roomId/user-plot-chat-profiles", { path: { roomId }, query });
   }
 
-  createUserPlotChatProfile(roomId: string, body?: UserPlotChatProfileDraftRequest) {
+  createUserPlotChatProfile(roomId: string, body?: UserPlotChatProfileDraftRequest): Promise<ApiResult<UserPlotChatProfile>> {
     return this.client.post<UserPlotChatProfile, UserPlotChatProfileDraftRequest | undefined>("/v1/rooms/:roomId/user-plot-chat-profiles", body, { path: { roomId } });
   }
 
-  selectUserPlotChatProfile(roomId: string, id: string) {
+  selectUserPlotChatProfile(roomId: string, id: string): Promise<ApiResult<UserPlotChatProfile>> {
     return this.client.put<UserPlotChatProfile>("/v1/rooms/:roomId/user-plot-chat-profiles/:id/selected", undefined, { path: { roomId, id } });
   }
 
-  getSelectedUserPlotChatProfile(roomId: string) {
+  getSelectedUserPlotChatProfile(roomId: string): Promise<ApiResult<UserPlotChatProfile>> {
     return this.client.get<UserPlotChatProfile>("/v1/rooms/:roomId/user-plot-chat-profiles/selected", { path: { roomId } });
   }
 
-  getSelectedUserPlotChatProfileCharacterIds(roomId: string) {
+  getSelectedUserPlotChatProfileCharacterIds(roomId: string): Promise<ApiResult<{ [key: string]: unknown; selectedCharacterIds?: string[]; }>> {
     return this.client.get<{ selectedCharacterIds?: string[]; [key: string]: unknown }>("/v1/rooms/:roomId/user-plot-chat-profiles/selectedCharacterIds", { path: { roomId } });
   }
 
-  getMyUserPlotChatProfile(roomId: string) {
+  getMyUserPlotChatProfile(roomId: string): Promise<ApiResult<UserPlotChatProfile>> {
     return this.client.get<UserPlotChatProfile>("/v1/rooms/:roomId/user-plot-chat-profiles/me", { path: { roomId } });
   }
 
-  updateMyUserPlotChatProfile(roomId: string, body?: UserPlotChatProfileDraftRequest) {
+  updateMyUserPlotChatProfile(roomId: string, body?: UserPlotChatProfileDraftRequest): Promise<ApiResult<UserPlotChatProfile>> {
     return this.client.patch<UserPlotChatProfile, UserPlotChatProfileDraftRequest | undefined>("/v1/rooms/:roomId/user-plot-chat-profiles/me", body, { path: { roomId } });
   }
 
-  createAndSelectUserPlotChatProfile(roomId: string, body?: UserPlotChatProfileDraftRequest) {
+  createAndSelectUserPlotChatProfile(roomId: string, body?: UserPlotChatProfileDraftRequest): Promise<ApiResult<UserPlotChatProfile>> {
     return this.client.post<UserPlotChatProfile, UserPlotChatProfileDraftRequest | undefined>("/v1/rooms/:roomId/user-plot-chat-profiles/selected", body, { path: { roomId } });
   }
 
-  selectUserChatProfile(roomId: string, id: string, body?: Omit<UserChatProfileSelectionRequest, "roomId">) {
+  selectUserChatProfile(roomId: string, id: string, body?: Omit<UserChatProfileSelectionRequest, "roomId">): Promise<ApiResult<void>> {
     return this.client.put<void, UserChatProfileSelectionRequest>("/v1/user-chat-profiles/:id/selected", { ...body, roomId }, { path: { id } });
   }
 
-  getSelectedUserPersona(plotId: string, roomId: string) {
+  getSelectedUserPersona(plotId: string, roomId: string): Promise<ApiResult<UserPersona>> {
     return this.client.get<UserPersona>("/v1/plots/:plotId/rooms/:roomId/user-personas/selected", { path: { plotId, roomId } });
   }
 
-  uploadUserPlotChatProfileImage(body: MultipartImageBody) {
+  uploadUserPlotChatProfileImage(body: MultipartImageBody): Promise<ApiResult<unknown>> {
     return this.client.post("/v1/user-plot-chat-profiles/images", body, { multipart: true });
   }
 
-  saveRoom(roomId: string, body?: RoomSaveRequest) {
+  saveRoom(roomId: string, body?: RoomSaveRequest): Promise<ApiResult<unknown>> {
     return this.client.post("/v1/rooms/:roomId/save", body, { path: { roomId } });
   }
 
-  loadRoom(roomId: string, body?: RoomLoadRequest) {
+  loadRoom(roomId: string, body?: RoomLoadRequest): Promise<ApiResult<Room>> {
     return this.client.post<Room, RoomLoadRequest | undefined>("/v1/rooms/:roomId/load", body, { path: { roomId } });
   }
 
-  listSavedRooms(query?: RoomListQuery) {
+  listSavedRooms(query?: RoomListQuery): Promise<ApiResult<RoomListResponse>> {
     return this.client.get<RoomListResponse>("/v1/rooms/saved", { query });
   }
 
-  deleteSavedRoom(roomId: string) {
+  deleteSavedRoom(roomId: string): Promise<ApiResult<unknown>> {
     return this.client.delete("/v1/rooms/:roomId/saved", { path: { roomId } });
   }
 
-  getSavedRoomStatus(plotId: string) {
+  getSavedRoomStatus(plotId: string): Promise<ApiResult<SavedRoomStatusResponse>> {
     return this.client.get<SavedRoomStatusResponse>("/v1/rooms/plots/:plotId/saved-room-status", { path: { plotId } });
   }
 }

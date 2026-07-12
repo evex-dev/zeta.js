@@ -35,20 +35,20 @@ const WEB_CLIENT_VERSION = "3.39.17";
 export class BaseClient {
   readonly baseUrl: string;
   readonly session: AuthManager;
-  readonly auth = new AuthApi(this);
-  readonly featureFlags = new FeatureFlagsApi(this);
-  readonly home = new HomeApi(this);
-  readonly ranking = new RankingApi(this);
-  readonly announcements = new AnnouncementsApi(this);
-  readonly app = new AppApi(this);
-  readonly search = new SearchApi(this);
-  readonly talk = new TalkApi(this);
-  readonly plots = new PlotsApi(this);
-  readonly lorebooks = new LorebooksApi(this);
-  readonly profile = new ProfileApi(this);
-  readonly creator = new CreatorApi(this);
-  readonly coin = new CoinApi(this);
-  readonly pass = new PassApi(this);
+  readonly auth: AuthApi = new AuthApi(this);
+  readonly featureFlags: FeatureFlagsApi = new FeatureFlagsApi(this);
+  readonly home: HomeApi = new HomeApi(this);
+  readonly ranking: RankingApi = new RankingApi(this);
+  readonly announcements: AnnouncementsApi = new AnnouncementsApi(this);
+  readonly app: AppApi = new AppApi(this);
+  readonly search: SearchApi = new SearchApi(this);
+  readonly talk: TalkApi = new TalkApi(this);
+  readonly plots: PlotsApi = new PlotsApi(this);
+  readonly lorebooks: LorebooksApi = new LorebooksApi(this);
+  readonly profile: ProfileApi = new ProfileApi(this);
+  readonly creator: CreatorApi = new CreatorApi(this);
+  readonly coin: CoinApi = new CoinApi(this);
+  readonly pass: PassApi = new PassApi(this);
   private readonly defaultHeaders = new Headers();
   private readonly fetchImpl: FetchLike;
 
@@ -116,7 +116,7 @@ export class BaseClient {
     return this.request<T>("DELETE", path, options);
   }
 
-  async refreshTokens(refreshToken = this.session.refreshToken, deviceId = this.session.deviceId): Promise<TokenPair> {
+  async refreshTokens(refreshToken: string | undefined = this.session.refreshToken, deviceId: string | undefined = this.session.deviceId): Promise<TokenPair> {
     if (!refreshToken) {
       throw new ApiError("Cannot refresh access token because refreshToken is missing.", {
         code: "MissingRefreshToken",
@@ -141,7 +141,7 @@ export class BaseClient {
     return this.session.acceptTokenResponse(data as UnknownRecord);
   }
 
-  async startAnonymousSession(deviceId = this.ensureDeviceId()): Promise<TokenPair> {
+  async startAnonymousSession(deviceId: string = this.ensureDeviceId()): Promise<TokenPair> {
     this.setDeviceId(deviceId);
 
     const body = { type: "anonymous", deviceId } as const;

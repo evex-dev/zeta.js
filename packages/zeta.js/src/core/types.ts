@@ -74,7 +74,7 @@ export type ErrorResponseData = {
 };
 
 export class ApiError<TData = unknown> extends Error {
-  override readonly name = "ApiError";
+  override readonly name: "ApiError" = "ApiError";
   readonly status?: number;
   readonly code?: string;
   readonly data?: TData;

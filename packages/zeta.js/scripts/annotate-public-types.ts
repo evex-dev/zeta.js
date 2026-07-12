@@ -105,7 +105,7 @@ function annotateProperty(sourceFile: ts.SourceFile, declaration: ts.PropertyDec
   }
 
   const propertyType = checker.typeToString(checker.getTypeAtLocation(declaration.name), declaration, formatFlags);
-  const insertPos = declaration.name.getEnd(sourceFile);
+  const insertPos = declaration.name.getEnd();
   edits.push({ fileName: sourceFile.fileName, pos: insertPos, text: `: ${propertyType}` });
 }
 
@@ -116,7 +116,7 @@ function annotateDefaultedParameters(sourceFile: ts.SourceFile, parameters: ts.N
     }
 
     const parameterType = checker.typeToString(checker.getTypeAtLocation(parameter.name), parameter, formatFlags);
-    edits.push({ fileName: sourceFile.fileName, pos: parameter.name.getEnd(sourceFile), text: `: ${parameterType}` });
+    edits.push({ fileName: sourceFile.fileName, pos: parameter.name.getEnd(), text: `: ${parameterType}` });
   }
 }
 

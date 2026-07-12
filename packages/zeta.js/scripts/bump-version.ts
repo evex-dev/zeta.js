@@ -2,8 +2,9 @@ type BumpKind = "patch" | "minor" | "major";
 
 const bump = Bun.argv[2] as BumpKind | undefined;
 if (bump !== "patch" && bump !== "minor" && bump !== "major") {
-  throw new Error("Usage: bun scripts/bump-version.ts <patch|minor|major>");
+  throw new Error("Usage: bun scripts/bump-version.ts <patch|minor|major> [--dry-run]");
 }
+const dryRun = Bun.argv.includes("--dry-run");
 
 const packageJsonUrl = new URL("../package.json", import.meta.url);
 const jsrJsonUrl = new URL("../jsr.json", import.meta.url);
@@ -29,8 +30,10 @@ const nextVersion = bumpVersion(packageJson.version, bump);
 packageJson.version = nextVersion;
 jsrJson.version = nextVersion;
 
-await Bun.write(packageJsonUrl, `${JSON.stringify(packageJson, null, 2)}\n`);
-await Bun.write(jsrJsonUrl, `${JSON.stringify(jsrJson, null, 2)}\n`);
+if (!dryRun) {
+  await Bun.write(packageJsonUrl, `${JSON.stringify(packageJson, null, 2)}\n`);
+  await Bun.write(jsrJsonUrl, `${JSON.stringify(jsrJson, null, 2)}\n`);
+}
 
 console.log(nextVersion);
 

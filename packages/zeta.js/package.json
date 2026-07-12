@@ -1,9 +1,13 @@
 {
   "name": "@evex/zeta",
   "version": "0.1.0",
-  "description": "TypeScript API client for Zeta",
+  "description": "Runtime-agnostic TypeScript API client for Zeta built on Web standard APIs.",
   "license": "WTFPL",
   "type": "module",
+  "sideEffects": false,
+  "engines": {
+    "node": ">=18"
+  },
   "exports": {
     ".": "./index.ts"
   },

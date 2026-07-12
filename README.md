@@ -1,8 +1,9 @@
 # @evex/zeta
 
-TypeScript API client for Zeta. The library uses Web standard APIs such as
-`fetch`, `Headers`, `FormData`, and `ReadableStream`, so it can run on modern
-JavaScript runtimes without depending on Bun.
+Runtime-agnostic TypeScript API client for Zeta. The library uses Web standard
+APIs such as `fetch`, `Headers`, `Blob`, `FormData`, `ReadableStream`,
+`TextDecoder`, and `crypto.randomUUID`, so it can run on modern JavaScript
+runtimes without depending on Bun.
 
 ---
 
@@ -34,9 +35,16 @@ await talk.delete();
 
 ## Runtime requirements
 
-- A runtime with Web Fetch API support.
+- Node.js 18+.
+- Bun 1+.
+- Deno 1.39+.
+- Browser and edge runtimes with Web Fetch API support.
 - For older runtimes, pass a compatible `fetch` implementation with
   `new ZetaClient({ fetch })`.
+
+Published JSR releases should show provenance when they are published from the
+GitHub Actions workflows in this repository. JSR creates provenance
+automatically for GitHub Actions publishes that use OIDC.
 
 ## Scripts
 

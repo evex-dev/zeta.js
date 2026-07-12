@@ -1,4 +1,4 @@
-name: Bump and Publish
+name: Create Release PR
 
 on:
   workflow_dispatch:
@@ -14,10 +14,10 @@ on:
 
 permissions:
   contents: write
-  actions: write
+  pull-requests: write
 
 jobs:
-  bump-and-publish:
+  create-release-pr:
     runs-on: ubuntu-latest
 
     steps:
@@ -44,8 +44,16 @@ jobs:
       - name: Ensure tag does not exist
         run: |
           TAG="v${{ steps.bump.outputs.version }}"
-          if git rev-parse "${TAG}" >/dev/null 2>&1; then
+          if git rev-parse "${TAG}" >/dev/null 2>&1 || git ls-remote --exit-code --tags origin "${TAG}" >/dev/null 2>&1; then
             echo "Tag ${TAG} already exists."
+            exit 1
+          fi
+
+      - name: Ensure release branch does not exist
+        run: |
+          BRANCH="release/v${{ steps.bump.outputs.version }}"
+          if git ls-remote --exit-code --heads origin "${BRANCH}" >/dev/null 2>&1; then
+            echo "Branch ${BRANCH} already exists."
             exit 1
           fi
 
@@ -63,24 +71,31 @@ jobs:
         working-directory: packages/zeta.js
         run: bunx jsr publish --dry-run --allow-dirty
 
-      - name: Commit and tag release
+      - name: Create release branch and commit
+        id: commit
         run: |
           VERSION="${{ steps.bump.outputs.version }}"
           TAG="v${VERSION}"
+          BRANCH="release/${TAG}"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "${BRANCH}"
           git add bun.lock packages/zeta.js/package.json packages/zeta.js/jsr.json packages/zeta.js/src packages/zeta.js/index.ts
           git diff --cached --quiet && {
             echo "No release changes to commit."
             exit 1
           }
           git commit -m "chore: release @evex/zeta ${TAG}"
-          git tag "${TAG}"
-          git push origin "HEAD:${GITHUB_REF_NAME}" "refs/tags/${TAG}"
+          git push origin "${BRANCH}"
+          echo "branch=${BRANCH}" >> "${GITHUB_OUTPUT}"
 
-      - name: Dispatch publish workflow
+      - name: Create release pull request
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           TAG="v${{ steps.bump.outputs.version }}"
-          gh workflow run publish.yml --ref "${TAG}"
+          gh pr create \
+            --base "${GITHUB_REF_NAME}" \
+            --head "${{ steps.commit.outputs.branch }}" \
+            --title "chore: release @evex/zeta ${TAG}" \
+            --body "Release @evex/zeta ${TAG}.\n\nMerging this PR triggers the Publish workflow, which creates the ${TAG} tag and publishes to JSR."

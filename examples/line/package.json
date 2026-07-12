@@ -10,7 +10,7 @@
   "dependencies": {
     "@line/bot-sdk": "^11.1.0",
     "hono": "^4.12.27",
-    "zeta.js": "workspace:*"
+    "@evex/zeta": "workspace:*"
   },
   "devDependencies": {
     "@types/bun": "latest",

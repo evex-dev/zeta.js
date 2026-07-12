@@ -1,16 +1,18 @@
-# zeta.js
+# @evex/zeta
 
-Lightweight Bun + TypeScript API client for Zeta!
+TypeScript API client for Zeta. The library uses Web standard APIs such as
+`fetch`, `Headers`, `FormData`, and `ReadableStream`, so it can run on modern
+JavaScript runtimes without depending on Bun.
 
 ---
 
 ```ts
-import { ZetaClient } from "./src/index.ts";
+import { ZetaClient } from "@evex/zeta";
 
 const client = new ZetaClient({
-  token: Bun.env.TOKEN,
-  refreshToken: Bun.env.REFRESH_TOKEN,
-  deviceId: Bun.env.DEVICE_ID,
+  token: "<access-token>",
+  refreshToken: "<refresh-token>",
+  deviceId: "<device-id>",
   userLanguage: "ENGLISH",
   onTokenUpdate(tokens) {
     // Persist tokens wherever your application stores secrets.
@@ -29,6 +31,12 @@ for await (const event of stream) {
 
 await talk.delete();
 ```
+
+## Runtime requirements
+
+- A runtime with Web Fetch API support.
+- For older runtimes, pass a compatible `fetch` implementation with
+  `new ZetaClient({ fetch })`.
 
 ## Scripts
 

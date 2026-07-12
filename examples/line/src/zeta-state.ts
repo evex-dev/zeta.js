@@ -3,7 +3,7 @@ import {
   type Message as ZetaMessage,
   type Plot,
   type TokenPair,
-} from "zeta.js";
+} from "@evex/zeta";
 import {
   LineService,
   conversationIdFromSource,

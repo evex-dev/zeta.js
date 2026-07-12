@@ -1,4 +1,4 @@
-import type { ChatStreamEvent, Message, Talk, ZetaClient } from "zeta.js";
+import type { ChatStreamEvent, Message, Talk, ZetaClient } from "@evex/zeta";
 import { createConfiguredZetaClient, statePath } from "./config.ts";
 import { readState, writeState, type TranscriptEntry, type ZetaloopState } from "./state.ts";
 import { SideBySideRenderer } from "./terminal.ts";

@@ -1,4 +1,4 @@
-import type { Plot } from "zeta.js";
+import type { Plot } from "@evex/zeta";
 import { statePath, writeJsonFile } from "./config.ts";
 
 export type ZetaloopPlot = {

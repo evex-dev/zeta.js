@@ -1,0 +1,20 @@
+{
+  "$schema": "https://jsr.io/schema/config-file.v1.json",
+  "name": "@evex/zeta",
+  "version": "0.1.0",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "publish": {
+    "include": [
+      "index.ts",
+      "src/**/*.ts",
+      "README.md",
+      "LICENSE"
+    ],
+    "exclude": [
+      "**/*.test.ts",
+      "scripts/**"
+    ]
+  }
+}

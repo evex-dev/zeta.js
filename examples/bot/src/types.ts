@@ -1,4 +1,4 @@
-import type { Plot } from "zeta.js";
+import type { Plot } from "@evex/zeta";
 
 export type ChannelBinding = {
   channelId: string;

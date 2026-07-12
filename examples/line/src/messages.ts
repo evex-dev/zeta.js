@@ -4,7 +4,7 @@ import type {
   Message as ZetaMessage,
   Plot,
   TalkSpeakerProfile,
-} from "zeta.js";
+} from "@evex/zeta";
 import type { ConversationBinding, PlotPersona, TextSegment } from "./types.ts";
 
 export const MAX_LINE_MESSAGES = 5;

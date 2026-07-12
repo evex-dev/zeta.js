@@ -1,19 +1,18 @@
 {
-  "name": "zeta.js",
-  "module": "./index.ts",
-  "types": "./index.ts",
+  "name": "@evex/zeta",
+  "version": "0.1.0",
+  "description": "TypeScript API client for Zeta",
+  "license": "WTFPL",
+  "type": "module",
   "exports": {
     ".": "./index.ts"
   },
-  "type": "module",
   "scripts": {
     "test": "bun test",
-    "typecheck": "bun x tsc --noEmit"
+    "typecheck": "bun x tsc --noEmit",
+    "publish:check": "bunx jsr publish --dry-run --allow-slow-types --allow-dirty"
   },
   "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
     "typescript": "^5"
   }
 }

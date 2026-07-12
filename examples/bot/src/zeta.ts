@@ -1,5 +1,5 @@
 import { rename } from "node:fs/promises";
-import { ZetaClient, type TokenPair, type UserLanguage } from "zeta.js";
+import { ZetaClient, type TokenPair, type UserLanguage } from "@evex/zeta";
 
 type ZetaCredentialFile = {
   token: string;

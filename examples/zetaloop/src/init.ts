@@ -1,4 +1,4 @@
-import type { Plot, ZetaClient } from "zeta.js";
+import type { Plot, ZetaClient } from "@evex/zeta";
 import { createConfiguredZetaClient, statePath } from "./config.ts";
 import { makeInitialState, readState, statePlotFromApi, writeState } from "./state.ts";
 import { hasExactlyOneCharacter, plotDescription, plotIdOf, plotName, singleCharacterName, truncate } from "./text.ts";

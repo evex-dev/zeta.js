@@ -1,5 +1,5 @@
 import { type AutocompleteInteraction } from "discord.js";
-import type { ZetaClient } from "zeta.js";
+import type { ZetaClient } from "@evex/zeta";
 
 export async function handleKeywordAutocomplete(interaction: AutocompleteInteraction, zeta: ZetaClient): Promise<void> {
   if (interaction.commandName !== "zeta" || interaction.options.getSubcommand(false) !== "plot") {

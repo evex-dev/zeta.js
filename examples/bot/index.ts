@@ -6,7 +6,7 @@ import {
   type ApplicationCommand,
   type Interaction,
 } from "discord.js";
-import { ApiError } from "zeta.js";
+import { ApiError } from "@evex/zeta";
 import { handleKeywordAutocomplete } from "./src/autocomplete.ts";
 import { zetaCommand } from "./src/commands.ts";
 import { PlotLinkingService } from "./src/plotLinking.ts";

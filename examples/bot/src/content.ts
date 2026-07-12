@@ -1,4 +1,4 @@
-import type { ChatStreamEvent, Message, MessageContent, Plot, TalkSpeakerProfile } from "zeta.js";
+import type { ChatStreamEvent, Message, MessageContent, Plot, TalkSpeakerProfile } from "@evex/zeta";
 import type { PlotPersona } from "./types.ts";
 
 export type TextSegment = {

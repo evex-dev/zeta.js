@@ -4,7 +4,7 @@ import {
   type ButtonInteraction,
   type ChatInputCommandInteraction,
 } from "discord.js";
-import type { Plot, ZetaClient } from "zeta.js";
+import type { Plot, ZetaClient } from "@evex/zeta";
 import { plotDisplayName, plotPersona, speakerProfilesFromApi } from "./content.ts";
 import {
   buildPlotSearchResponse,

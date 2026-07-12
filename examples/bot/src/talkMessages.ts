@@ -2,7 +2,7 @@ import {
   type Client,
   type Message,
 } from "discord.js";
-import type { ChatStreamEvent, Message as ZetaMessage, ZetaClient } from "zeta.js";
+import type { ChatStreamEvent, Message as ZetaMessage, ZetaClient } from "@evex/zeta";
 import {
   messageToSegments,
   replaceDiscordUserMentions,

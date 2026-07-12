@@ -15,7 +15,7 @@ import {
   type Message,
   type TextBasedChannel,
 } from "discord.js";
-import type { Plot } from "zeta.js";
+import type { Plot } from "@evex/zeta";
 import { plotDisplayName, plotPersona, plotSearchDescription, replaceProfileNamePlaceholder, truncate } from "./content.ts";
 import type { ChannelBinding, PlotPersona } from "./types.ts";
 

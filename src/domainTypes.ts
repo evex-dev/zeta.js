@@ -259,7 +259,7 @@ export type Message = AnyData & {
   id?: string;
   messageId?: string;
   roomId?: string;
-  sender?: string;
+  sender?: string | { id?: string; type?: string; [key: string]: unknown };
   role?: string;
   type?: string;
   content?: string;

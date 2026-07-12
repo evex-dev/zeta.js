@@ -14,7 +14,7 @@ on:
 
 permissions:
   contents: write
-  id-token: write # Required by JSR for OIDC publishing and provenance.
+  actions: write
 
 jobs:
   bump-and-publish:
@@ -78,6 +78,9 @@ jobs:
           git tag "${TAG}"
           git push origin "HEAD:${GITHUB_REF_NAME}" "refs/tags/${TAG}"
 
-      - name: Publish to JSR
-        working-directory: packages/zeta.js
-        run: bunx jsr publish
+      - name: Dispatch publish workflow
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="v${{ steps.bump.outputs.version }}"
+          gh workflow run publish.yml --ref "${TAG}"

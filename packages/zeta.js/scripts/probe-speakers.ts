@@ -1,5 +1,5 @@
 import { rename } from "node:fs/promises";
-import { createZetaClient, type UserLanguage } from "../src/index.ts";
+import { createZetaClient, type UserLanguage } from "../index.ts";
 
 type ZetaCredentialFile = {
   token: string;

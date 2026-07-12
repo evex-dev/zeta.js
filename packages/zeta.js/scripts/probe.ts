@@ -1,4 +1,4 @@
-import { createZetaClient, type ApiResult, type UserLanguage } from "../src/index.ts";
+import { createZetaClient, type ApiResult, type UserLanguage } from "../index.ts";
 
 const token = Bun.env.TOKEN;
 const refreshToken = Bun.env.REFRESH_TOKEN;

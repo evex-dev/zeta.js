@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { BaseClient } from "./core/client.ts";
-import { createWebAnonymousClient, createZetaClient, LorebookResource, PlotResource, Talk, ZetaClient } from "./index.ts";
+import { createWebAnonymousClient, createZetaClient, LorebookResource, PlotResource, Talk, ZetaClient } from "../index.ts";
 
 describe("ZetaClient", () => {
   test("exposes object-oriented resource APIs", async () => {

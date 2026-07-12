@@ -1,10 +1,14 @@
 {
-  "name": "zeta.js",
-  "module": "index.ts",
+  "name": "zeta-api-workspace",
   "type": "module",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "examples/*"
+  ],
   "scripts": {
     "test": "bun test",
-    "typecheck": "bun x tsc --noEmit"
+    "typecheck": "bun x tsc -p packages/zeta.js/tsconfig.json --noEmit && bun x tsc -p examples/bot/tsconfig.json --noEmit && bun x tsc -p examples/line/tsconfig.json --noEmit && bun x tsc -p examples/zetaloop/tsconfig.json --noEmit && bun x tsc -p examples/voice/tsconfig.json --noEmit"
   },
   "devDependencies": {
     "@types/bun": "latest"

@@ -1,4 +1,4 @@
-import type { ChatStreamEvent, Message, MessageContent, Plot } from "../../../index.ts";
+import type { ChatStreamEvent, Message, MessageContent, Plot } from "zeta.js";
 
 export type TextSegment = {
   text: string;

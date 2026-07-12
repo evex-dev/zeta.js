@@ -1,4 +1,4 @@
-import { ApiError, createZetaClient, type PlotSearchQuery } from "../src/index.ts";
+import { ApiError, createZetaClient, type PlotSearchQuery } from "../index.ts";
 
 const client = createZetaClient({ userLanguage: "JAPANESE" });
 

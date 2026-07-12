@@ -1,4 +1,4 @@
-import { createZetaClient, ApiError, type ApiResult, type UserLanguage, type BaseClient } from "../src/index.ts";
+import { createZetaClient, ApiError, type ApiResult, type UserLanguage, type BaseClient } from "../index.ts";
 
 const client = createZetaClient({
   userLanguage: parseLanguage(Bun.env.USER_LANGUAGE),

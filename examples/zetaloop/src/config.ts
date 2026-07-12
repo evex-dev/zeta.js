@@ -1,6 +1,6 @@
 import { dirname } from "node:path";
 import { rename } from "node:fs/promises";
-import { ZetaClient, type TokenPair, type UserLanguage } from "../../../index.ts";
+import { ZetaClient, type TokenPair, type UserLanguage } from "zeta.js";
 
 export type ZetaCredentialFile = {
   token: string;

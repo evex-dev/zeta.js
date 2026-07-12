@@ -1,4 +1,4 @@
-import type { Plot } from "../../../index.ts";
+import type { Plot } from "zeta.js";
 import { statePath, writeJsonFile } from "./config.ts";
 
 export type ZetaloopPlot = {

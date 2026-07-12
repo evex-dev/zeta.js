@@ -3,7 +3,7 @@ import {
   type Message as ZetaMessage,
   type Plot,
   type TokenPair,
-} from "../../../index.ts";
+} from "zeta.js";
 import {
   LineService,
   conversationIdFromSource,

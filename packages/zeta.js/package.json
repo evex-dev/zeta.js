@@ -1,6 +1,6 @@
 {
   "name": "@evex/zeta",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Runtime-agnostic TypeScript API client for Zeta built on Web standard APIs.",
   "license": "WTFPL",
   "type": "module",

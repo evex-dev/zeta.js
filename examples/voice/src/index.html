@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f7f7f5" />
+    <title>Zeta Voice — 参加型オーディオドラマ</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="/" aria-label="Zeta Voice ホーム">
+          <span class="brand-mark"><i></i><i></i><i></i></span>
+          <span><strong>Zeta Voice</strong><small>INTERACTIVE AUDIO DRAMA</small></span>
+        </a>
+        <div class="top-actions">
+          <button id="plot-search-button" class="search-trigger" type="button">⌕ <span>プロット検索</span></button>
+          <button id="room-select-button" class="icon-button" type="button">▤ <span class="desktop-label">ルーム選択</span></button>
+          <button id="cast-button" class="icon-button" type="button" aria-label="声のキャスティングを開く">
+            <span aria-hidden="true">♬</span><span class="desktop-label">キャスティング</span>
+          </button>
+        </div>
+      </header>
+      <div class="connection-bar" aria-live="polite">
+        <span class="connection-label">接続状態</span>
+        <span id="zeta-status" class="connection-badge checking" title="Zeta認証を確認中"><i></i>Zeta <strong>確認中</strong></span>
+        <span id="voicevox-status" class="connection-badge checking" title="VOICEVOXを確認中"><i></i>VOICEVOX <strong>確認中</strong></span>
+        <button id="status-refresh" type="button" aria-label="接続状態を再確認">↻ 再確認</button>
+      </div>
+
+      <main>
+        <section id="story-context" class="story-context" hidden>
+          <img id="plot-image" class="plot-image" alt="" />
+          <div class="plot-copy">
+            <span class="section-label">CURRENT STORY</span>
+            <h1 id="story-title"></h1>
+            <p id="plot-description"></p>
+            <div id="character-list" class="character-list"></div>
+          </div>
+        </section>
+
+        <section class="player-card" aria-label="音声プレイヤー">
+          <div class="speaker-portrait" aria-hidden="true"><span id="speaker-initial">Z</span><div class="pulse-ring"></div></div>
+          <div class="player-copy">
+            <span class="player-kicker">STORY VOICE</span>
+            <strong id="play-status">物語を待っています</strong>
+            <div class="waveform" id="waveform" aria-hidden="true">
+              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+            </div>
+          </div>
+          <div class="player-actions">
+            <button id="pause-button" class="round-button" type="button" disabled aria-label="一時停止"><span>Ⅱ</span></button>
+            <button id="restart-button" class="round-button" type="button" disabled aria-label="最初から"><span>↺</span></button>
+          </div>
+        </section>
+
+        <section id="transcript" class="transcript" aria-live="polite" aria-label="物語">
+          <div id="empty-state" class="empty-state">
+            <div class="empty-icon">⌕</div>
+            <h1>物語を選んで始める</h1>
+            <p>新しいプロットを検索するか、既存のルームを選択してください。</p>
+            <button id="empty-search-button" type="button">プロット検索</button>
+            <button id="empty-room-button" type="button">ルーム選択</button>
+            <button id="sample-button" type="button">音声劇のサンプルを再生</button>
+          </div>
+        </section>
+      </main>
+
+      <footer class="composer-wrap">
+        <form id="composer" class="composer">
+          <textarea id="message-input" rows="1" placeholder="台詞や状況を入力…" aria-label="台詞や状況を入力"></textarea>
+          <div class="composer-row">
+            <div class="composer-tools">
+              <button id="mic-button" class="tool-button" type="button" aria-label="音声で入力"><span>●</span> 音声</button>
+              <button id="description-button" class="tool-button" type="button"><em>＊</em> 描写</button>
+            </div>
+            <div class="composer-submit">
+              <button id="continue-button" type="button">続きを聴く</button>
+              <span class="send-hint">Shift + Enter で送信</span>
+              <button id="send-button" type="submit" aria-label="送信" aria-keyshortcuts="Shift+Enter">↑</button>
+            </div>
+          </div>
+          <div id="recognition-actions" class="recognition-actions" hidden>
+            <span>音声をどう送りますか？</span>
+            <button type="submit">台詞として送る</button>
+            <button id="recognition-description" type="button">描写にする</button>
+          </div>
+        </form>
+        <p id="notice" class="notice">VOICEVOXを起動すると、キャラクターの声で再生できます。</p>
+      </footer>
+    </div>
+
+    <dialog id="cast-dialog" class="cast-dialog">
+      <form method="dialog" class="dialog-topbar"><button aria-label="閉じる">×</button></form>
+      <div class="dialog-content">
+        <p class="eyebrow"><span></span> VOICE CASTING</p>
+        <h2>この物語の声を決める</h2>
+        <p class="dialog-lead">声を選んで、あなただけのキャストをつくりましょう。</p>
+        <div id="cast-list" class="cast-list"><div class="loading-line">VOICEVOXを探しています…</div></div>
+        <fieldset class="narration-setting">
+          <legend>状況描写の扱い</legend>
+          <label><input type="radio" name="narration" value="read" checked /><span>読み上げる<small>すべてをナレーターが読みます</small></span></label>
+          <label><input type="radio" name="narration" value="effects" /><span>一部を演出に変換<small>沈黙やため息を「間」にします</small></span></label>
+          <label><input type="radio" name="narration" value="display" /><span>表示だけにする<small>描写は声にせず画面だけに残します</small></span></label>
+        </fieldset>
+        <button id="save-cast" class="primary-wide" type="button">このキャストで物語を始める <span>→</span></button>
+      </div>
+    </dialog>
+
+    <dialog id="room-dialog" class="room-dialog">
+      <form method="dialog" class="dialog-topbar"><button aria-label="閉じる">×</button></form>
+      <div class="search-content">
+        <span class="section-label">ROOM SELECT</span>
+        <h2>会話を再開する</h2>
+        <form id="room-open-form" class="room-open-form">
+          <input id="room-id" autocomplete="off" placeholder="ルームIDを直接入力" />
+          <button type="submit">開く</button>
+        </form>
+        <p id="room-status" class="search-status">既存のルームを読み込んでいます…</p>
+        <div id="room-results" class="room-results"></div>
+      </div>
+    </dialog>
+
+    <dialog id="search-dialog" class="search-dialog">
+      <form method="dialog" class="dialog-topbar"><button aria-label="閉じる">×</button></form>
+      <div class="search-content">
+        <span class="section-label">PLOT SEARCH</span>
+        <h2>物語を探す</h2>
+        <form id="plot-search-form" class="plot-search-form">
+          <input id="plot-search-input" type="search" placeholder="タイトル、キャラクター、キーワード" autocomplete="off" />
+          <button type="submit">検索</button>
+        </form>
+        <p id="search-status" class="search-status">キーワードでZetaのプロットを検索できます。</p>
+        <div id="plot-results" class="plot-results"></div>
+      </div>
+    </dialog>
+
+    <template id="message-template">
+      <article class="message">
+        <img class="message-avatar" alt="" />
+        <div class="message-content">
+          <div class="message-meta"><span class="message-role"></span><span class="message-time"></span></div>
+          <div class="message-body"></div>
+          <div class="message-actions">
+            <button class="replay-message" type="button">▶ もう一度聴く</button>
+            <label>話者 <select class="speaker-override"></select></label>
+          </div>
+        </div>
+      </article>
+    </template>
+    <script type="module" src="./app.ts"></script>
+  </body>
+</html>

@@ -31,6 +31,7 @@ import {
 export const DEFAULT_BASE_URL = "https://api.zeta-ai.io";
 const DEFAULT_CLIENT_VERSION = "3.39.14";
 const WEB_CLIENT_VERSION = "3.39.17";
+const IOS_APP_STORE_LOOKUP_URL = "https://itunes.apple.com/lookup?id=1619030760";
 
 export class BaseClient {
   readonly baseUrl: string;
@@ -63,7 +64,7 @@ export class BaseClient {
     });
 
     const clientType = options.clientType ?? "app";
-    const deviceType = options.deviceType ?? "android";
+    const deviceType = options.deviceType ?? "ios";
     const clientVersion = options.clientVersion ?? DEFAULT_CLIENT_VERSION;
     const nativeClientVersion = options.clientNativeVersion ?? clientVersion;
 
@@ -295,6 +296,26 @@ export function webClientOptions<T extends BaseClientOptions>(options: T = {} as
   };
 }
 
+export async function fetchLatestIosClientVersion(fetcher: FetchLike = fetch): Promise<string> {
+  const response = await fetcher(IOS_APP_STORE_LOOKUP_URL);
+  const data = await parseResponseBody(response);
+
+  if (!response.ok) {
+    throw toApiError(response, data, "App Store lookup request failed.");
+  }
+
+  const version = appStoreVersion(data);
+  if (!version) {
+    throw new ApiError("App Store lookup response did not include a Zeta app version.", {
+      code: "MissingAppStoreVersion",
+      data,
+      response,
+    });
+  }
+
+  return version;
+}
+
 export function interpolatePath(path: string, params: Record<string, string | number> = {}): string {
   return path.replace(/:([A-Za-z0-9_]+)/g, (match, key: string) => {
     const value = params[key];
@@ -303,6 +324,27 @@ export function interpolatePath(path: string, params: Record<string, string | nu
     }
     return encodeURIComponent(String(value));
   });
+}
+
+function appStoreVersion(data: unknown): string | undefined {
+  if (!data || typeof data !== "object") {
+    return undefined;
+  }
+
+  const results = (data as { results?: unknown }).results;
+  if (!Array.isArray(results)) {
+    return undefined;
+  }
+
+  for (const result of results) {
+    if (!result || typeof result !== "object") continue;
+    const version = (result as { version?: unknown }).version;
+    if (typeof version === "string" && version.trim()) {
+      return version.trim();
+    }
+  }
+
+  return undefined;
 }
 
 export function serializeQuery(query?: QueryParams): string {

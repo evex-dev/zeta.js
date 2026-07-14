@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { BaseClient, interpolatePath, serializeQuery, webClientOptions } from "./client.ts";
+import { BaseClient, fetchLatestIosClientVersion, interpolatePath, serializeQuery, webClientOptions } from "./client.ts";
 import { ApiError } from "./types.ts";
 
 describe("path and query helpers", () => {
@@ -25,6 +25,22 @@ describe("path and query helpers", () => {
 });
 
 describe("BaseClient request", () => {
+  test("defaults to iOS app headers", async () => {
+    const client = new BaseClient({
+      baseUrl: "https://example.test",
+      fetch: async (_url, init) => {
+        const headers = new Headers(init?.headers);
+        expect(headers.get("X-Client-Type")).toBe("app");
+        expect(headers.get("X-Device-Type")).toBe("ios");
+        expect(headers.get("X-Client-Version")).toBe("3.39.14");
+        expect(headers.get("X-Client-Native-Version")).toBe("3.39.14");
+        return jsonResponse({ ok: true });
+      },
+    });
+
+    await client.get("/v1/headers");
+  });
+
   test("injects authorization and JSON body", async () => {
     const calls: Array<{ url: string; init: RequestInit }> = [];
     const client = new BaseClient({
@@ -211,6 +227,18 @@ describe("BaseClient request", () => {
     });
 
     await client.startAnonymousSession();
+  });
+
+  test("fetches the latest iOS client version from the App Store lookup", async () => {
+    const version = await fetchLatestIosClientVersion(async (url) => {
+      expect(String(url)).toBe("https://itunes.apple.com/lookup?id=1619030760");
+      return jsonResponse({
+        resultCount: 1,
+        results: [{ version: "3.40.0" }],
+      });
+    });
+
+    expect(version).toBe("3.40.0");
   });
 
   test("uses single-flight refresh for concurrent 401 responses", async () => {

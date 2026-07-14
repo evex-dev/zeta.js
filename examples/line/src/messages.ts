@@ -121,6 +121,47 @@ export function buildPlotInfoMessage(
   };
 }
 
+export function buildSystemMessage(
+  title: string,
+  body?: string,
+  quickReply?: messagingApi.QuickReply,
+): messagingApi.FlexMessage {
+  const contents: messagingApi.FlexComponent[] = [
+    {
+      type: "text",
+      text: truncate(title, 120),
+      weight: "bold",
+      size: "md",
+      wrap: true,
+    },
+  ];
+
+  if (body?.trim()) {
+    contents.push({
+      type: "text",
+      text: truncate(body.trim(), 900),
+      size: "sm",
+      color: "#555555",
+      margin: "md",
+      wrap: true,
+    });
+  }
+
+  return {
+    type: "flex",
+    altText: title,
+    contents: {
+      type: "bubble",
+      body: {
+        type: "box",
+        layout: "vertical",
+        contents,
+      },
+    },
+    ...(quickReply ? { quickReply } : {}),
+  };
+}
+
 function buildPlotBubble(
   conversationId: string,
   plot: Plot,
@@ -218,12 +259,11 @@ export function buildUnlinkMessage(): messagingApi.FlexBubble {
   };
 }
 
-export function segmentsToCompactLineMessages(
+export function segmentsToTextLineMessages(
   binding: ConversationBinding,
   segments: TextSegment[],
   displayName: string,
-  altTitle: string,
-): messagingApi.Message[] {
+): messagingApi.TextMessage[] {
   const groups = groupAdjacentSegments(segments).filter((group) =>
     segmentsToText(group.segments),
   );
@@ -231,81 +271,25 @@ export function segmentsToCompactLineMessages(
     return [];
   }
 
-  return chunk(groups, 8)
-    .slice(0, MAX_LINE_MESSAGES)
-    .map((groupChunk, index) => {
-      const contents: messagingApi.FlexComponent[] = [];
-      for (const group of groupChunk) {
-        const rawText = segmentsToText(group.segments);
-        if (!rawText) continue;
+  return groups.map((group) => {
+    const rawText = segmentsToText(group.segments) ?? "";
+    const plotPersonaFallback = {
+      name: binding.plotName,
+      avatarUrl: binding.avatarUrl,
+    };
+    const persona = group.speakerName?.trim()
+      ? resolveSpeakerPersona(
+          group.speakerName,
+          binding.speakerProfiles,
+          plotPersonaFallback,
+          displayName,
+        )
+      : plotPersonaFallback;
 
-        const plotPersonaFallback = {
-          name: binding.plotName,
-          avatarUrl: binding.avatarUrl,
-        };
-        const persona = group.speakerName?.trim()
-          ? resolveSpeakerPersona(
-              group.speakerName,
-              binding.speakerProfiles,
-              plotPersonaFallback,
-              displayName,
-            )
-          : plotPersonaFallback;
-        const rowContents: messagingApi.FlexComponent[] = [];
-
-        if (persona.avatarUrl?.startsWith("https://")) {
-          rowContents.push({
-            type: "image",
-            url: persona.avatarUrl,
-            size: "xxs",
-            aspectRatio: "1:1",
-            aspectMode: "cover",
-            flex: 0,
-          });
-        }
-
-        rowContents.push({
-          type: "box",
-          layout: "vertical",
-          flex: 1,
-          contents: [
-            {
-              type: "text",
-              text: truncate(persona.name, 40),
-              weight: "bold",
-              size: "sm",
-              color: "#333333",
-              wrap: true,
-            },
-            ...richTextComponents(truncate(rawText, 900), {
-              size: "sm",
-              color: "#555555",
-            }),
-          ],
-        });
-        contents.push({
-          type: "box",
-          layout: "horizontal",
-          spacing: "sm",
-          margin: contents.length === 0 ? "none" : "lg",
-          contents: rowContents,
-        });
-      }
-
-      return {
-        type: "flex",
-        altText: index === 0 ? altTitle : `${altTitle} (${index + 1})`,
-        contents: {
-          type: "bubble",
-          body: {
-            type: "box",
-            layout: "vertical",
-            contents,
-          },
-        },
-        quickReply: unlinkQuickReply(),
-      };
+    return textMessage(removeMarkdownItalic(rawText), {
+      sender: lineSenderFromPersona(persona),
     });
+  });
 }
 
 export function textMessage(
@@ -331,6 +315,44 @@ export function unlinkQuickReply(): messagingApi.QuickReply {
   };
 }
 
+export function continuationQuickReply(
+  continuationId: string,
+  sentCount: number,
+  totalCount: number,
+): messagingApi.QuickReply {
+  return {
+    items: [
+      {
+        type: "action",
+        action: {
+          type: "postback",
+          label: `続き: ${sentCount}/${totalCount}`,
+          data: new URLSearchParams({
+            action: "continue",
+            continuationId,
+          }).toString(),
+          inputOption: "closeRichMenu",
+        },
+      },
+    ],
+  };
+}
+
+export function retryQuickReply(text: string): messagingApi.QuickReply {
+  return {
+    items: [
+      {
+        type: "action",
+        action: {
+          type: "message",
+          label: "再試行",
+          text: truncate(text, 300),
+        },
+      },
+    ],
+  };
+}
+
 export function recommendedQuickReply(
   keywords: string[],
 ): messagingApi.QuickReply {
@@ -346,45 +368,8 @@ export function recommendedQuickReply(
   };
 }
 
-function richTextComponents(
-  text: string,
-  options: Record<string, unknown> = {},
-): messagingApi.FlexText[] {
-  return text
-    .split(/\n+/)
-    .map((line) => line.trim())
-    .filter(Boolean)
-    .map((line) => richTextComponent(line, options));
-}
-
-function richTextComponent(
-  text: string,
-  options: Record<string, unknown> = {},
-): messagingApi.FlexText {
-  return {
-    type: "text",
-    wrap: true,
-    ...options,
-    contents: italicSpans(text),
-  };
-}
-
-function italicSpans(text: string): messagingApi.FlexSpan[] {
-  const spans: messagingApi.FlexSpan[] = [];
-  let cursor = 0;
-  const pattern = /\*([^*\n]+)\*/g;
-  for (const match of text.matchAll(pattern)) {
-    const index = match.index ?? 0;
-    if (index > cursor) {
-      spans.push({ type: "span", text: text.slice(cursor, index) });
-    }
-    spans.push({ type: "span", text: match[1] ?? "", style: "italic" });
-    cursor = index + match[0].length;
-  }
-  if (cursor < text.length) {
-    spans.push({ type: "span", text: text.slice(cursor) });
-  }
-  return spans.length > 0 ? spans : [{ type: "span", text }];
+function removeMarkdownItalic(text: string): string {
+  return text.replace(/\*([^*\n]+)\*/g, "$1");
 }
 
 export function plotDisplayName(plot: Plot): string {
@@ -538,6 +523,27 @@ function resolveSpeakerPersona(
   );
 }
 
+function lineSenderFromPersona(
+  persona: PlotPersona,
+): messagingApi.TextMessage["sender"] {
+  const sender: messagingApi.TextMessage["sender"] = {
+    name: truncate(sanitizeLineSenderName(persona.name), 20),
+  };
+  if (persona.avatarUrl?.startsWith("https://")) {
+    sender.iconUrl = persona.avatarUrl;
+  }
+  return sender;
+}
+
+function sanitizeLineSenderName(value: string): string {
+  const normalized = value
+    .normalize("NFKC")
+    .replace(/\bLINE\b/gi, "")
+    .replace(/\s+/g, " ")
+    .trim();
+  return normalized || "Zeta";
+}
+
 function groupAdjacentSegments(
   segments: TextSegment[],
 ): Array<{ speakerName?: string; segments: TextSegment[] }> {
@@ -597,12 +603,4 @@ export function firstText(
 export function truncate(value: string, maxLength: number): string {
   if (value.length <= maxLength) return value;
   return `${value.slice(0, Math.max(0, maxLength - 1))}…`;
-}
-
-function chunk<T>(items: T[], size: number): T[][] {
-  const chunks: T[][] = [];
-  for (let index = 0; index < items.length; index += size) {
-    chunks.push(items.slice(index, index + size));
-  }
-  return chunks;
 }

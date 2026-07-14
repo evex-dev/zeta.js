@@ -23,7 +23,7 @@ import type {
   UserListQuery,
 } from "./src/domainTypes.ts";
 
-export { BaseClient, DEFAULT_BASE_URL, interpolatePath, serializeQuery, webClientOptions } from "./src/core/client.ts";
+export { BaseClient, DEFAULT_BASE_URL, fetchLatestIosClientVersion, interpolatePath, serializeQuery, webClientOptions } from "./src/core/client.ts";
 export { ApiError } from "./src/core/types.ts";
 export type * from "./src/core/types.ts";
 export type * from "./src/core/stream.ts";

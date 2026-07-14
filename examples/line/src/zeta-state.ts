@@ -1,4 +1,5 @@
 import {
+  fetchLatestIosClientVersion,
   ZetaClient,
   type Message as ZetaMessage,
   type Plot,
@@ -12,9 +13,11 @@ import {
 import {
   MAX_FLEX_CAROUSEL_BUBBLES,
   MAX_LINE_MESSAGES,
+  buildSystemMessage,
   buildPlotCarouselMessage,
   buildPlotInfoMessage,
   buildUnlinkMessage,
+  continuationQuickReply,
   firstText,
   mergeSpeakerProfiles,
   messageToSegments,
@@ -22,11 +25,12 @@ import {
   plotPersona,
   readIntroMessages,
   recommendedQuickReply,
-  segmentsToCompactLineMessages,
+  retryQuickReply,
+  segmentsToTextLineMessages,
   speakerProfilesFromApi,
   speakerProfilesFromPlot,
   streamEventToSegments,
-  textMessage,
+  unlinkQuickReply,
   truncate,
 } from "./messages.ts";
 import type {
@@ -44,6 +48,16 @@ import type {
 const TOKENS_KEY = "zetaTokens";
 const BINDINGS_KEY = "bindings";
 const GROUP_LAST_BOT_MESSAGE_IDS_KEY = "groupLastBotMessageIds";
+const CONTINUATIONS_KEY = "continuations";
+const IOS_CLIENT_VERSION_KEY = "iosClientVersion";
+
+type ContinuationRecord = {
+  conversationId: string;
+  messages: Parameters<LineService["replyMessage"]>[1];
+  deliveredCount: number;
+  totalCount: number;
+  createdAt: string;
+};
 
 export class ZetaState {
   private queue: Promise<void> = Promise.resolve();
@@ -79,10 +93,22 @@ export class ZetaState {
         async (error) => {
           console.error("LINE event failed", describeError(error));
           if ("replyToken" in event && event.replyToken) {
+            const retryText =
+              event.source?.type === "user" &&
+              event.type === "message" &&
+              event.message.type === "text"
+                ? normalizeRetryText(event.message.text)
+                : undefined;
             await this.replyAndRemember(event.replyToken, event.source, [
-              textMessage(
-                "処理中にエラーが発生しました。もう一度お試しください。",
-              ),
+              {
+                ...buildSystemMessage(
+                  "処理中にエラーが発生しました",
+                  "もう一度お試しください。",
+                ),
+                ...(retryText
+                  ? { quickReply: retryQuickReply(retryText) }
+                  : {}),
+              },
             ]).catch(() => undefined);
           }
         },
@@ -119,8 +145,9 @@ export class ZetaState {
       if (event.replyToken) {
         await this.replyAndRemember(event.replyToken, event.source, [
           {
-            ...textMessage(
-              "こんにちは。使いたいプロット名やキーワードを送ってください。",
+            ...buildSystemMessage(
+              "友だち追加ありがとうございます!",
+              "まずは使いたいプロット名やキーワードを送ってください。検索結果から選択するとチャットを始められます。",
             ),
             quickReply: recommendedQuickReply(await this.getRecommendations()),
           },
@@ -181,7 +208,10 @@ export class ZetaState {
     const text = stripBotMentions(message, botUserId).trim();
     if (!text) {
       await this.replyAndRemember(replyToken, source, [
-        textMessage("メンションに続けてメッセージを入力してください。"),
+        buildSystemMessage(
+          "メッセージを入力してください",
+          "メンションに続けて内容を送ってください。",
+        ),
       ]);
       return;
     }
@@ -248,12 +278,23 @@ export class ZetaState {
 
     const data = new URLSearchParams(event.postback.data ?? "");
     const action = data.get("action");
+    if (action === "continue") {
+      await this.replyContinuation(
+        event.replyToken,
+        source,
+        conversationId,
+        data.get("continuationId"),
+      );
+      return;
+    }
+
     if (action === "unlink") {
       await this.unlink(conversationId);
       await this.replyAndRemember(event.replyToken, source, [
         {
-          ...textMessage(
-            "プロットとの紐づけを解除しました。次のメッセージでまた検索できます。",
+          ...buildSystemMessage(
+            "紐づけを解除しました",
+            "次のメッセージでまた検索できます。",
           ),
           quickReply: recommendedQuickReply(await this.getRecommendations()),
         },
@@ -269,8 +310,9 @@ export class ZetaState {
     if (!plotId) {
       await this.replyAndRemember(event.replyToken, source, [
         {
-          ...textMessage(
-            "選択したプロットIDを取得できませんでした。もう一度検索してください。",
+          ...buildSystemMessage(
+            "プロットを選択できませんでした",
+            "もう一度検索してください。",
           ),
           quickReply: recommendedQuickReply(await this.getRecommendations()),
         },
@@ -314,7 +356,8 @@ export class ZetaState {
     if (plots.length === 0) {
       await this.replyAndRemember(replyToken, source, [
         {
-          ...textMessage(
+          ...buildSystemMessage(
+            "プロットが見つかりませんでした",
             `「${keyword}」に合うプロットが見つかりませんでした。別のキーワードで試してください。`,
           ),
           quickReply: recommendedQuickReply(await this.getRecommendations()),
@@ -429,22 +472,16 @@ export class ZetaState {
     const intros = await this.collectIntroMessages(zeta, talk.id);
     const introSegments = intros.flatMap((intro) => messageToSegments(intro));
     const messages = [
-      textMessage(
-        `「${plotName}」に紐づけました。${source?.type === "user" ? "このまま話しかけてください。" : "以降はBotへのメンション付きメッセージか、Botのメッセージへのリプライを送ってください。"}`,
+      buildSystemMessage(
+        `「${plotName}」に紐づけました`,
+        source?.type === "user"
+          ? "このまま話しかけてください。"
+          : "以降はBotへのメンション付きメッセージか、Botのメッセージへのリプライを送ってください。",
       ),
       ...(plot ? [buildPlotInfoMessage(plot, displayName)] : []),
-      ...segmentsToCompactLineMessages(
-        binding,
-        introSegments,
-        displayName,
-        plotName,
-      ).slice(0, plot ? 3 : 4),
+      ...segmentsToTextLineMessages(binding, introSegments, displayName),
     ];
-    await this.replyAndRemember(
-      replyToken,
-      source,
-      messages.slice(0, MAX_LINE_MESSAGES),
-    );
+    await this.replyAndRemember(replyToken, source, messages, conversationId);
   }
 
   private async replyFromTalk(
@@ -487,24 +524,19 @@ export class ZetaState {
 
     const replySegments =
       completedSegments.length > 0 ? completedSegments : latestSegments;
-    const messages = segmentsToCompactLineMessages(
+    const messages = segmentsToTextLineMessages(
       binding,
       replySegments,
       displayName,
-      binding.plotName,
     );
     if (messages.length === 0) {
       await this.replyAndRemember(replyToken, source, [
-        textMessage("Zetaが空の応答を返しました。"),
+        buildSystemMessage("Zetaが空の応答を返しました"),
       ]);
       return;
     }
 
-    await this.replyAndRemember(
-      replyToken,
-      source,
-      messages.slice(0, MAX_LINE_MESSAGES),
-    );
+    await this.replyAndRemember(replyToken, source, messages, conversationId);
   }
 
   private async ensureSpeakerProfiles(
@@ -603,6 +635,7 @@ export class ZetaState {
     const accessToken = stored?.accessToken;
     const refreshToken = stored?.refreshToken;
     const deviceId = stored?.deviceId;
+    const clientVersion = await this.latestIosClientVersion();
 
     if (!accessToken && !refreshToken) {
       throw new Error("ZETA_ACCESS_TOKEN or stored Zeta token is required.");
@@ -612,11 +645,26 @@ export class ZetaState {
       token: accessToken,
       refreshToken,
       deviceId,
+      deviceType: "ios",
+      clientVersion,
+      clientNativeVersion: clientVersion,
       fetch: (input, init) => fetch(input, init),
       userLanguage: "JAPANESE",
       onTokenUpdate: async (tokens) => this.updateZetaTokens(tokens, deviceId),
     });
     return this.zeta;
+  }
+
+  private async latestIosClientVersion(): Promise<string | undefined> {
+    const cached = await this.state.storage.get<string>(IOS_CLIENT_VERSION_KEY);
+    const version = await fetchLatestIosClientVersion((input, init) =>
+      fetch(input, init),
+    ).catch(() => undefined);
+    if (version) {
+      await this.state.storage.put(IOS_CLIENT_VERSION_KEY, version);
+      return version;
+    }
+    return cached;
   }
 
   private async updateZetaTokens(
@@ -708,9 +756,147 @@ export class ZetaState {
     replyToken: string,
     source: LineSource | undefined,
     messages: Parameters<LineService["replyMessage"]>[1],
+    conversationId = conversationIdFromSource(source),
+    alreadyDeliveredCount = 0,
+    totalMessageCount = messages.length,
   ): Promise<void> {
-    const sentMessageIds = await this.line.replyMessage(replyToken, messages);
+    const messagesToSend = await this.prepareMessagesPage(
+      conversationId,
+      messages,
+      alreadyDeliveredCount,
+      totalMessageCount,
+    );
+    await this.withUnlinkQuickReply(conversationId, messagesToSend);
+    const sentMessageIds = await this.line.replyMessage(
+      replyToken,
+      messagesToSend,
+    );
     await this.rememberLastGroupBotMessageId(source, sentMessageIds.at(-1));
+  }
+
+  private async replyContinuation(
+    replyToken: string,
+    source: LineSource | undefined,
+    conversationId: string,
+    continuationId: string | null,
+  ): Promise<void> {
+    if (!continuationId) {
+      await this.replyAndRemember(replyToken, source, [
+        buildSystemMessage("続きが見つかりませんでした"),
+      ]);
+      return;
+    }
+
+    const continuations = await this.getContinuations();
+    const continuation = continuations[continuationId];
+    if (!continuation || continuation.conversationId !== conversationId) {
+      await this.replyAndRemember(replyToken, source, [
+        buildSystemMessage("続きが見つかりませんでした"),
+      ]);
+      return;
+    }
+
+    delete continuations[continuationId];
+    await this.state.storage.put(CONTINUATIONS_KEY, continuations);
+    await this.replyAndRemember(
+      replyToken,
+      source,
+      continuation.messages,
+      conversationId,
+      continuation.deliveredCount,
+      continuation.totalCount,
+    );
+  }
+
+  private async prepareMessagesPage(
+    conversationId: string | undefined,
+    messages: Parameters<LineService["replyMessage"]>[1],
+    alreadyDeliveredCount = 0,
+    totalMessageCount = messages.length,
+  ): Promise<Parameters<LineService["replyMessage"]>[1]> {
+    if (messages.length <= MAX_LINE_MESSAGES || !conversationId) {
+      return messages.slice(0, MAX_LINE_MESSAGES);
+    }
+
+    const firstPage = messages.slice(0, MAX_LINE_MESSAGES);
+    const rest = messages.slice(MAX_LINE_MESSAGES);
+    const deliveredCount = alreadyDeliveredCount + firstPage.length;
+    const continuationId = crypto.randomUUID();
+    const continuations = await this.getContinuations();
+    continuations[continuationId] = {
+      conversationId,
+      messages: rest,
+      deliveredCount,
+      totalCount: totalMessageCount,
+      createdAt: new Date().toISOString(),
+    };
+    await this.state.storage.put(CONTINUATIONS_KEY, continuations);
+
+    const last = firstPage.at(-1);
+    if (last) {
+      const continuationQuickReplyItems =
+        continuationQuickReply(
+          continuationId,
+          deliveredCount,
+          totalMessageCount,
+        ).items ?? [];
+      last.quickReply = {
+        items: [
+          ...(last.quickReply?.items ?? []),
+          ...continuationQuickReplyItems,
+        ].slice(0, 13),
+      };
+    }
+    return firstPage;
+  }
+
+  private async withUnlinkQuickReply(
+    conversationId: string | undefined,
+    messages: Parameters<LineService["replyMessage"]>[1],
+  ): Promise<void> {
+    if (!conversationId) {
+      return;
+    }
+
+    const bindings = await this.getBindings();
+    if (!bindings[conversationId]) {
+      return;
+    }
+
+    const last = messages.at(-1);
+    if (!last) {
+      return;
+    }
+
+    if (hasUnlinkQuickReply(last)) {
+      return;
+    }
+
+    const unlinkItems = unlinkQuickReply().items ?? [];
+    last.quickReply = {
+      items: [...(last.quickReply?.items ?? []), ...unlinkItems].slice(0, 13),
+    };
+  }
+
+  private async getContinuations(): Promise<
+    Record<string, ContinuationRecord>
+  > {
+    const continuations =
+      (await this.state.storage.get<Record<string, ContinuationRecord>>(
+        CONTINUATIONS_KEY,
+      )) ?? {};
+    const cutoff = Date.now() - 15 * 60 * 1000;
+    let changed = false;
+    for (const [id, continuation] of Object.entries(continuations)) {
+      if (Date.parse(continuation.createdAt) < cutoff) {
+        delete continuations[id];
+        changed = true;
+      }
+    }
+    if (changed) {
+      await this.state.storage.put(CONTINUATIONS_KEY, continuations);
+    }
+    return continuations;
   }
 
   private async rememberLastGroupBotMessageId(
@@ -830,6 +1016,24 @@ function stripBotMentions(
   }
 
   return text.replace(/\s+/g, " ").trim();
+}
+
+function normalizeRetryText(text: string): string {
+  const retryText = text.replace(/\s+/g, " ").trim();
+  return retryText;
+}
+
+function hasUnlinkQuickReply(
+  message: Parameters<LineService["replyMessage"]>[1][number],
+): boolean {
+  return (message.quickReply?.items ?? []).some((item) => {
+    const action = item.action;
+    return (
+      action?.type === "postback" &&
+      typeof action.data === "string" &&
+      new URLSearchParams(action.data).get("action") === "unlink"
+    );
+  });
 }
 
 function sanitizeZetaChatProfileName(value: string): string {

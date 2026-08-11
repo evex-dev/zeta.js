@@ -1016,6 +1016,7 @@ export type CoinExpiration = AnyData & {
 export type CoinExpirationsResponse = CursorList<CoinExpiration, "expirations">;
 
 export type CoinDailyRewardResponse = AnyData & {
+  success?: boolean;
   amount?: number;
   claimed?: boolean;
   leftAttempts?: number;

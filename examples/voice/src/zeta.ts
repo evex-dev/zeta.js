@@ -1,4 +1,13 @@
-import { ZetaClient, type ChatStreamEvent, type Message, type Plot, type Room, type TalkSpeakerProfile, type TokenPair } from "@evex/zeta";
+import {
+  fetchLatestIosClientVersion,
+  ZetaClient,
+  type ChatStreamEvent,
+  type Message,
+  type Plot,
+  type Room,
+  type TalkSpeakerProfile,
+  type TokenPair,
+} from "@evex/zeta";
 import type { SpeechSegment } from "./types.ts";
 
 type Credentials = { token: string; refreshToken?: string; deviceId?: string };
@@ -248,13 +257,21 @@ function isoDate(value: string | Date | undefined): string | undefined {
 
 async function createClient(): Promise<ZetaClient> {
   const credentials = await readCredentials();
+  const clientVersion = await latestIosClientVersion();
   return new ZetaClient({
     token: credentials.token,
     refreshToken: credentials.refreshToken,
     deviceId: credentials.deviceId,
+    deviceType: "ios",
+    clientVersion,
+    clientNativeVersion: clientVersion,
     userLanguage: "JAPANESE",
     onTokenUpdate: async (tokens) => persistTokens(credentials, tokens),
   });
+}
+
+async function latestIosClientVersion(): Promise<string | undefined> {
+  return await fetchLatestIosClientVersion().catch(() => undefined);
 }
 
 async function readCredentials(): Promise<Credentials> {

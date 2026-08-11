@@ -1,6 +1,11 @@
 import { dirname } from "node:path";
 import { rename } from "node:fs/promises";
-import { ZetaClient, type TokenPair, type UserLanguage } from "@evex/zeta";
+import {
+  fetchLatestIosClientVersion,
+  ZetaClient,
+  type TokenPair,
+  type UserLanguage,
+} from "@evex/zeta";
 
 export type ZetaCredentialFile = {
   token: string;
@@ -13,11 +18,15 @@ export const statePath = Bun.env.ZETALOOP_STATE ?? "data/state.json";
 
 export async function createConfiguredZetaClient(configPath = credentialPath): Promise<ZetaClient> {
   const credentials = await readCredentials(configPath);
+  const clientVersion = await latestIosClientVersion();
 
   return new ZetaClient({
     token: credentials.token,
     refreshToken: credentials.refresh_token,
     deviceId: credentials.device_id,
+    deviceType: "ios",
+    clientVersion,
+    clientNativeVersion: clientVersion,
     userLanguage: languageFromEnv(),
     onTokenUpdate: async (tokens) => {
       await writeCredentials(configPath, credentials, tokens);
@@ -65,4 +74,8 @@ function languageFromEnv(): UserLanguage {
     return value;
   }
   return "JAPANESE";
+}
+
+async function latestIosClientVersion(): Promise<string | undefined> {
+  return await fetchLatestIosClientVersion().catch(() => undefined);
 }

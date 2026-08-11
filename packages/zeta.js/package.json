@@ -12,6 +12,7 @@
     ".": "./index.ts"
   },
   "scripts": {
+    "dailyclaim": "bun scripts/dailyclaim.ts",
     "test": "bun test",
     "typecheck": "bun x tsc --noEmit",
     "fix:slow-types": "bun scripts/annotate-public-types.ts",

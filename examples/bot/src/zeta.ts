@@ -1,5 +1,10 @@
 import { rename } from "node:fs/promises";
-import { ZetaClient, type TokenPair, type UserLanguage } from "@evex/zeta";
+import {
+  fetchLatestIosClientVersion,
+  ZetaClient,
+  type TokenPair,
+  type UserLanguage,
+} from "@evex/zeta";
 
 type ZetaCredentialFile = {
   token: string;
@@ -9,11 +14,15 @@ type ZetaCredentialFile = {
 
 export async function createConfiguredZetaClient(configPath = "data/zeta.json"): Promise<ZetaClient> {
   const credentials = await readCredentials(configPath);
+  const clientVersion = await latestIosClientVersion();
 
   return new ZetaClient({
     token: credentials.token,
     refreshToken: credentials.refresh_token,
     deviceId: credentials.device_id,
+    deviceType: "ios",
+    clientVersion,
+    clientNativeVersion: clientVersion,
     userLanguage: "JAPANESE",
     onTokenUpdate: async (tokens) => {
       await writeCredentials(configPath, credentials, tokens);
@@ -43,4 +52,8 @@ async function writeCredentials(path: string, previous: ZetaCredentialFile, toke
 
   previous.token = next.token;
   previous.refresh_token = next.refresh_token;
+}
+
+async function latestIosClientVersion(): Promise<string | undefined> {
+  return await fetchLatestIosClientVersion().catch(() => undefined);
 }

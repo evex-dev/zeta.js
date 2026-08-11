@@ -17,6 +17,9 @@ type HistoryMessage = { id: string; direction: "user" | "assistant"; text: strin
 type RoomView = { roomId: string; plot: PlotView; characters: CharacterView[]; messages: HistoryMessage[] };
 type RoomSummary = { roomId: string; plot: PlotView; lastMessage?: string; updatedAt?: string };
 type ConnectionInfo = { state: "connected" | "not_configured" | "error"; label: string; detail?: string };
+type PreparedSpeech =
+  | { ok: true; block: SpeechBlock; member: CastMember; blob: Blob }
+  | { ok: false; block: SpeechBlock; member: CastMember; error: unknown };
 
 const $ = <T extends Element>(selector: string) => document.querySelector<T>(selector)!;
 const roomInput = $("#room-id") as HTMLInputElement;
@@ -50,6 +53,8 @@ let narrationMode: NarrationMode = "read";
 let assistantMessages: StoryMessage[] = [];
 let latestTurnMessages: StoryMessage[] = [];
 let submitting = false;
+let revealGeneration = 0;
+const pendingRevealPlaceholders = new Set<StoryMessage>();
 
 class AudioVisualizer {
   private context?: AudioContext;
@@ -126,26 +131,37 @@ class DramaPlayer {
   private last?: { message: StoryMessage; blocks: SpeechBlock[] };
 
   async play(message: StoryMessage, blocks: SpeechBlock[], remember = true): Promise<void> {
-    await this.stop(false);
-    const generation = ++this.generation;
-    this.paused = false;
-    if (remember) this.last = { message, blocks };
-    pauseButton.disabled = false;
-    restartButton.disabled = false;
+    const prepared = await this.prepare(message, blocks);
+    await this.playPrepared(message, prepared, remember);
+  }
 
+  async prepare(message: StoryMessage, blocks: SpeechBlock[]): Promise<PreparedSpeech[]> {
     const selected = message.override === "off" ? [] : blocks;
-    if (selected.length > 0) setPlayerState("preparing", "声を準備しています…", "Zeta");
-    const prepared = selected.map((block) => {
+    if (selected.length === 0) return [];
+    setPlayerState("preparing", "音声を生成しています…", "Zeta");
+    return await Promise.all(selected.map((block) => {
       const member = resolveCast(block, message.override);
       return this.fetchSpeech(message, block, member).then(
         (blob) => ({ ok: true as const, block, member, blob }),
         (error: unknown) => ({ ok: false as const, block, member, error }),
       );
-    });
+    }));
+  }
 
-    for (const pending of prepared) {
-      if (generation !== this.generation) return;
-      const speech = await pending;
+  async playPrepared(message: StoryMessage, prepared: PreparedSpeech[], remember = true): Promise<void> {
+    await this.stop(false);
+    const generation = ++this.generation;
+    this.paused = false;
+    if (remember) {
+      this.last = {
+        message,
+        blocks: prepared.map((speech) => speech.block),
+      };
+    }
+    pauseButton.disabled = false;
+    restartButton.disabled = false;
+
+    for (const speech of prepared) {
       if (generation !== this.generation) return;
       if (!speech.ok) {
         showNotice(`${speech.member.label}の音声を準備できません: ${errorMessage(speech.error)}`, true);
@@ -396,6 +412,8 @@ async function submit(rawText: string): Promise<void> {
   }
 
   submitting = true;
+  cancelPendingReveal();
+  const revealId = ++revealGeneration;
   input.value = "";
   syncDescriptionButton();
   recognitionActions.hidden = true;
@@ -404,6 +422,7 @@ async function submit(rawText: string): Promise<void> {
   appendMessage("user", text, crypto.randomUUID());
   const assistant = appendMessage("assistant", "", crypto.randomUUID());
   assistant.element.classList.add("streaming");
+  renderGeneratingMessage(assistant, "生成中");
   setPlayerState("preparing", "物語の続きを紡いでいます…", "Zeta");
 
   try {
@@ -420,17 +439,15 @@ async function submit(rawText: string): Promise<void> {
         if (Array.isArray(update.segments)) {
           assistant.segments = update.segments as SpeechSegment[];
           assistant.speakerName = assistant.segments.find((segment) => segment.speakerName)?.speakerName;
-          updateMessageIdentity(assistant, "assistant");
         }
-        renderMessageBody(assistant.element.querySelector(".message-body") as HTMLElement, assistant.text);
       }
     });
     if (!assistant.text) throw new Error("Zetaから空の応答が返りました");
     assistant.element.classList.remove("streaming");
-    replaceAssistantWithUnits(assistant);
-    replayLatestTurn();
+    void revealAssistantByGeneratedUnit(assistant, revealId);
   } catch (error) {
     assistant.element.remove();
+    pendingRevealPlaceholders.delete(assistant);
     assistantMessages = assistantMessages.filter((item) => item !== assistant);
     latestTurnMessages = latestTurnMessages.filter((item) => item !== assistant);
     refreshReplayButton();
@@ -439,6 +456,17 @@ async function submit(rawText: string): Promise<void> {
   } finally {
     submitting = false;
   }
+}
+
+function cancelPendingReveal(): void {
+  revealGeneration += 1;
+  for (const message of pendingRevealPlaceholders) {
+    message.element.remove();
+    assistantMessages = assistantMessages.filter((item) => item !== message);
+    latestTurnMessages = latestTurnMessages.filter((item) => item !== message);
+  }
+  pendingRevealPlaceholders.clear();
+  refreshReplayButton();
 }
 
 function appendMessage(role: "user" | "assistant", text: string, id: string, options: { speakerName?: string; createdAt?: string; segments?: SpeechSegment[] } = {}): StoryMessage {
@@ -507,6 +535,56 @@ function appendAssistantBubbles(id: string, segments: SpeechSegment[], createdAt
   return messages;
 }
 
+async function revealAssistantByGeneratedUnit(message: StoryMessage, revealId: number): Promise<void> {
+  const segments = message.segments?.length
+    ? message.segments
+    : [{ text: message.text, speakerName: message.speakerName ?? characterNames[0], position: "LEFT" }];
+  const groups = groupSpeechSegmentsForDisplay(segments);
+  let placeholderVisible = true;
+  pendingRevealPlaceholders.add(message);
+
+  for (const [index, group] of groups.entries()) {
+    if (revealId !== revealGeneration) return;
+    const text = group.map((segment) => segment.text).join("\n");
+    const draft = {
+      ...message,
+      id: `${message.id}:${index + 1}`,
+      text,
+      speakerName: group[0]?.speakerName,
+      segments: group,
+      override: "auto",
+    };
+    const prepared = await dramaPlayer.prepare(draft, speechBlocksForMessage(draft));
+    if (revealId !== revealGeneration) return;
+
+    if (placeholderVisible) {
+      message.element.remove();
+      assistantMessages = assistantMessages.filter((item) => item !== message);
+      latestTurnMessages = latestTurnMessages.filter((item) => item !== message);
+      pendingRevealPlaceholders.delete(message);
+      placeholderVisible = false;
+    }
+
+    const unit = appendAssistantBubble(draft.id, group);
+    await dramaPlayer.playPrepared(unit, prepared);
+    if (revealId !== revealGeneration) return;
+  }
+  pendingRevealPlaceholders.delete(message);
+  refreshReplayButton();
+}
+
+function appendAssistantBubble(id: string, segments: SpeechSegment[], createdAt?: string): StoryMessage {
+  const text = segments.map((segment) => segment.text).join("\n");
+  const message = appendMessage("assistant", text, id, {
+    speakerName: segments[0]?.speakerName,
+    createdAt,
+    segments,
+  });
+  updateMessageActions(message);
+  refreshReplayButton();
+  return message;
+}
+
 function refreshReplayButton(): void {
   for (const message of assistantMessages) {
     const button = message.element.querySelector(".replay-message") as HTMLButtonElement | null;
@@ -558,6 +636,13 @@ function renderMessageBody(element: HTMLElement, markdown: string): void {
     em.textContent = part.text;
     element.appendChild(em);
   }
+}
+
+function renderGeneratingMessage(message: StoryMessage, label: string): void {
+  message.element.classList.add("generating");
+  pendingRevealPlaceholders.add(message);
+  const body = message.element.querySelector(".message-body") as HTMLElement;
+  body.textContent = label;
 }
 
 function updateMessageActions(message: StoryMessage): void {

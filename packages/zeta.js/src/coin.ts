@@ -18,6 +18,20 @@ import type {
   StorePurchaseResponse,
   StoreProductsResponse,
 } from "./domainTypes.ts";
+
+export type DailyRewardClaimAttempt = {
+  index: number;
+  reward: CoinDailyRewardResponse;
+};
+
+export type DailyRewardsClaimSummary = {
+  leftAttemptsBefore: number;
+  claimed: number;
+  attempts: DailyRewardClaimAttempt[];
+  balance: CoinBalance;
+  leftAttemptsAfter: number;
+};
+
 export class CoinApi {
   constructor(private readonly client: BaseClient) {}
 
@@ -39,6 +53,38 @@ export class CoinApi {
 
   claimDailyReward(body?: CoinDailyRewardRequest): Promise<ApiResult<CoinDailyRewardResponse>> {
     return this.client.post<CoinDailyRewardResponse, CoinDailyRewardRequest | undefined>("/v1/coin/daily-rewards", body);
+  }
+
+  async claimDailyRewards(body: CoinDailyRewardRequest = {}): Promise<DailyRewardsClaimSummary> {
+    const left = await this.getDailyRewardLeftAttempts();
+    const leftAttemptsBefore = numberValue(left.data.leftAttempts ?? left.data.attempts);
+
+    let claimed = 0;
+    const attempts: DailyRewardClaimAttempt[] = [];
+
+    for (let index = 0; index < leftAttemptsBefore; index += 1) {
+      const reward = await this.claimDailyReward(body);
+      attempts.push({ index, reward: reward.data });
+
+      if (reward.data.success === false) {
+        break;
+      }
+
+      if (reward.data.success === true || reward.data.claimed === true) {
+        claimed += 1;
+      }
+    }
+
+    const balance = await this.getBalance();
+    const leftAfter = await this.getDailyRewardLeftAttempts();
+
+    return {
+      leftAttemptsBefore,
+      claimed,
+      attempts,
+      balance: balance.data,
+      leftAttemptsAfter: numberValue(leftAfter.data.leftAttempts ?? leftAfter.data.attempts),
+    };
   }
 
   getDailyRewardLeftAttempts(): Promise<ApiResult<AttemptsResponse>> {
@@ -92,4 +138,9 @@ export class CoinApi {
 
 export function createCoinApi(client: BaseClient): CoinApi {
   return new CoinApi(client);
+}
+
+function numberValue(value: unknown): number {
+  const number = typeof value === "number" ? value : Number(value ?? 0);
+  return Number.isFinite(number) && number > 0 ? Math.trunc(number) : 0;
 }

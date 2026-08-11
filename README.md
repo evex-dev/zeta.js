@@ -33,6 +33,19 @@ for await (const event of stream) {
 await talk.delete();
 ```
 
+Claim all available daily coin rewards:
+
+```ts
+const summary = await client.coin.claimDailyRewards();
+console.log(summary.claimed, summary.balance, summary.leftAttemptsAfter);
+```
+
+Or run the CLI port of `zeta_dailyclaim.py`:
+
+```bash
+ZETA_TOKEN='eyJ...' bun run dailyclaim
+```
+
 ## Runtime requirements
 
 - Node.js 18+.

@@ -115,10 +115,12 @@ export class CoinApi {
     return this.client.get<PaymentMethodResponse>("/v1/coin/auto-payment/settings/payment-method");
   }
 
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
   listCoinProducts(query?: StoreProductQuery): Promise<ApiResult<CoinProductsResponse>> {
     return this.client.get<CoinProductsResponse>("/v1/coin-products", { query });
   }
 
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
   purchaseCoinProduct(productId: string, body?: CoinPurchaseRequest): Promise<ApiResult<StorePurchaseResponse>> {
     return this.client.post<StorePurchaseResponse, CoinPurchaseRequest | undefined>("/v1/coin-products/:productId/purchases", body, { path: { productId } });
   }

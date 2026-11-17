@@ -1,5 +1,8 @@
 import type { BaseClient } from "./core/client.ts";
-import type { ApiResult } from "./core/types.ts";
+import type { ApiResult, JsonObject, RequestOptions } from "./core/types.ts";
+import type { StreamEvent } from "./core/stream.ts";
+import type { ChatStreamEvent } from "./chatTypes.ts";
+import type { SnapshotDto } from "./generated/dtos.ts";
 import { ApiError } from "./core/types.ts";
 import type {
   AppendPlotImagesRequest,
@@ -105,7 +108,7 @@ export class PlotResource {
     return this.api.listSimilarPlots(this.id, query);
   }
 
-  getLikes(): Promise<ApiResult<PlotLikeState>> {
+  getLikes(): Promise<ApiResult<SnapshotDto<"PlotLikeSummaryResponseV2">>> {
     return this.api.getPlotLikes(this.id);
   }
 
@@ -138,7 +141,7 @@ export class PlotResource {
     return this.api.listAboutImages(this.id, query);
   }
 
-  appendAboutImages(body?: AppendPlotImagesRequest): Promise<ApiResult<PlotImageListResponse>> {
+  appendAboutImages(body: MultipartImageBody): Promise<ApiResult<SnapshotDto<"AppendPlotAboutImagesResponse">>> {
     return this.api.appendAboutImages(this.id, body);
   }
 
@@ -170,15 +173,15 @@ export class PlotResource {
     return this.api.previewAllCharacterImages(this.id, query);
   }
 
-  createCharacterImage(characterId: string, body?: ImageCreatorRequest): Promise<ApiResult<PlotImageListResponse>> {
-    return this.api.createCharacterImage(this.id, characterId, body);
+  createCharacterImage(characterId: string, query?: ImageHistoryQuery): Promise<ApiResult<PlotImageListResponse>> {
+    return this.api.listCharacterImagesForCreator(this.id, characterId, query);
   }
 
-  cropCharacterImage(characterId: string, body?: ImageCropRequest): Promise<ApiResult<PlotImageListResponse>> {
+  cropCharacterImage(characterId: string, body?: ImageCropRequest): Promise<ApiResult<SnapshotDto<"CropImageResponse">>> {
     return this.api.cropCharacterImage(this.id, characterId, body);
   }
 
-  uploadOriginalCharacterImage(characterId: string, body: MultipartImageBody): Promise<ApiResult<PlotImageListResponse>> {
+  uploadOriginalCharacterImage(characterId: string, body: MultipartImageBody): Promise<ApiResult<SnapshotDto<"UpdatePlotCharacterImageResponse">>> {
     return this.api.uploadOriginalCharacterImage(this.id, characterId, body);
   }
 
@@ -186,27 +189,27 @@ export class PlotResource {
     return this.api.rateCharacterImage(this.id, characterId, body);
   }
 
-  cropChatProfileImage(chatProfileId: string, body?: ImageCropRequest): Promise<ApiResult<PlotImageListResponse>> {
+  cropChatProfileImage(chatProfileId: string, body: MultipartImageBody): Promise<ApiResult<SnapshotDto<"CropImageResponse">>> {
     return this.api.cropChatProfileImage(this.id, chatProfileId, body);
   }
 
-  uploadOriginalChatProfileImage(chatProfileId: string, body: MultipartImageBody): Promise<ApiResult<PlotImageListResponse>> {
+  uploadOriginalChatProfileImage(chatProfileId: string, body: MultipartImageBody): Promise<ApiResult<SnapshotDto<"UpdatePlotChatProfileImageResponse">>> {
     return this.api.uploadOriginalChatProfileImage(this.id, chatProfileId, body);
   }
 
-  createImage(body?: ImageCreatorRequest): Promise<ApiResult<PlotImageListResponse>> {
-    return this.api.createPlotImage(this.id, body);
+  createImage(query?: ImageHistoryQuery): Promise<ApiResult<PlotImageListResponse>> {
+    return this.api.listPlotImagesForCreator(this.id, query);
   }
 
   previewImage(query?: ImageHistoryQuery): Promise<ApiResult<PlotImageListResponse>> {
     return this.api.previewPlotImage(this.id, query);
   }
 
-  cropImage(body?: ImageCropRequest): Promise<ApiResult<PlotImageListResponse>> {
+  cropImage(body?: ImageCropRequest): Promise<ApiResult<SnapshotDto<"CropImageResponse">>> {
     return this.api.cropPlotImage(this.id, body);
   }
 
-  uploadOriginalImage(body: MultipartImageBody): Promise<ApiResult<PlotImageListResponse>> {
+  uploadOriginalImage(body: MultipartImageBody): Promise<ApiResult<SnapshotDto<"UpdatePlotCoverImageResponse">>> {
     return this.api.uploadOriginalPlotImage(this.id, body);
   }
 
@@ -303,22 +306,24 @@ export class PlotsApi {
     return this.client.get<PlotNameCheckResponse>("/v1/plots/check-name", { query });
   }
 
-  getPlotLikes(plotId: string): Promise<ApiResult<PlotLikeState>> {
-    return this.client.get<PlotLikeState>("/v1/plots/:plotId/likes", { path: { plotId } });
+  getPlotLikes(plotId: string): Promise<ApiResult<SnapshotDto<"PlotLikeSummaryResponseV2">>> {
+    return this.client.get("/v2/plots/:plotId/likes/summary", { path: { plotId } });
   }
 
   likePlot(plotId: string, body?: PlotLikeRequest): Promise<ApiResult<unknown>> {
-    return this.client.put("/v1/plots/:plotId/likes", body, { path: { plotId } });
+    return this.client.put("/v2/plots/:plotId/likes", body, { path: { plotId } });
   }
 
   unlikePlot(plotId: string): Promise<ApiResult<unknown>> {
-    return this.client.delete("/v1/plots/:plotId/likes", { path: { plotId } });
+    return this.client.delete("/v2/plots/:plotId/likes", { path: { plotId } });
   }
 
-  listLikedPlots(query?: PlotListQuery): Promise<ApiResult<PlotListResponse>> {
-    return this.client.get<PlotListResponse>("/v1/plots/liked", { query });
+  async listLikedPlots(query?: PlotListQuery): Promise<ApiResult<PlotListResponse & { items: Plot[] }>> {
+    const result = await this.client.get<{ items: Plot[]; nextCursor?: string | null }>("/v2/plots/liked", { query });
+    return { ...result, data: { ...result.data, plots: result.data.items ?? [] } };
   }
 
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
   getLikedPlotCount(): Promise<ApiResult<CountResponse>> {
     return this.client.get<CountResponse>("/v1/plots/liked/count");
   }
@@ -347,6 +352,7 @@ export class PlotsApi {
     return this.client.request("DELETE", "/v1/plots/hashtags/blocks", { body });
   }
 
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
   reportPlot(plotId: string, body?: ReportRequest): Promise<ApiResult<unknown>> {
     return this.client.post("/v1/plots/:plotId/reports", body, { path: { plotId } });
   }
@@ -355,34 +361,45 @@ export class PlotsApi {
     return this.client.post<Plot, PlotDraftRequest | undefined>("/v1/plots/:plotId/private-snapshots", body, { path: { plotId } });
   }
 
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
   createRecommendedMessages(plotId: string, body?: PlotRecommendedMessagesRequest): Promise<ApiResult<unknown>> {
     return this.client.post("/v1/plots/:plotId/recommended-messages", body, { path: { plotId } });
   }
 
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
   getExampleChat(plotId: string, query?: IdQuery): Promise<ApiResult<ExampleChatResponse>> {
     return this.client.get<ExampleChatResponse>("/v1/plots/:plotId/example-chat", { path: { plotId }, query });
   }
 
+  streamExampleChat(plotId: string, body: JsonObject, options: RequestOptions = {}): Promise<AsyncGenerator<StreamEvent<ChatStreamEvent>>> {
+    return this.client.stream("/v1/plots/:plotId/example-chat", body, { ...options, path: { plotId } });
+  }
+
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
   listAboutImages(plotId: string, query?: ImageHistoryQuery): Promise<ApiResult<PlotImageListResponse>> {
     return this.client.get<PlotImageListResponse>("/v1/plots/:plotId/about-images", { path: { plotId }, query });
   }
 
-  appendAboutImages(plotId: string, body?: AppendPlotImagesRequest): Promise<ApiResult<PlotImageListResponse>> {
-    return this.client.post<PlotImageListResponse, AppendPlotImagesRequest | undefined>("/v1/plots/:plotId/about-images", body, { path: { plotId } });
+  appendAboutImages(plotId: string, body: MultipartImageBody): Promise<ApiResult<SnapshotDto<"AppendPlotAboutImagesResponse">>> {
+    return this.client.post<SnapshotDto<"AppendPlotAboutImagesResponse">, MultipartImageBody>("/v1/plots/:plotId/about-images", body, { path: { plotId }, multipart: true });
   }
 
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
   listIntroImages(plotId: string, query?: ImageHistoryQuery): Promise<ApiResult<PlotImageListResponse>> {
     return this.client.get<PlotImageListResponse>("/v1/plots/:plotId/intro-images", { path: { plotId }, query });
   }
 
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
   getPlotUserPersonaSelectedPlayerCharacter(plotId: string, roomId: string, query?: IdQuery): Promise<ApiResult<SelectedPlayerCharacterResponse>> {
     return this.client.get<SelectedPlayerCharacterResponse>("/v1/plots/:plotId/rooms/:roomId/user-personas/selected-player-character", { path: { plotId, roomId }, query });
   }
 
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
   getPlotSummary(plotId: string): Promise<ApiResult<PlotSummary>> {
     return this.client.get<PlotSummary>("/v1/plot-summaries/:plotId", { path: { plotId } });
   }
 
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
   getPlotSummaryByIdentifier(plotIdentifier: string): Promise<ApiResult<PlotSummary>> {
     return this.client.get<PlotSummary>("/v1/plot-summaries/:plotIdentifier", { path: { plotIdentifier } });
   }
@@ -407,6 +424,7 @@ export class PlotsApi {
     return this.client.get<PlotProfileImageSavedResultListResponse>("/v1/plots/saved-profile-image/list", { query });
   }
 
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
   saveProfileImageResult(profileImageResultId: string, body?: SaveProfileImageResultRequest): Promise<ApiResult<PlotProfileImageGenerationResult>> {
     return this.client.post<PlotProfileImageGenerationResult, SaveProfileImageResultRequest | undefined>("/v1/plots/saved-profile-image/profile-image-result/:profileImageResultId", body, { path: { profileImageResultId } });
   }
@@ -423,16 +441,16 @@ export class PlotsApi {
     return this.client.get<PlotProfileImageGenerationJob>("/v1/plots/profile-image/job/:jobId", { path: { jobId } });
   }
 
-  getProfileImageResult(profileImageResultId: string): Promise<ApiResult<PlotProfileImageGenerationResult>> {
-    return this.client.get<PlotProfileImageGenerationResult>("/v1/plots/profile-image/result/:profileImageResultId", { path: { profileImageResultId } });
+  getProfileImageResult(profileImageResultId: string): Promise<ApiResult<SnapshotDto<"GetPlotProfileImageGenerationResultResponse">>> {
+    return this.client.get("/v1/plots/profile-image/:profileImageResultId", { path: { profileImageResultId } });
   }
 
   reportProfileImageResult(profileImageResultId: string, body?: ReportRequest): Promise<ApiResult<unknown>> {
     return this.client.post("/v1/plots/profile-image/result/:profileImageResultId/report", body, { path: { profileImageResultId } });
   }
 
-  extractProfileImageTags(body?: ExtractProfileImageTagsRequest): Promise<ApiResult<ProfileImageTagResponse>> {
-    return this.client.post<ProfileImageTagResponse, ExtractProfileImageTagsRequest | undefined>("/v1/plots/profile-image/tool/extract-tag", body);
+  extractProfileImageTags(body: MultipartImageBody): Promise<ApiResult<ProfileImageTagResponse>> {
+    return this.client.post<ProfileImageTagResponse, MultipartImageBody>("/v1/plots/profile-image/tool/extract-tags", body, { multipart: true });
   }
 
   translateProfileImageTags(body?: TranslateProfileImageTagsRequest): Promise<ApiResult<ProfileImageTagResponse>> {
@@ -444,9 +462,10 @@ export class PlotsApi {
   }
 
   getSearchPlotCount(query?: PlotSearchQuery): Promise<ApiResult<PlotCountResponse>> {
-    return this.client.get<PlotCountResponse>("/v1/plots/search/plot-count", { query });
+    return this.client.get<PlotCountResponse>("/v2/plots/search/plot-count", { query });
   }
 
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
   getRecommendedMessagesQuota(): Promise<ApiResult<RecommendedMessagesQuotaResponse>> {
     return this.client.get<RecommendedMessagesQuotaResponse>("/v1/recommended-messages/quota");
   }
@@ -455,44 +474,109 @@ export class PlotsApi {
     return this.client.get<PlotImageListResponse>("/v2/plots/:plotId/all-character-images/preview", { path: { plotId }, query });
   }
 
-  createCharacterImage(plotId: string, characterId: string, body?: ImageCreatorRequest): Promise<ApiResult<PlotImageListResponse>> {
-    return this.client.post<PlotImageListResponse, ImageCreatorRequest | undefined>("/v2/plots/:plotId/characters/:characterId/images/creator", body, { path: { plotId, characterId } });
+  /** @deprecated This endpoint lists images. Use listCharacterImagesForCreator. */
+  createCharacterImage(plotId: string, characterId: string, query?: ImageHistoryQuery): Promise<ApiResult<PlotImageListResponse>> {
+    return this.listCharacterImagesForCreator(plotId, characterId, query);
   }
 
-  cropCharacterImage(plotId: string, characterId: string, body?: ImageCropRequest): Promise<ApiResult<PlotImageListResponse>> {
-    return this.client.post<PlotImageListResponse, ImageCropRequest | undefined>("/v2/plots/:plotId/characters/:characterId/images/crop", body, { path: { plotId, characterId } });
+  listCharacterImagesForCreator(plotId: string, characterId: string, query?: ImageHistoryQuery): Promise<ApiResult<PlotImageListResponse>> {
+    return this.client.get("/v2/plots/:plotId/characters/:characterId/images/creator", { path: { plotId, characterId }, query });
   }
 
-  uploadOriginalCharacterImage(plotId: string, characterId: string, body: MultipartImageBody): Promise<ApiResult<PlotImageListResponse>> {
-    return this.client.post<PlotImageListResponse, MultipartImageBody>("/v2/plots/:plotId/characters/:characterId/images/original", body, { path: { plotId, characterId }, multipart: true });
+  listCharacterImages(plotId: string, characterId: string): Promise<ApiResult<PlotImageListResponse>> {
+    return this.client.get("/v2/plots/:plotId/characters/:characterId/images", { path: { plotId, characterId } });
+  }
+
+  updateCharacterImage(plotId: string, characterId: string, body: MultipartImageBody): Promise<ApiResult<SnapshotDto<"UpdatePlotCharacterImageResponse">>> {
+    return this.client.put("/v2/plots/:plotId/characters/:characterId/images", body, { path: { plotId, characterId }, multipart: true });
+  }
+
+  appendCharacterImages(plotId: string, characterId: string, body: MultipartImageBody): Promise<ApiResult<SnapshotDto<"AppendPlotCharacterProfileImagesResponse">>> {
+    return this.client.post("/v2/plots/:plotId/characters/:characterId/images", body, { path: { plotId, characterId }, multipart: true });
+  }
+
+  deleteCharacterImages(plotId: string, characterId: string, body?: JsonObject): Promise<ApiResult<unknown>> {
+    return this.client.request("DELETE", "/v2/plots/:plotId/characters/:characterId/images", { path: { plotId, characterId }, body });
+  }
+
+  getOriginalCharacterImage(plotId: string, characterId: string): Promise<ApiResult<SnapshotDto<"GetOriginalPlotCharacterImageResponse">>> {
+    return this.client.get("/v2/plots/:plotId/characters/:characterId/images/original/first", { path: { plotId, characterId } });
+  }
+
+  cropCharacterImage(plotId: string, characterId: string, body?: ImageCropRequest): Promise<ApiResult<SnapshotDto<"CropImageResponse">>> {
+    return this.client.post<SnapshotDto<"CropImageResponse">, ImageCropRequest | undefined>("/v2/plots/:plotId/characters/:characterId/images/crop", body, { path: { plotId, characterId } });
+  }
+
+  /** @deprecated Upload through updateCharacterImage; original images are retrieved with GET. */
+  uploadOriginalCharacterImage(plotId: string, characterId: string, body: MultipartImageBody): Promise<ApiResult<SnapshotDto<"UpdatePlotCharacterImageResponse">>> {
+    return this.updateCharacterImage(plotId, characterId, body);
   }
 
   rateCharacterImage(plotId: string, characterId: string, body?: ImageRatingRequest): Promise<ApiResult<unknown>> {
     return this.client.post("/v2/plots/:plotId/characters/:characterId/images/ratings", body, { path: { plotId, characterId } });
   }
 
-  cropChatProfileImage(plotId: string, chatProfileId: string, body?: ImageCropRequest): Promise<ApiResult<PlotImageListResponse>> {
-    return this.client.post<PlotImageListResponse, ImageCropRequest | undefined>("/v2/plots/:plotId/chat-profiles/:chatProfileId/images/crop", body, { path: { plotId, chatProfileId } });
+  cropChatProfileImage(plotId: string, chatProfileId: string, body: MultipartImageBody): Promise<ApiResult<SnapshotDto<"CropImageResponse">>> {
+    return this.client.post<SnapshotDto<"CropImageResponse">, MultipartImageBody>("/v2/plots/:plotId/chat-profiles/:chatProfileId/images/crop", body, { path: { plotId, chatProfileId }, multipart: true });
   }
 
-  uploadOriginalChatProfileImage(plotId: string, chatProfileId: string, body: MultipartImageBody): Promise<ApiResult<PlotImageListResponse>> {
-    return this.client.post<PlotImageListResponse, MultipartImageBody>("/v2/plots/:plotId/chat-profiles/:chatProfileId/images/original", body, { path: { plotId, chatProfileId }, multipart: true });
+  /** @deprecated Use updateChatProfileImage. */
+  uploadOriginalChatProfileImage(plotId: string, chatProfileId: string, body: MultipartImageBody): Promise<ApiResult<SnapshotDto<"UpdatePlotChatProfileImageResponse">>> {
+    return this.updateChatProfileImage(plotId, chatProfileId, body);
   }
 
-  createPlotImage(plotId: string, body?: ImageCreatorRequest): Promise<ApiResult<PlotImageListResponse>> {
-    return this.client.post<PlotImageListResponse, ImageCreatorRequest | undefined>("/v2/plots/:plotId/images/creator", body, { path: { plotId } });
+  updateChatProfileImage(plotId: string, chatProfileId: string, body: MultipartImageBody): Promise<ApiResult<SnapshotDto<"UpdatePlotChatProfileImageResponse">>> {
+    return this.client.put("/v2/plots/:plotId/chat-profiles/:chatProfileId/images", body, { path: { plotId, chatProfileId }, multipart: true });
+  }
+
+  getOriginalChatProfileImage(plotId: string, chatProfileId: string): Promise<ApiResult<SnapshotDto<"GetOriginalPlotChatProfileImageResponse">>> {
+    return this.client.get("/v2/plots/:plotId/chat-profiles/:chatProfileId/images/original", { path: { plotId, chatProfileId } });
+  }
+
+  deleteChatProfileImage(plotId: string, chatProfileId: string): Promise<ApiResult<unknown>> {
+    return this.client.delete("/v2/plots/:plotId/chat-profiles/:chatProfileId/images", { path: { plotId, chatProfileId } });
+  }
+
+  /** @deprecated This endpoint lists images. Use listPlotImagesForCreator. */
+  createPlotImage(plotId: string, query?: ImageHistoryQuery): Promise<ApiResult<PlotImageListResponse>> {
+    return this.listPlotImagesForCreator(plotId, query);
+  }
+
+  listPlotImagesForCreator(plotId: string, query?: ImageHistoryQuery): Promise<ApiResult<PlotImageListResponse>> {
+    return this.client.get("/v2/plots/:plotId/images/creator", { path: { plotId }, query });
+  }
+
+  listPlotImages(plotId: string): Promise<ApiResult<PlotImageListResponse>> {
+    return this.client.get("/v2/plots/:plotId/images", { path: { plotId } });
+  }
+
+  updatePlotImage(plotId: string, body: MultipartImageBody): Promise<ApiResult<SnapshotDto<"UpdatePlotCoverImageResponse">>> {
+    return this.client.put("/v2/plots/:plotId/images", body, { path: { plotId }, multipart: true });
+  }
+
+  appendPlotImages(plotId: string, body: MultipartImageBody): Promise<ApiResult<SnapshotDto<"AppendPlotCoverImagesResponse">>> {
+    return this.client.post("/v2/plots/:plotId/images", body, { path: { plotId }, multipart: true });
+  }
+
+  deletePlotImages(plotId: string, body?: JsonObject): Promise<ApiResult<unknown>> {
+    return this.client.request("DELETE", "/v2/plots/:plotId/images", { path: { plotId }, body });
+  }
+
+  getOriginalPlotImage(plotId: string): Promise<ApiResult<SnapshotDto<"GetOriginalPlotCoverImageResponse">>> {
+    return this.client.get("/v2/plots/:plotId/images/original/first", { path: { plotId } });
   }
 
   previewPlotImage(plotId: string, query?: ImageHistoryQuery): Promise<ApiResult<PlotImageListResponse>> {
     return this.client.get<PlotImageListResponse>("/v2/plots/:plotId/images/creator/preview", { path: { plotId }, query });
   }
 
-  cropPlotImage(plotId: string, body?: ImageCropRequest): Promise<ApiResult<PlotImageListResponse>> {
-    return this.client.post<PlotImageListResponse, ImageCropRequest | undefined>("/v2/plots/:plotId/images/crop", body, { path: { plotId } });
+  cropPlotImage(plotId: string, body?: ImageCropRequest): Promise<ApiResult<SnapshotDto<"CropImageResponse">>> {
+    return this.client.post<SnapshotDto<"CropImageResponse">, ImageCropRequest | undefined>("/v2/plots/:plotId/images/crop", body, { path: { plotId } });
   }
 
-  uploadOriginalPlotImage(plotId: string, body: MultipartImageBody): Promise<ApiResult<PlotImageListResponse>> {
-    return this.client.post<PlotImageListResponse, MultipartImageBody>("/v2/plots/:plotId/images/original", body, { path: { plotId }, multipart: true });
+  /** @deprecated Use updatePlotImage. */
+  uploadOriginalPlotImage(plotId: string, body: MultipartImageBody): Promise<ApiResult<SnapshotDto<"UpdatePlotCoverImageResponse">>> {
+    return this.updatePlotImage(plotId, body);
   }
 
   ratePlotImage(plotId: string, body?: ImageRatingRequest): Promise<ApiResult<unknown>> {

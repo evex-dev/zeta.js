@@ -1,6 +1,7 @@
 import { messagingApi } from "@line/bot-sdk";
 import type {
   ChatStreamEvent,
+  MessageChunkContent,
   Message as ZetaMessage,
   Plot,
   TalkSpeakerProfile,
@@ -496,11 +497,12 @@ export function messageToSegments(
 }
 
 function contentsToSegments(
-  contents: ZetaMessage["contents"] | undefined,
+  contents: MessageChunkContent[] | undefined,
 ): TextSegment[] {
   if (!Array.isArray(contents)) return [];
   return contents.flatMap((content) => {
-    const text = content.text?.trim();
+    if (content.type !== "TEXT") return [];
+    const text = content.text.trim();
     return text ? [{ text, speakerName: content.speakerName }] : [];
   });
 }

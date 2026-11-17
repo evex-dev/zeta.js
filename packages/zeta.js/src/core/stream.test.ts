@@ -22,3 +22,20 @@ describe("readEventStream", () => {
     ]);
   });
 });
+
+test("ignores SSE heartbeat frames and preserves unfamiliar JSON events", async () => {
+  const events = [];
+  const input = ': heartbeat\r\n\r\nevent: ping\r\n\r\ndata: {"event":"FUTURE_EVENT","payload":42}\r\n\r\n';
+  for await (const event of readEventStream(new Response(input))) events.push(event.data);
+  expect(events).toEqual([{ event: "FUTURE_EVENT", payload: 42 }]);
+});
+
+test("cancels the underlying stream when a consumer stops early", async () => {
+  let cancelled = false;
+  const input = new ReadableStream({
+    start(controller) { controller.enqueue(new TextEncoder().encode('data: {"n":1}\n\n')); },
+    cancel() { cancelled = true; },
+  });
+  for await (const event of readEventStream(new Response(input))) { expect(event.data).toEqual({ n: 1 }); break; }
+  expect(cancelled).toBe(true);
+});

@@ -4,6 +4,8 @@ import { ApiError } from "./core/types.ts";
 import type {
   AnyData,
   ChatProfile,
+  SignupCheckRequest,
+  SignupCheckResponse,
   ChatProfileAbusingCheckRequest,
   ChatProfileDraftRequest,
   ChatProfileListQuery,
@@ -278,10 +280,11 @@ export class ProfileApi {
     return this.client.request("DELETE", "/v1/users/blocks", { body });
   }
 
-  checkUser(query?: UserListQuery): Promise<ApiResult<User>> {
-    return this.client.get<User>("/v1/users/check", { query });
+  checkUser(body: SignupCheckRequest): Promise<ApiResult<SignupCheckResponse>> {
+    return this.client.post<SignupCheckResponse>("/v1/users/check", body);
   }
 
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
   checkIsNative(): Promise<ApiResult<{ [key: string]: unknown; isNative?: boolean; }>> {
     return this.client.get<{ isNative?: boolean; [key: string]: unknown }>("/v1/users/checkIsNative");
   }
@@ -290,6 +293,7 @@ export class ProfileApi {
     return this.client.get<UserListResponse>("/v1/users/me/account-blocks", { query });
   }
 
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
   getPreferredGenres(): Promise<ApiResult<{ [key: string]: unknown; genres?: string[]; genreKeys?: string[]; }>> {
     return this.client.get<{ genres?: string[]; genreKeys?: string[]; [key: string]: unknown }>("/v1/users/me/preferred-genres");
   }

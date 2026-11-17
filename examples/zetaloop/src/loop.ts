@@ -318,7 +318,7 @@ function messageDirection(message: Message, fallbackIndex: number): TranscriptEn
 
 function messageTimestamp(message: Message): number | undefined {
   const value = message.messageTime ?? message.createdAt ?? message.updatedAt;
-  const time = value instanceof Date ? value.getTime() : Date.parse(String(value ?? ""));
+  const time = Date.parse(value ?? "");
   return Number.isFinite(time) ? time : undefined;
 }
 

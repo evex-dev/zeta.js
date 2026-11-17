@@ -14,7 +14,8 @@
   "scripts": {
     "dailyclaim": "bun scripts/dailyclaim.ts",
     "test": "bun test",
-    "typecheck": "bun x tsc --noEmit",
+    "typecheck": "bun x tsc -p tsconfig.contracts.json --noEmit",
+    "check:snapshot": "bun scripts/sync-snapshot.ts --from-fixture --check && bun scripts/generate-snapshot-types.ts --check",
     "fix:slow-types": "bun scripts/annotate-public-types.ts",
     "test:runtime": "bun test scripts/runtime-bun.test.ts",
     "publish:check": "bunx jsr publish --dry-run --allow-dirty"

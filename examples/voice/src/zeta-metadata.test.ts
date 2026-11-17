@@ -12,8 +12,8 @@ test("uses sender.type instead of message array position", () => {
 test("keeps Zeta speaker and narrator metadata", () => {
   const segments = messageSegments({
     contents: [
-      { text: "雨が降る。", speakerName: "ナレーター", position: "NARRATOR" },
-      { text: "帰ろう", speakerName: "みくる", position: "LEFT" },
+      { type: "TEXT", text: "雨が降る。", speakerName: "ナレーター", position: "NARRATOR" },
+      { type: "TEXT", text: "帰ろう", speakerName: "みくる", position: "LEFT" },
     ],
   });
   expect(segments).toEqual([

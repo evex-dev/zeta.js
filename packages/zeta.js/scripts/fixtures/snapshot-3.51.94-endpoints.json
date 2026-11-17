@@ -1,0 +1,3701 @@
+{
+  "addFeedPostCommentLike": {
+    "method": "POST",
+    "path": "/v1/creator-feed/comments/:commentId/likes",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_3916.js",
+    "line": 22
+  },
+  "addFeedPostLike": {
+    "method": "POST",
+    "path": "/v1/creator-feed/posts/:postId/likes",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_3898.js",
+    "line": 34
+  },
+  "addTrickOrTreatVisit": {
+    "method": "POST",
+    "path": "/v1/trick-or-treat/invites/:code/visit",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_4486.js",
+    "line": 23
+  },
+  "agreeBrandpayTerms": {
+    "method": "POST",
+    "path": "/v1/toss-brandpay/terms/agree",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/web/mirror/zeta-ai.io/_external/web-cdn.zeta-ai.io/_next/static/chunks/1m-e8rwvfiyzk.js",
+    "line": 2
+  },
+  "appendPlotAboutImages": {
+    "method": "POST",
+    "path": "/v1/plots/:plotId/about-images",
+    "multipart": true,
+    "stream": false,
+    "response": "AppendPlotAboutImagesResponse",
+    "source": "analysis/android/v3.51.94/extracted/5617_appendPlotAboutImagesApi.js",
+    "line": 9
+  },
+  "appendPlotDraftCharacterProfileImages": {
+    "method": "POST",
+    "path": "/v2/plots/:plotId/characters/:characterId/images",
+    "multipart": true,
+    "stream": false,
+    "response": "AppendPlotCharacterProfileImagesResponse",
+    "source": "analysis/android/v3.51.94/extracted/4861_appendPlotDraftCharacterProfileImagesApi.js",
+    "line": 11
+  },
+  "appendPlotDraftCoverImages": {
+    "method": "POST",
+    "path": "/v2/plots/:plotId/images",
+    "multipart": true,
+    "stream": false,
+    "response": "AppendPlotCoverImagesResponse",
+    "source": "analysis/android/v3.51.94/extracted/5084_appendPlotDraftCoverImagesApi.js",
+    "line": 11
+  },
+  "attachLorebook": {
+    "method": "PUT",
+    "path": "/v1/plots/:plotId/lorebooks/:lorebookId",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/4061_attachLorebookApi.js",
+    "line": 12
+  },
+  "blockHashtag": {
+    "method": "POST",
+    "path": "/v1/plots/hashtags/blocks",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/6454_blockHashtagApi.js",
+    "line": 12
+  },
+  "blockPlot": {
+    "method": "POST",
+    "path": "/v1/plots/blocks",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/3686_blockPlotApi.js",
+    "line": 12
+  },
+  "blockUser": {
+    "method": "POST",
+    "path": "/v1/users/blocks",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/3923_blockUserApi.js",
+    "line": 12
+  },
+  "cancelTossPayments": {
+    "method": "POST",
+    "path": "/v1/toss-payments/cancellations",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/4262_cancelTossPaymentsApi.js",
+    "line": 17
+  },
+  "cancelZetaPass": {
+    "method": "POST",
+    "path": "/v1/zeta-pass/cancel",
+    "multipart": false,
+    "stream": false,
+    "response": "ZetaPassSubscriptionResponse",
+    "source": "analysis/android/v3.51.94/extracted/3038_cancelZetaPassApi.js",
+    "line": 45
+  },
+  "changeCodaPayAutoPaymentPaymentMethod": {
+    "method": "POST",
+    "path": "/v1/coin/auto-payment/payment-method/coda-pay",
+    "multipart": false,
+    "stream": false,
+    "response": "CodaPayCheckoutResponse",
+    "source": "analysis/android/v3.51.94/extracted/2649_changeCodaPayAutoPaymentPaymentMethodApi.js",
+    "line": 11
+  },
+  "changeZetaPassPaymentMethod": {
+    "method": "PUT",
+    "path": "/v1/zeta-pass/payment-method",
+    "multipart": false,
+    "stream": false,
+    "response": "ZetaPassPaymentMethodResponse",
+    "source": "analysis/android/v3.51.94/extracted/3038_cancelZetaPassApi.js",
+    "line": 23
+  },
+  "changeZetaPassPaymentMethodViaCodaPay": {
+    "method": "POST",
+    "path": "/v1/zeta-pass/payment-method/coda-pay",
+    "multipart": false,
+    "stream": false,
+    "response": "CodaPayCheckoutResponse",
+    "source": "analysis/android/v3.51.94/extracted/3038_cancelZetaPassApi.js",
+    "line": 43
+  },
+  "chat": {
+    "method": "POST",
+    "path": "/v1/rooms/:roomId/messages/stream",
+    "multipart": false,
+    "stream": true,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/5026_chatApi.js",
+    "line": 15
+  },
+  "checkAbusingUserChatProfile": {
+    "method": "POST",
+    "path": "/v1/user-chat-profiles/abusing",
+    "multipart": false,
+    "stream": false,
+    "response": "CheckAbusingUserChatProfileResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_2654.js",
+    "line": 10
+  },
+  "checkFeatureEnabled": {
+    "method": "GET",
+    "path": "/v1/feature-flags/:key",
+    "multipart": false,
+    "stream": false,
+    "response": "FeatureFlagResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_2902.js",
+    "line": 9
+  },
+  "checkFeaturesEnabled": {
+    "method": "GET",
+    "path": "/v1/feature-flags",
+    "multipart": false,
+    "stream": false,
+    "response": "FeatureFlagsResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_2902.js",
+    "line": 8
+  },
+  "checkLorebookContents": {
+    "method": "POST",
+    "path": "/v1/lorebooks/check-contents",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_4301.js",
+    "line": 10
+  },
+  "checkLorebookTitle": {
+    "method": "GET",
+    "path": "/v1/lorebooks/check-title",
+    "multipart": false,
+    "stream": false,
+    "response": "CheckLorebookTitleResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_4301.js",
+    "line": 8
+  },
+  "checkPlotName": {
+    "method": "GET",
+    "path": "/v1/plots/check-name",
+    "multipart": false,
+    "stream": false,
+    "response": "CheckPlotNameResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_3071.js",
+    "line": 25
+  },
+  "checkSignup": {
+    "method": "POST",
+    "path": "/v1/users/check",
+    "multipart": false,
+    "stream": false,
+    "response": "CheckSignupResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_2653.js",
+    "line": 9
+  },
+  "claimRewardForDailyQuiz": {
+    "method": "POST",
+    "path": "/v1/daily-quizzes/:quizId/claim-reward",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/4178_claimRewardForDailyQuizApi.js",
+    "line": 14
+  },
+  "claimTrickOrTreatPlay": {
+    "method": "POST",
+    "path": "/v1/trick-or-treat/claim",
+    "multipart": false,
+    "stream": false,
+    "response": "TrickOrTreatClaimApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_4486.js",
+    "line": 12
+  },
+  "cloneRoom": {
+    "method": "POST",
+    "path": "/v1/rooms/:roomId/clone",
+    "multipart": false,
+    "stream": false,
+    "response": "RoomApiDto",
+    "source": "analysis/android/v3.51.94/extracted/2637_cloneRoomApi.js",
+    "line": 12
+  },
+  "confirmTossPayments": {
+    "method": "POST",
+    "path": "/v1/toss-payments/confirmations",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/4262_cancelTossPaymentsApi.js",
+    "line": 15
+  },
+  "confirmZetaPassOneDayPassWebPayment": {
+    "method": "POST",
+    "path": "/v1/zeta-pass/one-day-pass/purchase/web/confirmations",
+    "multipart": false,
+    "stream": false,
+    "response": "ZetaPassOneDayPassResponse",
+    "source": "analysis/android/v3.51.94/extracted/3740_confirmZetaPassOneDayPassWebPaymentApi.js",
+    "line": 11
+  },
+  "confirmZetaPassPromotionConsentViaBrandpay": {
+    "method": "POST",
+    "path": "/v1/zeta-pass/subscribe/promotion/brandpay/consent",
+    "multipart": false,
+    "stream": false,
+    "response": "ZetaPassSubscriptionResponse",
+    "source": "analysis/android/v3.51.94/extracted/3038_cancelZetaPassApi.js",
+    "line": 25
+  },
+  "convertZetaPassProSubscription": {
+    "method": "POST",
+    "path": "/v1/zeta-pass/pro-conversion/convert",
+    "multipart": false,
+    "stream": false,
+    "response": "ZetaPassProConversionStatusResponse",
+    "source": "analysis/android/v3.51.94/extracted/3038_cancelZetaPassApi.js",
+    "line": 41
+  },
+  "countMessageBookmarkAfter": {
+    "method": "GET",
+    "path": "/v1/rooms/:roomId/bookmarks/count",
+    "multipart": false,
+    "stream": false,
+    "response": "MessageBookmarkCountResponse",
+    "source": "analysis/android/v3.51.94/extracted/4929_countMessageBookmarkAfterApi.js",
+    "line": 13
+  },
+  "countPlotScrapped": {
+    "method": "GET",
+    "path": "/v1/plots/scrapped/count",
+    "multipart": false,
+    "stream": false,
+    "response": "CountPlotScrappedResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_3684.js",
+    "line": 10
+  },
+  "createAutoPaymentSetting": {
+    "method": "POST",
+    "path": "/v1/coin/auto-payment/settings",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/2649_changeCodaPayAutoPaymentPaymentMethodApi.js",
+    "line": 16
+  },
+  "createChatSnapshotImage": {
+    "method": "POST",
+    "path": "/v1/rooms/:roomId/messages/:messageId/candidates/:candidateId/snapshot-images",
+    "multipart": false,
+    "stream": false,
+    "response": "ChatSnapshotImageApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_4831.js",
+    "line": 8
+  },
+  "createChatSnapshotImageOpinion": {
+    "method": "POST",
+    "path": "/v1/rooms/:roomId/messages/:messageId/candidates/:candidateId/snapshot-images/:snapshotImageId/opinion",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_4831.js",
+    "line": 14
+  },
+  "createCodaPayAutoPaymentSetting": {
+    "method": "POST",
+    "path": "/v1/coin/auto-payment/settings/coda-pay",
+    "multipart": false,
+    "stream": false,
+    "response": "CodaPayCheckoutResponse",
+    "source": "analysis/android/v3.51.94/extracted/2649_changeCodaPayAutoPaymentPaymentMethodApi.js",
+    "line": 10
+  },
+  "createCreatorPluginEvent": {
+    "method": "POST",
+    "path": "/v1/plugins/:pluginId/events",
+    "multipart": false,
+    "stream": false,
+    "response": "CreatorPluginEventCreatedResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_5216.js",
+    "line": 8
+  },
+  "createCreatorPluginFileEvent": {
+    "method": "POST",
+    "path": "/v1/plugins/:pluginId/events/files",
+    "multipart": true,
+    "stream": false,
+    "response": "CreatorPluginEventCreatedResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_5216.js",
+    "line": 9
+  },
+  "createFeedPost": {
+    "method": "POST",
+    "path": "/v1/creator-feed/posts",
+    "multipart": true,
+    "stream": false,
+    "response": "FeedPostApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_3898.js",
+    "line": 38
+  },
+  "createFeedPostComment": {
+    "method": "POST",
+    "path": "/v1/creator-feed/posts/:postId/comments",
+    "multipart": false,
+    "stream": false,
+    "response": "FeedPostCommentApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_3916.js",
+    "line": 10
+  },
+  "createFrame4cut": {
+    "method": "POST",
+    "path": "/v1/frame-4cuts",
+    "multipart": false,
+    "stream": false,
+    "response": "Frame4cutApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_4753.js",
+    "line": 9
+  },
+  "createLorebook": {
+    "method": "POST",
+    "path": "/v1/lorebooks",
+    "multipart": false,
+    "stream": false,
+    "response": "LorebookApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_4059.js",
+    "line": 11
+  },
+  "createMessageBookmark": {
+    "method": "POST",
+    "path": "/v1/rooms/:roomId/bookmarks",
+    "multipart": false,
+    "stream": false,
+    "response": "MessageBookmarkApiDto",
+    "source": "analysis/android/v3.51.94/extracted/4929_countMessageBookmarkAfterApi.js",
+    "line": 11
+  },
+  "createOrUpdateAppPushToken": {
+    "method": "PUT",
+    "path": "/v1/app-push/tokens",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_2889.js",
+    "line": 12
+  },
+  "createPlot": {
+    "method": "POST",
+    "path": "/v1/plots",
+    "multipart": false,
+    "stream": false,
+    "response": "PlotForCreatorApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_3071.js",
+    "line": 17
+  },
+  "createPlotComment": {
+    "method": "POST",
+    "path": "/v1/plots/:plotId/comments",
+    "multipart": false,
+    "stream": false,
+    "response": "CreatePlotCommentResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_3926.js",
+    "line": 9
+  },
+  "createPlotCommentReply": {
+    "method": "POST",
+    "path": "/v1/plots/:plotId/comments/:commentId/replies",
+    "multipart": false,
+    "stream": false,
+    "response": "CreatePlotCommentResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_3926.js",
+    "line": 13
+  },
+  "createPlotFirstImpressionSurveyExposure": {
+    "method": "POST",
+    "path": "/v1/plots/:plotId/first-impression-survey/exposures",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_3032.js",
+    "line": 12
+  },
+  "createPlotFirstImpressionSurveyResponse": {
+    "method": "POST",
+    "path": "/v1/plots/:plotId/first-impression-survey/responses",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_3032.js",
+    "line": 11
+  },
+  "createPrivateSnapshot": {
+    "method": "POST",
+    "path": "/v1/plots/:plotId/private-snapshots",
+    "multipart": false,
+    "stream": false,
+    "response": "PlotForCreatorApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_4106.js",
+    "line": 8
+  },
+  "createRoom": {
+    "method": "POST",
+    "path": "/v1/rooms",
+    "multipart": false,
+    "stream": false,
+    "response": "RoomApiDto",
+    "source": "analysis/android/v3.51.94/extracted/2637_cloneRoomApi.js",
+    "line": 11
+  },
+  "createRoomIntro": {
+    "method": "POST",
+    "path": "/v1/rooms/:roomId/intros",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_4834.js",
+    "line": 10
+  },
+  "createSavedRoom": {
+    "method": "POST",
+    "path": "/v1/rooms/:roomId/save",
+    "multipart": false,
+    "stream": false,
+    "response": "RoomApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_3671.js",
+    "line": 12
+  },
+  "createUser": {
+    "method": "POST",
+    "path": "/v1/users",
+    "multipart": false,
+    "stream": false,
+    "response": "SignUpResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_2653.js",
+    "line": 8
+  },
+  "createUserChatProfile": {
+    "method": "POST",
+    "path": "/v1/user-chat-profiles",
+    "multipart": false,
+    "stream": false,
+    "response": "UserChatProfileApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_2654.js",
+    "line": 8
+  },
+  "createUserChatProfileImage": {
+    "method": "POST",
+    "path": "/v1/user-chat-profiles/images",
+    "multipart": true,
+    "stream": false,
+    "response": "CreateUserChatProfileImageResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_2654.js",
+    "line": 9
+  },
+  "createUserPlotChatProfileImage": {
+    "method": "POST",
+    "path": "/v1/user-plot-chat-profiles/images",
+    "multipart": true,
+    "stream": false,
+    "response": "CreateUserPlotChatProfileImageResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_4749.js",
+    "line": 8
+  },
+  "cropPlotDraftCharacterProfileImage": {
+    "method": "POST",
+    "path": "/v2/plots/:plotId/characters/:characterId/images/crop",
+    "multipart": false,
+    "stream": false,
+    "response": "CropImageResponse",
+    "source": "analysis/android/v3.51.94/extracted/4861_appendPlotDraftCharacterProfileImagesApi.js",
+    "line": 12
+  },
+  "cropPlotDraftChatProfileImage": {
+    "method": "POST",
+    "path": "/v2/plots/:plotId/chat-profiles/:chatProfileId/images/crop",
+    "multipart": true,
+    "stream": false,
+    "response": "CropImageResponse",
+    "source": "analysis/android/v3.51.94/extracted/5099_cropPlotDraftChatProfileImageApi.js",
+    "line": 10
+  },
+  "cropPlotDraftCoverImage": {
+    "method": "POST",
+    "path": "/v2/plots/:plotId/images/crop",
+    "multipart": false,
+    "stream": false,
+    "response": "CropImageResponse",
+    "source": "analysis/android/v3.51.94/extracted/5084_appendPlotDraftCoverImagesApi.js",
+    "line": 12
+  },
+  "deleteAppPushToken": {
+    "method": "DELETE",
+    "path": "/v1/app-push/tokens",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_2889.js",
+    "line": 14
+  },
+  "deleteAutoPaymentSetting": {
+    "method": "DELETE",
+    "path": "/v1/coin/auto-payment/settings",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/2649_changeCodaPayAutoPaymentPaymentMethodApi.js",
+    "line": 17
+  },
+  "deleteCharacterProfileImageGenerationResult": {
+    "method": "DELETE",
+    "path": "/v1/plots/profile-image/result/:profileImageResultId",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_5051.js",
+    "line": 19
+  },
+  "deleteChatSnapshotImage": {
+    "method": "DELETE",
+    "path": "/v1/rooms/:roomId/messages/:messageId/candidates/:candidateId/snapshot-images/:snapshotImageId",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_4831.js",
+    "line": 16
+  },
+  "deleteDraftPlotCharacterProfileImage": {
+    "method": "DELETE",
+    "path": "/v2/plots/:plotId/characters/:characterId/images",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/4861_appendPlotDraftCharacterProfileImagesApi.js",
+    "line": 21
+  },
+  "deleteDraftPlotChatProfileImage": {
+    "method": "DELETE",
+    "path": "/v2/plots/:plotId/chat-profiles/:chatProfileId/images",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/5099_cropPlotDraftChatProfileImageApi.js",
+    "line": 14
+  },
+  "deleteFeedPost": {
+    "method": "DELETE",
+    "path": "/v1/creator-feed/posts/:postId",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_3898.js",
+    "line": 26
+  },
+  "deleteFeedPostComment": {
+    "method": "DELETE",
+    "path": "/v1/creator-feed/comments/:commentId",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_3916.js",
+    "line": 17
+  },
+  "deleteFeedPostCommentLike": {
+    "method": "DELETE",
+    "path": "/v1/creator-feed/comments/:commentId/likes",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_3916.js",
+    "line": 23
+  },
+  "deleteFeedPostLike": {
+    "method": "DELETE",
+    "path": "/v1/creator-feed/posts/:postId/likes",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_3898.js",
+    "line": 36
+  },
+  "deleteFrame4cut": {
+    "method": "DELETE",
+    "path": "/v1/frame-4cuts/:id",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_4753.js",
+    "line": 17
+  },
+  "deleteLorebook": {
+    "method": "DELETE",
+    "path": "/v1/lorebooks/:id",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_4059.js",
+    "line": 16
+  },
+  "deleteMessageBookmark": {
+    "method": "DELETE",
+    "path": "/v1/rooms/:roomId/bookmarks/:bookmarkId",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/4929_countMessageBookmarkAfterApi.js",
+    "line": 16
+  },
+  "deleteNotification": {
+    "method": "DELETE",
+    "path": "/v1/notifications/:notificationId",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_3766.js",
+    "line": 13
+  },
+  "deletePlotAboutImages": {
+    "method": "DELETE",
+    "path": "/v1/plots/:plotId/about-images",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/5617_appendPlotAboutImagesApi.js",
+    "line": 12
+  },
+  "deletePlotComment": {
+    "method": "DELETE",
+    "path": "/v1/plots/:plotId/comments/:commentId",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_3926.js",
+    "line": 25
+  },
+  "deletePlotCommentByCreator": {
+    "method": "DELETE",
+    "path": "/v1/creator/plots/:plotId/comments/:commentId",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_3925.js",
+    "line": 21
+  },
+  "deletePlotDraftCoverImage": {
+    "method": "DELETE",
+    "path": "/v2/plots/:plotId/images",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/5084_appendPlotDraftCoverImagesApi.js",
+    "line": 20
+  },
+  "deletePlotIntroImages": {
+    "method": "DELETE",
+    "path": "/v1/plots/:plotId/intro-images",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_5019.js",
+    "line": 12
+  },
+  "deletePlotProfileImageResultByProfileImageResultId": {
+    "method": "DELETE",
+    "path": "/v1/plots/saved-profile-image/profile-image-result/:profileImageResultId",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_5071.js",
+    "line": 14
+  },
+  "deletePlotProfileImageSavedResults": {
+    "method": "DELETE",
+    "path": "/v1/plots/saved-profile-image",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_5071.js",
+    "line": 12
+  },
+  "deleteRoom": {
+    "method": "DELETE",
+    "path": "/v1/rooms/:roomId",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/2637_cloneRoomApi.js",
+    "line": 18
+  },
+  "deleteRoomMessages": {
+    "method": "DELETE",
+    "path": "/v1/rooms/:roomId/room-messages",
+    "multipart": false,
+    "stream": false,
+    "response": "DeleteMessageResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_4835.js",
+    "line": 10
+  },
+  "deleteSavedRoom": {
+    "method": "DELETE",
+    "path": "/v1/rooms/:roomId/saved",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_3671.js",
+    "line": 17
+  },
+  "deleteUserChatProfile": {
+    "method": "DELETE",
+    "path": "/v1/user-chat-profiles/:id",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_2654.js",
+    "line": 19
+  },
+  "deleteUserCoverImage": {
+    "method": "DELETE",
+    "path": "/v1/users/me/profile/cover-images",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_4120.js",
+    "line": 14
+  },
+  "deleteUserProfileImage": {
+    "method": "DELETE",
+    "path": "/v1/users/me/profile/images",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_4120.js",
+    "line": 12
+  },
+  "detachFrame4cutFromWall": {
+    "method": "DELETE",
+    "path": "/v1/frame-4cuts/:id/wall",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/6411_detachFrame4cutFromWallApi.js",
+    "line": 15
+  },
+  "detachLorebook": {
+    "method": "DELETE",
+    "path": "/v1/plots/:plotId/lorebooks/:lorebookId",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/4061_attachLorebookApi.js",
+    "line": 14
+  },
+  "discoverPopularLorebooks": {
+    "method": "GET",
+    "path": "/v1/lorebooks/discovery/popular",
+    "multipart": false,
+    "stream": false,
+    "response": "LorebookDiscoveryResponse",
+    "source": "analysis/android/v3.51.94/extracted/5143_discoverPopularLorebooksApi.js",
+    "line": 11
+  },
+  "discoverRecentPlayLorebooks": {
+    "method": "GET",
+    "path": "/v1/lorebooks/discovery/recent-play",
+    "multipart": false,
+    "stream": false,
+    "response": "LorebookDiscoveryRecentPlayResponse",
+    "source": "analysis/android/v3.51.94/extracted/5143_discoverPopularLorebooksApi.js",
+    "line": 10
+  },
+  "discoverRecommendedLorebooks": {
+    "method": "GET",
+    "path": "/v1/lorebooks/discovery/recommend",
+    "multipart": false,
+    "stream": false,
+    "response": "LorebookDiscoveryResponse",
+    "source": "analysis/android/v3.51.94/extracted/5143_discoverPopularLorebooksApi.js",
+    "line": 9
+  },
+  "exampleChat": {
+    "method": "POST",
+    "path": "/v1/plots/:plotId/example-chat",
+    "multipart": false,
+    "stream": true,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/5026_chatApi.js",
+    "line": 16
+  },
+  "extractTagsFromImage": {
+    "method": "POST",
+    "path": "/v1/plots/profile-image/tool/extract-tags",
+    "multipart": true,
+    "stream": false,
+    "response": "GenerateProfileImageTagsResponse",
+    "source": "analysis/android/v3.51.94/extracted/5059_extractTagsFromImageApi.js",
+    "line": 14
+  },
+  "followCreator": {
+    "method": "POST",
+    "path": "/v1/creators/:creatorId/follow",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/2909_followCreatorApi.js",
+    "line": 15
+  },
+  "generateCreatorAssistantBriefBackstories": {
+    "method": "POST",
+    "path": "/v2/creator-assistant/generate-backstories",
+    "multipart": false,
+    "stream": false,
+    "response": "CreatorAssistantGenerateBackstoriesResponse",
+    "source": "analysis/android/v3.51.94/extracted/4342_generateCreatorAssistantBriefBackstoriesApi.js",
+    "line": 28
+  },
+  "generateCreatorAssistantBriefCharacters": {
+    "method": "POST",
+    "path": "/v2/creator-assistant/generate-characters",
+    "multipart": false,
+    "stream": false,
+    "response": "CreatorAssistantGenerateCharactersResponse",
+    "source": "analysis/android/v3.51.94/extracted/4342_generateCreatorAssistantBriefBackstoriesApi.js",
+    "line": 22
+  },
+  "generateCreatorAssistantBriefSituations": {
+    "method": "POST",
+    "path": "/v2/creator-assistant/generate-situations",
+    "multipart": false,
+    "stream": false,
+    "response": "CreatorAssistantGenerateSituationsResponse",
+    "source": "analysis/android/v3.51.94/extracted/4342_generateCreatorAssistantBriefBackstoriesApi.js",
+    "line": 18
+  },
+  "generateCreatorAssistantCharacterImageByCoin": {
+    "method": "POST",
+    "path": "/v2/creator-assistant/generate-character-image/by-coin",
+    "multipart": false,
+    "stream": false,
+    "response": "CreatorAssistantGenerateCharacterImageResponse",
+    "source": "analysis/android/v3.51.94/extracted/4342_generateCreatorAssistantBriefBackstoriesApi.js",
+    "line": 26
+  },
+  "generateCreatorAssistantFreeCharacterImage": {
+    "method": "POST",
+    "path": "/v2/creator-assistant/generate-character-image",
+    "multipart": false,
+    "stream": false,
+    "response": "CreatorAssistantGenerateCharacterImageResponse",
+    "source": "analysis/android/v3.51.94/extracted/4342_generateCreatorAssistantBriefBackstoriesApi.js",
+    "line": 24
+  },
+  "generateSsoCode": {
+    "method": "POST",
+    "path": "/v1/auth/sso/code",
+    "multipart": false,
+    "stream": false,
+    "response": "SsoCodeApiDto",
+    "source": "analysis/android/v3.51.94/extracted/2652_generateSsoCodeApi.js",
+    "line": 17
+  },
+  "getABExperiment": {
+    "method": "GET",
+    "path": "/v1/ab-experiments/:experimentId",
+    "multipart": false,
+    "stream": false,
+    "response": "GetABExperimentResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_6326.js",
+    "line": 8
+  },
+  "getABExperimentByDevice": {
+    "method": "GET",
+    "path": "/v1/ab-experiments-by-device/:experimentId",
+    "multipart": false,
+    "stream": false,
+    "response": "GetABExperimentByDeviceResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_6769.js",
+    "line": 8
+  },
+  "getABExperimentByFeature": {
+    "method": "GET",
+    "path": "/v1/ab-experiments/by-feature/:feature",
+    "multipart": false,
+    "stream": false,
+    "response": "GetABExperimentByFeatureResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_6326.js",
+    "line": 9
+  },
+  "getActiveRoomId": {
+    "method": "GET",
+    "path": "/v1/rooms/active-room-id",
+    "multipart": false,
+    "stream": false,
+    "response": "GetRoomIdResponse",
+    "source": "analysis/android/v3.51.94/extracted/2637_cloneRoomApi.js",
+    "line": 14
+  },
+  "getActiveSpecialCuration": {
+    "method": "GET",
+    "path": "/v1/special-curation",
+    "multipart": false,
+    "stream": false,
+    "response": "SpecialCurationResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_3074.js",
+    "line": 8
+  },
+  "getAnnouncement": {
+    "method": "GET",
+    "path": "/v1/announcements/:id",
+    "multipart": false,
+    "stream": false,
+    "response": "AnnouncementApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_4712.js",
+    "line": 9
+  },
+  "getAppPushSetting": {
+    "method": "GET",
+    "path": "/v1/app-push/settings/:pushType",
+    "multipart": false,
+    "stream": false,
+    "response": "AppPushSettingApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_2889.js",
+    "line": 16
+  },
+  "getAppPushSettings": {
+    "method": "GET",
+    "path": "/v1/app-push/settings",
+    "multipart": false,
+    "stream": false,
+    "response": "AppPushSettingsApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_2889.js",
+    "line": 11
+  },
+  "getAutoPaymentOrder": {
+    "method": "GET",
+    "path": "/v1/coin/auto-payment/orders/:orderId",
+    "multipart": false,
+    "stream": false,
+    "response": "AutoPaymentOrderResponse",
+    "source": "analysis/android/v3.51.94/extracted/2649_changeCodaPayAutoPaymentPaymentMethodApi.js",
+    "line": 13
+  },
+  "getAutoPaymentSettingPaymentMethod": {
+    "method": "GET",
+    "path": "/v1/coin/auto-payment/settings/payment-method",
+    "multipart": false,
+    "stream": false,
+    "response": "AutoPaymentPaymentMethodApiDto",
+    "source": "analysis/android/v3.51.94/extracted/2649_changeCodaPayAutoPaymentPaymentMethodApi.js",
+    "line": 12
+  },
+  "getAvailableGenres": {
+    "method": "GET",
+    "path": "/v1/genres",
+    "multipart": false,
+    "stream": false,
+    "response": "AvailableGenresResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_4602.js",
+    "line": 10
+  },
+  "getAwesomeUsername": {
+    "method": "GET",
+    "path": "/v1/usernames/awesome",
+    "multipart": false,
+    "stream": false,
+    "response": "UsernameResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_6727.js",
+    "line": 9
+  },
+  "getBannerAnnouncement": {
+    "method": "GET",
+    "path": "/v1/announcements/banner",
+    "multipart": false,
+    "stream": false,
+    "response": "GetBannerAnnouncementResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_4712.js",
+    "line": 10
+  },
+  "getBanners": {
+    "method": "GET",
+    "path": "/v1/banners",
+    "multipart": false,
+    "stream": false,
+    "response": "ListBannerResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_4578.js",
+    "line": 8
+  },
+  "getBrandpayCustomer": {
+    "method": "GET",
+    "path": "/v1/toss-brandpay/customer",
+    "multipart": false,
+    "stream": false,
+    "response": "WebBrandpayCustomerResponse",
+    "source": "analysis/web/mirror/zeta-ai.io/_external/web-cdn.zeta-ai.io/_next/static/chunks/1m-e8rwvfiyzk.js",
+    "line": 2
+  },
+  "getBrandpayTerms": {
+    "method": "GET",
+    "path": "/v1/toss-brandpay/terms",
+    "multipart": false,
+    "stream": false,
+    "response": "WebBrandpayTermsResponse",
+    "source": "analysis/web/mirror/zeta-ai.io/_external/web-cdn.zeta-ai.io/_next/static/chunks/1m-e8rwvfiyzk.js",
+    "line": 2
+  },
+  "getChatSnapshotImage": {
+    "method": "GET",
+    "path": "/v1/rooms/:roomId/messages/:messageId/candidates/:candidateId/snapshot-images/:snapshotImageId",
+    "multipart": false,
+    "stream": false,
+    "response": "ChatSnapshotImageApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_4831.js",
+    "line": 9
+  },
+  "getCodaPayOrder": {
+    "method": "GET",
+    "path": "/v1/coda-pay/orders/:orderId",
+    "multipart": false,
+    "stream": false,
+    "response": "CodaPayOrderResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_4259.js",
+    "line": 10
+  },
+  "getCoinBalance": {
+    "method": "GET",
+    "path": "/v1/coin/balance",
+    "multipart": false,
+    "stream": false,
+    "response": "CoinBalanceResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_2650.js",
+    "line": 14
+  },
+  "getCoinDepositDetail": {
+    "method": "GET",
+    "path": "/v1/coin/deposits/:transactionId",
+    "multipart": false,
+    "stream": false,
+    "response": "CoinDepositDetailResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_2650.js",
+    "line": 11
+  },
+  "getConnectedExternalPlatforms": {
+    "method": "GET",
+    "path": "/v1/auth/connected-external-platforms",
+    "multipart": false,
+    "stream": false,
+    "response": "GetConnectedExternalPlatformsResponse",
+    "source": "analysis/android/v3.51.94/extracted/2652_generateSsoCodeApi.js",
+    "line": 12
+  },
+  "getCreatorAssistantBriefOptionsJob": {
+    "method": "GET",
+    "path": "/v2/creator-assistant/brief-options/jobs/:jobId",
+    "multipart": false,
+    "stream": false,
+    "response": "CreatorAssistantBriefJobResponse",
+    "source": "analysis/android/v3.51.94/extracted/4342_generateCreatorAssistantBriefBackstoriesApi.js",
+    "line": 33
+  },
+  "getCreatorAssistantBriefQuota": {
+    "method": "GET",
+    "path": "/v2/creator-assistant/quota",
+    "multipart": false,
+    "stream": false,
+    "response": "CreatorAssistantBriefQuotaResponse",
+    "source": "analysis/android/v3.51.94/extracted/4342_generateCreatorAssistantBriefBackstoriesApi.js",
+    "line": 32
+  },
+  "getCreatorAssistantBriefVibes": {
+    "method": "GET",
+    "path": "/v2/creator-assistant/vibes",
+    "multipart": false,
+    "stream": false,
+    "response": "CreatorAssistantVibesResponse",
+    "source": "analysis/android/v3.51.94/extracted/4342_generateCreatorAssistantBriefBackstoriesApi.js",
+    "line": 17
+  },
+  "getCreatorAssistantStyles": {
+    "method": "GET",
+    "path": "/v2/creator-assistant/styles",
+    "multipart": false,
+    "stream": false,
+    "response": "CreatorAssistantStylesResponse",
+    "source": "analysis/android/v3.51.94/extracted/4342_generateCreatorAssistantBriefBackstoriesApi.js",
+    "line": 16
+  },
+  "getCreatorCapabilities": {
+    "method": "GET",
+    "path": "/v1/users/me/creator-capabilities",
+    "multipart": false,
+    "stream": false,
+    "response": "UserCreatorCapabilitiesResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_4692.js",
+    "line": 8
+  },
+  "getCreatorDashboardSummary": {
+    "method": "GET",
+    "path": "/v1/creators/dashboard/summary",
+    "multipart": false,
+    "stream": false,
+    "response": "CreatorDashboardSummaryApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_4356.js",
+    "line": 9
+  },
+  "getCreatorFeedWriteStatus": {
+    "method": "GET",
+    "path": "/v1/creator-feed/write-status",
+    "multipart": false,
+    "stream": false,
+    "response": "CreatorFeedWriteStatusResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_3898.js",
+    "line": 18
+  },
+  "getCreatorFollow": {
+    "method": "GET",
+    "path": "/v1/creators/:creatorId/follow",
+    "multipart": false,
+    "stream": false,
+    "response": "GetCreatorFollowResponse",
+    "source": "analysis/android/v3.51.94/extracted/2909_followCreatorApi.js",
+    "line": 9
+  },
+  "getCreatorPlot": {
+    "method": "GET",
+    "path": "/v1/plots/:plotId/creator",
+    "multipart": false,
+    "stream": false,
+    "response": "PlotForCreatorApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_3070.js",
+    "line": 10
+  },
+  "getCreatorSearchAutocomplete": {
+    "method": "GET",
+    "path": "/v1/creators/search/autocomplete",
+    "multipart": false,
+    "stream": false,
+    "response": "GetCreatorSearchAutocompleteResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_6354.js",
+    "line": 10
+  },
+  "getCreatorSearchCount": {
+    "method": "GET",
+    "path": "/v1/creators/search/count",
+    "multipart": false,
+    "stream": false,
+    "response": "GetCreatorSearchCountResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_6354.js",
+    "line": 9
+  },
+  "getCreatorStats": {
+    "method": "GET",
+    "path": "/v1/creators/:creatorId/stats",
+    "multipart": false,
+    "stream": false,
+    "response": "CreatorStatsApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_2910.js",
+    "line": 9
+  },
+  "getDailyQuizEnabled": {
+    "method": "GET",
+    "path": "/v1/daily-quizzes/enabled",
+    "multipart": false,
+    "stream": false,
+    "response": "DailyQuizEnabledResponse",
+    "source": "analysis/android/v3.51.94/extracted/4178_claimRewardForDailyQuizApi.js",
+    "line": 16
+  },
+  "getDailyQuizWinners": {
+    "method": "GET",
+    "path": "/v1/daily-quizzes/winners",
+    "multipart": false,
+    "stream": false,
+    "response": "DailyQuizWinnersResponse",
+    "source": "analysis/android/v3.51.94/extracted/4178_claimRewardForDailyQuizApi.js",
+    "line": 11
+  },
+  "getDailyRewardAmount": {
+    "method": "GET",
+    "path": "/v1/coin/daily-rewards/amount",
+    "multipart": false,
+    "stream": false,
+    "response": "CoinDailyRewardAmountResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_2650.js",
+    "line": 13
+  },
+  "getDailyRewardLeft": {
+    "method": "GET",
+    "path": "/v1/coin/daily-rewards/left-attempts",
+    "multipart": false,
+    "stream": false,
+    "response": "CoinDailyRewardLeftResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_2650.js",
+    "line": 12
+  },
+  "getDiscoveryTab": {
+    "method": "GET",
+    "path": "/v1/discovery-tab",
+    "multipart": false,
+    "stream": false,
+    "response": "GetLayoutResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_4174.js",
+    "line": 8
+  },
+  "getFeedPost": {
+    "method": "GET",
+    "path": "/v1/creator-feed/posts/:postId",
+    "multipart": false,
+    "stream": false,
+    "response": "FeedPostApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_3898.js",
+    "line": 23
+  },
+  "getFollowingCreatorCount": {
+    "method": "GET",
+    "path": "/v1/creators/me/followings/count",
+    "multipart": false,
+    "stream": false,
+    "response": "GetFollowingCreatorCountResponse",
+    "source": "analysis/android/v3.51.94/extracted/2909_followCreatorApi.js",
+    "line": 12
+  },
+  "getFrame4cut": {
+    "method": "GET",
+    "path": "/v1/frame-4cuts/:id",
+    "multipart": false,
+    "stream": false,
+    "response": "Frame4cutApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_4753.js",
+    "line": 11
+  },
+  "getFrame4cutEvent": {
+    "method": "GET",
+    "path": "/v1/frame-4cut/event",
+    "multipart": false,
+    "stream": false,
+    "response": "Frame4cutEventApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_3959.js",
+    "line": 11
+  },
+  "getFrame4cutOptions": {
+    "method": "GET",
+    "path": "/v1/frame-4cut/options",
+    "multipart": false,
+    "stream": false,
+    "response": "Frame4cutOptionsApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_3959.js",
+    "line": 8
+  },
+  "getFrame4cutPlotRanking": {
+    "method": "GET",
+    "path": "/v1/frame-4cut/rankings/plots",
+    "multipart": false,
+    "stream": false,
+    "response": "Frame4cutRankingApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_6428.js",
+    "line": 9
+  },
+  "getFrame4cutRooms": {
+    "method": "GET",
+    "path": "/v1/frame-4cut/rooms",
+    "multipart": false,
+    "stream": false,
+    "response": "Frame4cutRoomsApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_3959.js",
+    "line": 9
+  },
+  "getFrame4cutSetup": {
+    "method": "GET",
+    "path": "/v1/frame-4cut/plots/:plotId/setup",
+    "multipart": false,
+    "stream": false,
+    "response": "Frame4cutSetupApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_3959.js",
+    "line": 10
+  },
+  "getFrame4cutUserRanking": {
+    "method": "GET",
+    "path": "/v1/frame-4cut/rankings/users",
+    "multipart": false,
+    "stream": false,
+    "response": "Frame4cutRankingApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_6428.js",
+    "line": 8
+  },
+  "getHalloweenPluginSkin": {
+    "method": "GET",
+    "path": "/v1/plots/:plotId/plugins/theme/halloween",
+    "multipart": false,
+    "stream": false,
+    "response": "HalloweenPluginSkinApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_5167.js",
+    "line": 8
+  },
+  "getHomeSpecialCuration": {
+    "method": "GET",
+    "path": "/v1/home-special-curation",
+    "multipart": false,
+    "stream": false,
+    "response": "HomeSpecialCurationResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_4555.js",
+    "line": 8
+  },
+  "getInfinitePlots": {
+    "method": "GET",
+    "path": "/v1/infinite-plots",
+    "multipart": false,
+    "stream": false,
+    "response": "InfinitePlotsResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_3688.js",
+    "line": 8
+  },
+  "getLatestCreatorPlotComment": {
+    "method": "GET",
+    "path": "/v1/creator/comments/latest",
+    "multipart": false,
+    "stream": false,
+    "response": "LatestCreatorCommentResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_3925.js",
+    "line": 12
+  },
+  "getLatestCreatorReactionAt": {
+    "method": "GET",
+    "path": "/v1/creator-reactions/latest-at",
+    "multipart": false,
+    "stream": false,
+    "response": "LatestCreatorReactionAtResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_4130.js",
+    "line": 9
+  },
+  "getLatestDiscoveryTabUpdatedAt": {
+    "method": "GET",
+    "path": "/v1/discovery-tab/latest-updated-at",
+    "multipart": false,
+    "stream": false,
+    "response": "GetLatestDiscoveryTabUpdatedAtResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_4174.js",
+    "line": 9
+  },
+  "getLatestNotificationUpdatedAt": {
+    "method": "GET",
+    "path": "/v1/notifications/latest-updated-at",
+    "multipart": false,
+    "stream": false,
+    "response": "GetLatestNotificationUpdatedAtResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_3766.js",
+    "line": 9
+  },
+  "getLorebook": {
+    "method": "GET",
+    "path": "/v1/lorebooks/:id",
+    "multipart": false,
+    "stream": false,
+    "response": "LorebookApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_4059.js",
+    "line": 8
+  },
+  "getLorebookConnectedPlotStats": {
+    "method": "GET",
+    "path": "/v1/lorebooks/:lorebookId/plot-stats",
+    "multipart": false,
+    "stream": false,
+    "response": "LorebookAttachedPlotsResponse",
+    "source": "analysis/android/v3.51.94/extracted/4061_attachLorebookApi.js",
+    "line": 11
+  },
+  "getMessageBookmarkUsage": {
+    "method": "GET",
+    "path": "/v1/rooms/:roomId/bookmarks/usage",
+    "multipart": false,
+    "stream": false,
+    "response": "MessageBookmarkUsageResponse",
+    "source": "analysis/android/v3.51.94/extracted/4929_countMessageBookmarkAfterApi.js",
+    "line": 12
+  },
+  "getMyCreationStampBoardV2": {
+    "method": "GET",
+    "path": "/v2/creation-stamps/me",
+    "multipart": false,
+    "stream": false,
+    "response": "CreationStampBoardApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_4374.js",
+    "line": 8
+  },
+  "getMyCreatorStats": {
+    "method": "GET",
+    "path": "/v1/creators/me/stats",
+    "multipart": false,
+    "stream": false,
+    "response": "CreatorStatsWithDeltaApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_2910.js",
+    "line": 8
+  },
+  "getMyFrame4cutPlotRanking": {
+    "method": "GET",
+    "path": "/v1/frame-4cut/rankings/plots/mine",
+    "multipart": false,
+    "stream": false,
+    "response": "Frame4cutMyPlotRankingApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_6428.js",
+    "line": 10
+  },
+  "getMyUserPlotChatProfile": {
+    "method": "GET",
+    "path": "/v1/rooms/:roomId/user-plot-chat-profiles/me",
+    "multipart": false,
+    "stream": false,
+    "response": "UserPlotChatProfileWithSelectedApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_4747.js",
+    "line": 8
+  },
+  "getNuttyUser": {
+    "method": "GET",
+    "path": "/v1/nutty/user",
+    "multipart": false,
+    "stream": false,
+    "response": "NuttyUserApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_6538.js",
+    "line": 8
+  },
+  "getOnboardingPlot": {
+    "method": "GET",
+    "path": "/v1/plots/onboarding",
+    "multipart": false,
+    "stream": false,
+    "response": "ListOnboardingPlotResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_6675.js",
+    "line": 8
+  },
+  "getOneDayPassRefundEligibility": {
+    "method": "GET",
+    "path": "/v1/zeta-pass/one-day-pass/refund/eligibility",
+    "multipart": false,
+    "stream": false,
+    "response": "OneDayPassRefundEligibilityResponse",
+    "source": "analysis/android/v3.51.94/extracted/3740_confirmZetaPassOneDayPassWebPaymentApi.js",
+    "line": 14
+  },
+  "getPlot": {
+    "method": "GET",
+    "path": "/v1/plots/:plotId",
+    "multipart": false,
+    "stream": false,
+    "response": "DetailedPlotApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_3071.js",
+    "line": 13
+  },
+  "getPlotByViewer": {
+    "method": "GET",
+    "path": "/v1/plots/:plotId/viewer",
+    "multipart": false,
+    "stream": false,
+    "response": "DetailedPlotApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_3071.js",
+    "line": 23
+  },
+  "getPlotCommentCount": {
+    "method": "GET",
+    "path": "/v1/plots/:plotId/comments/count",
+    "multipart": false,
+    "stream": false,
+    "response": "PlotCommentCountResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_3926.js",
+    "line": 15
+  },
+  "getPlotCommentSetting": {
+    "method": "GET",
+    "path": "/v1/creator/plots/:plotId/comment-setting",
+    "multipart": false,
+    "stream": false,
+    "response": "PlotCommentSettingResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_3925.js",
+    "line": 8
+  },
+  "getPlotCountByKeyword": {
+    "method": "GET",
+    "path": "/v1/plots/search/plot-count",
+    "multipart": false,
+    "stream": false,
+    "response": "GetPlotCountByKeywordResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_3690.js",
+    "line": 10
+  },
+  "getPlotCountByKeywordV2": {
+    "method": "GET",
+    "path": "/v2/plots/search/plot-count",
+    "multipart": false,
+    "stream": false,
+    "response": "GetPlotCountByKeywordResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_3691.js",
+    "line": 9
+  },
+  "getPlotDraftFirstOriginalCharacterProfileImageUrl": {
+    "method": "GET",
+    "path": "/v2/plots/:plotId/characters/:characterId/images/original/first",
+    "multipart": false,
+    "stream": false,
+    "response": "GetOriginalPlotCharacterImageResponse",
+    "source": "analysis/android/v3.51.94/extracted/4861_appendPlotDraftCharacterProfileImagesApi.js",
+    "line": 13
+  },
+  "getPlotDraftFirstOriginalCoverImageUrl": {
+    "method": "GET",
+    "path": "/v2/plots/:plotId/images/original/first",
+    "multipart": false,
+    "stream": false,
+    "response": "GetOriginalPlotCoverImageResponse",
+    "source": "analysis/android/v3.51.94/extracted/5084_appendPlotDraftCoverImagesApi.js",
+    "line": 13
+  },
+  "getPlotId": {
+    "method": "GET",
+    "path": "/v1/rooms/:roomId/plot-id",
+    "multipart": false,
+    "stream": false,
+    "response": "GetPlotIdResponse",
+    "source": "analysis/android/v3.51.94/extracted/2637_cloneRoomApi.js",
+    "line": 13
+  },
+  "getPlotLanguageEditions": {
+    "method": "GET",
+    "path": "/v1/plots/:plotId/language-editions",
+    "multipart": false,
+    "stream": false,
+    "response": "PlotLanguageEditionsApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_3071.js",
+    "line": 12
+  },
+  "getPlotLikeSummaryV2": {
+    "method": "GET",
+    "path": "/v2/plots/:plotId/likes/summary",
+    "multipart": false,
+    "stream": false,
+    "response": "PlotLikeSummaryResponseV2",
+    "source": "analysis/android/v3.51.94/extracted/module_3693.js",
+    "line": 9
+  },
+  "getPlotOriginalChatProfileImageUrl": {
+    "method": "GET",
+    "path": "/v2/plots/:plotId/chat-profiles/:chatProfileId/images/original",
+    "multipart": false,
+    "stream": false,
+    "response": "GetOriginalPlotChatProfileImageResponse",
+    "source": "analysis/android/v3.51.94/extracted/5099_cropPlotDraftChatProfileImageApi.js",
+    "line": 11
+  },
+  "getPlotProfileImageGenerationJob": {
+    "method": "GET",
+    "path": "/v1/plots/profile-image/job/:jobId",
+    "multipart": false,
+    "stream": false,
+    "response": "GetPlotProfileImageGenerationJobResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_5051.js",
+    "line": 18
+  },
+  "getPlotProfileImageGenerationResult": {
+    "method": "GET",
+    "path": "/v1/plots/profile-image/:profileImageResultId",
+    "multipart": false,
+    "stream": false,
+    "response": "GetPlotProfileImageGenerationResultResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_5051.js",
+    "line": 16
+  },
+  "getPlotProfileImageGenerationResultHistory": {
+    "method": "GET",
+    "path": "/v1/plots/profile-image/:plotId/history",
+    "multipart": false,
+    "stream": false,
+    "response": "GetPlotProfileImageGenerationResultListResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_5051.js",
+    "line": 17
+  },
+  "getPlotProfileImageGenerationStyles": {
+    "method": "GET",
+    "path": "/v1/plots/profile-image/styles",
+    "multipart": false,
+    "stream": false,
+    "response": "GetPlotProfileImageGenerationStyleListResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_5051.js",
+    "line": 11
+  },
+  "getPlotProfileImageSavedResultCount": {
+    "method": "GET",
+    "path": "/v1/plots/saved-profile-image/count",
+    "multipart": false,
+    "stream": false,
+    "response": "GetPlotProfileImageGenerationSavedResultCountResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_5071.js",
+    "line": 11
+  },
+  "getPlotProfileImageSavedResultList": {
+    "method": "GET",
+    "path": "/v1/plots/saved-profile-image/list",
+    "multipart": false,
+    "stream": false,
+    "response": "GetPlotProfileImageGenerationSavedResultListResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_5071.js",
+    "line": 10
+  },
+  "getPlotReleaseNudge": {
+    "method": "GET",
+    "path": "/v1/plots/release-nudge",
+    "multipart": false,
+    "stream": false,
+    "response": "PlotReleaseNudgeApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_4484.js",
+    "line": 8
+  },
+  "getPlotStats": {
+    "method": "GET",
+    "path": "/v1/creators/dashboard/plots/:plotId/stats",
+    "multipart": false,
+    "stream": false,
+    "response": "CreatorDashboardPlotStatsApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_4356.js",
+    "line": 8
+  },
+  "getPluginManifest": {
+    "method": "GET",
+    "path": "/v1/plugins/:pluginId/manifest",
+    "multipart": false,
+    "stream": false,
+    "response": "PluginManifestApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_2968.js",
+    "line": 11
+  },
+  "getPredefinedTags": {
+    "method": "GET",
+    "path": "/v1/plots/profile-image/tool/tags",
+    "multipart": false,
+    "stream": false,
+    "response": "GetPlotProfileImagePredefinedTagsListResponse",
+    "source": "analysis/android/v3.51.94/extracted/5059_extractTagsFromImageApi.js",
+    "line": 11
+  },
+  "getPreferredGenresRepresentativePlots": {
+    "method": "GET",
+    "path": "/v1/genres/preferred/representative-plots",
+    "multipart": false,
+    "stream": false,
+    "response": "PreferredGenresRepresentativePlotsResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_4602.js",
+    "line": 9
+  },
+  "getPreReleasePlot": {
+    "method": "GET",
+    "path": "/v1/plots/prerelease/recent",
+    "multipart": false,
+    "stream": false,
+    "response": "RecentPreReleasePlotResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_3071.js",
+    "line": 24
+  },
+  "getProfile": {
+    "method": "GET",
+    "path": "/v1/users/me",
+    "multipart": false,
+    "stream": false,
+    "response": "UserMeResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_2977.js",
+    "line": 8
+  },
+  "getRecommendedKeywords": {
+    "method": "GET",
+    "path": "/v1/plots/search/keywords/recommended",
+    "multipart": false,
+    "stream": false,
+    "response": "ListPlotRecommendedKeywordResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_6365.js",
+    "line": 8
+  },
+  "getRecommendedPlaceholder": {
+    "method": "GET",
+    "path": "/v1/plots/search/recommended-placeholder",
+    "multipart": false,
+    "stream": false,
+    "response": "PlotSearchRecommendedPlaceholderResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_3690.js",
+    "line": 9
+  },
+  "getRelatedKeywords": {
+    "method": "GET",
+    "path": "/v1/plots/search/related-keywords",
+    "multipart": false,
+    "stream": false,
+    "response": "GetRelatedKeywordsResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_6373.js",
+    "line": 8
+  },
+  "getRenderedLayoutSection": {
+    "method": "GET",
+    "path": "/v1/layout-sections/:layoutSectionId",
+    "multipart": false,
+    "stream": false,
+    "response": "GetRenderedLayoutSectionResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_3950.js",
+    "line": 8
+  },
+  "getRoom": {
+    "method": "GET",
+    "path": "/v1/rooms/:roomId",
+    "multipart": false,
+    "stream": false,
+    "response": "RoomApiDto",
+    "source": "analysis/android/v3.51.94/extracted/2637_cloneRoomApi.js",
+    "line": 9
+  },
+  "getRoomHighlight": {
+    "method": "GET",
+    "path": "/v1/rooms/highlight",
+    "multipart": false,
+    "stream": false,
+    "response": "GetRoomHighlightResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_4205.js",
+    "line": 8
+  },
+  "getRoomIntrosBeforeSelection": {
+    "method": "GET",
+    "path": "/v1/rooms/:roomId/intros/before-selection",
+    "multipart": false,
+    "stream": false,
+    "response": "RoomIntrosBeforeSelectionResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_4834.js",
+    "line": 8
+  },
+  "getRoomModelSetting": {
+    "method": "GET",
+    "path": "/v1/rooms/:roomId/model-setting",
+    "multipart": false,
+    "stream": false,
+    "response": "RoomModelSettingApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_4908.js",
+    "line": 8
+  },
+  "getSavedRoomStatus": {
+    "method": "GET",
+    "path": "/v1/rooms/plots/:plotId/saved-room-status",
+    "multipart": false,
+    "stream": false,
+    "response": "GetSavedRoomStatusResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_3671.js",
+    "line": 11
+  },
+  "getSearchAutocomplete": {
+    "method": "GET",
+    "path": "/v1/plots/search/autocomplete",
+    "multipart": false,
+    "stream": false,
+    "response": "ListPlotSearchAutoCompleteResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_3690.js",
+    "line": 11
+  },
+  "getSearchAutocompleteV2": {
+    "method": "GET",
+    "path": "/v2/plots/search/autocomplete",
+    "multipart": false,
+    "stream": false,
+    "response": "ListPlotSearchAutoCompleteResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_3691.js",
+    "line": 10
+  },
+  "getSelectedUserChatProfile": {
+    "method": "GET",
+    "path": "/v1/user-chat-profiles/selected",
+    "multipart": false,
+    "stream": false,
+    "response": "UserChatProfileApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_2978.js",
+    "line": 9
+  },
+  "getSelectedUserPersona": {
+    "method": "GET",
+    "path": "/v1/plots/:plotId/rooms/:roomId/user-personas/selected",
+    "multipart": false,
+    "stream": false,
+    "response": "UserPersonaApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_4742.js",
+    "line": 8
+  },
+  "getTopicRankings": {
+    "method": "GET",
+    "path": "/v1/topics/:topicId/plot-rankings",
+    "multipart": false,
+    "stream": false,
+    "response": "ListPlotTopicRankingResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_4562.js",
+    "line": 8
+  },
+  "getTopics": {
+    "method": "GET",
+    "path": "/v1/topics",
+    "multipart": false,
+    "stream": false,
+    "response": "ListPlotTopicResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_4562.js",
+    "line": 9
+  },
+  "getTossPaymentMethods": {
+    "method": "GET",
+    "path": "/v1/toss-payments/payment-methods",
+    "multipart": false,
+    "stream": false,
+    "response": "TossPaymentMethodsResponse",
+    "source": "analysis/android/v3.51.94/extracted/4262_cancelTossPaymentsApi.js",
+    "line": 12
+  },
+  "getTrickOrTreatHome": {
+    "method": "GET",
+    "path": "/v1/trick-or-treat",
+    "multipart": false,
+    "stream": false,
+    "response": "TrickOrTreatHomeApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_4486.js",
+    "line": 13
+  },
+  "getUser": {
+    "method": "GET",
+    "path": "/v1/users/:userId",
+    "multipart": false,
+    "stream": false,
+    "response": "UserApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_2977.js",
+    "line": 9
+  },
+  "getUserChatProfile": {
+    "method": "GET",
+    "path": "/v1/user-chat-profiles/:id",
+    "multipart": false,
+    "stream": false,
+    "response": "UserChatProfileApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_2654.js",
+    "line": 11
+  },
+  "getUserGenreRanking": {
+    "method": "GET",
+    "path": "/v1/genres/ranking",
+    "multipart": false,
+    "stream": false,
+    "response": "UserGenreRankingResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_4602.js",
+    "line": 13
+  },
+  "getUserIdByUsername": {
+    "method": "GET",
+    "path": "/v1/users/get-id-by-username/:username",
+    "multipart": false,
+    "stream": false,
+    "response": "GetUserIdResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_2977.js",
+    "line": 11
+  },
+  "getUsername": {
+    "method": "GET",
+    "path": "/v1/usernames/:username",
+    "multipart": false,
+    "stream": false,
+    "response": "UsernameResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_6727.js",
+    "line": 8
+  },
+  "getUserPlotChatProfile": {
+    "method": "GET",
+    "path": "/v1/rooms/:roomId/user-plot-chat-profiles/:id",
+    "multipart": false,
+    "stream": false,
+    "response": "UserPlotChatProfileApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_4747.js",
+    "line": 10
+  },
+  "getZetaPassPaymentMethod": {
+    "method": "GET",
+    "path": "/v1/zeta-pass/payment-method",
+    "multipart": false,
+    "stream": false,
+    "response": "ZetaPassPaymentMethodResponse",
+    "source": "analysis/android/v3.51.94/extracted/3038_cancelZetaPassApi.js",
+    "line": 22
+  },
+  "getZetaPassProConversionPreview": {
+    "method": "GET",
+    "path": "/v1/zeta-pass/pro-conversion/preview",
+    "multipart": false,
+    "stream": false,
+    "response": "ZetaPassProConversionPreviewResponse",
+    "source": "analysis/android/v3.51.94/extracted/3038_cancelZetaPassApi.js",
+    "line": 49
+  },
+  "getZetaPassProConversionStatus": {
+    "method": "GET",
+    "path": "/v1/zeta-pass/pro-conversion/status",
+    "multipart": false,
+    "stream": false,
+    "response": "ZetaPassProConversionStatusResponse",
+    "source": "analysis/android/v3.51.94/extracted/3038_cancelZetaPassApi.js",
+    "line": 21
+  },
+  "getZetaPassPromotionEligibility": {
+    "method": "GET",
+    "path": "/v1/zeta-pass/promotion/eligibility",
+    "multipart": false,
+    "stream": false,
+    "response": "ZetaPassPromotionEligibilityResponse",
+    "source": "analysis/android/v3.51.94/extracted/3038_cancelZetaPassApi.js",
+    "line": 48
+  },
+  "getZetaPassRefundEligibility": {
+    "method": "GET",
+    "path": "/v1/zeta-pass/refund/eligibility",
+    "multipart": false,
+    "stream": false,
+    "response": "ZetaPassRefundEligibilityResponse",
+    "source": "analysis/android/v3.51.94/extracted/3038_cancelZetaPassApi.js",
+    "line": 47
+  },
+  "getZetaPassSubscription": {
+    "method": "GET",
+    "path": "/v1/zeta-pass/subscription",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/3038_cancelZetaPassApi.js",
+    "line": 65
+  },
+  "getZetaPassVoucherRedeemability": {
+    "method": "GET",
+    "path": "/v1/zeta-pass/vouchers/redeemability",
+    "multipart": false,
+    "stream": false,
+    "response": "ZetaPassVoucherRedeemabilityResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_6718.js",
+    "line": 9
+  },
+  "getZLabsRelatedPlots": {
+    "method": "GET",
+    "path": "/v1/zlabs/plots/:plotId/related",
+    "multipart": false,
+    "stream": false,
+    "response": "ZLabsPlotSummaryApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_6339.js",
+    "line": 8
+  },
+  "isPlotScrapped": {
+    "method": "GET",
+    "path": "/v1/plots/:plotId/scraps",
+    "multipart": false,
+    "stream": false,
+    "response": "IsPlotScrappedResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_3684.js",
+    "line": 8
+  },
+  "issueSsoAccessToken": {
+    "method": "POST",
+    "path": "/v1/auth/tokens/sso-access-token",
+    "multipart": false,
+    "stream": false,
+    "response": "SsoAccessTokenApiDto",
+    "source": "analysis/android/v3.51.94/extracted/2652_generateSsoCodeApi.js",
+    "line": 15
+  },
+  "issueToken": {
+    "method": "POST",
+    "path": "/v1/auth/tokens",
+    "multipart": false,
+    "stream": false,
+    "response": "TokenApiDto",
+    "source": "analysis/android/v3.51.94/extracted/2652_generateSsoCodeApi.js",
+    "line": 13
+  },
+  "knockTrickOrTreat": {
+    "method": "POST",
+    "path": "/v1/trick-or-treat/knock",
+    "multipart": false,
+    "stream": false,
+    "response": "TrickOrTreatPlayApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_4486.js",
+    "line": 11
+  },
+  "likeFrame4cut": {
+    "method": "POST",
+    "path": "/v1/frame-4cuts/:id/likes",
+    "multipart": false,
+    "stream": false,
+    "response": "Frame4cutLikeApiDto",
+    "source": "analysis/android/v3.51.94/extracted/6411_detachFrame4cutFromWallApi.js",
+    "line": 10
+  },
+  "likePlotComment": {
+    "method": "POST",
+    "path": "/v1/plots/:plotId/comments/:commentId/likes",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_3926.js",
+    "line": 23
+  },
+  "likePlotV2": {
+    "method": "PUT",
+    "path": "/v2/plots/:plotId/likes",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_3693.js",
+    "line": 13
+  },
+  "listAllPlotCharacterImages": {
+    "method": "GET",
+    "path": "/v2/plots/:plotId/all-character-images",
+    "multipart": false,
+    "stream": false,
+    "response": "ListAllPlotCharacterImageResponse",
+    "source": "analysis/android/v3.51.94/extracted/4861_appendPlotDraftCharacterProfileImagesApi.js",
+    "line": 15
+  },
+  "listAllPlotCharacterImagesForPreview": {
+    "method": "GET",
+    "path": "/v2/plots/:plotId/all-character-images/preview",
+    "multipart": false,
+    "stream": false,
+    "response": "ListAllPlotCharacterImageResponse",
+    "source": "analysis/android/v3.51.94/extracted/4861_appendPlotDraftCharacterProfileImagesApi.js",
+    "line": 16
+  },
+  "listAnnouncements": {
+    "method": "GET",
+    "path": "/v1/announcements/",
+    "multipart": false,
+    "stream": false,
+    "response": "ListAnnouncementResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_4712.js",
+    "line": 8
+  },
+  "listAutoPaymentSettings": {
+    "method": "GET",
+    "path": "/v1/coin/auto-payment/settings",
+    "multipart": false,
+    "stream": false,
+    "response": "ListAutoPaymentSettingsResponse",
+    "source": "analysis/android/v3.51.94/extracted/2649_changeCodaPayAutoPaymentPaymentMethodApi.js",
+    "line": 9
+  },
+  "listBlockedHashtag": {
+    "method": "GET",
+    "path": "/v1/plots/hashtags/blocks",
+    "multipart": false,
+    "stream": false,
+    "response": "ListBlockedHashtagResponse",
+    "source": "analysis/android/v3.51.94/extracted/6454_blockHashtagApi.js",
+    "line": 9
+  },
+  "listBlockedPlot": {
+    "method": "GET",
+    "path": "/v1/plots/blocks",
+    "multipart": false,
+    "stream": false,
+    "response": "ListBlockedPlotResponse",
+    "source": "analysis/android/v3.51.94/extracted/3686_blockPlotApi.js",
+    "line": 9
+  },
+  "listBlockedUser": {
+    "method": "GET",
+    "path": "/v1/users/blocks",
+    "multipart": false,
+    "stream": false,
+    "response": "ListBlockedUserResponse",
+    "source": "analysis/android/v3.51.94/extracted/3923_blockUserApi.js",
+    "line": 9
+  },
+  "listCodaPayPaymentMethods": {
+    "method": "GET",
+    "path": "/v1/coda-pay/payment-methods",
+    "multipart": false,
+    "stream": false,
+    "response": "CodaPayChannelsResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_4259.js",
+    "line": 9
+  },
+  "listCoinExpirations": {
+    "method": "GET",
+    "path": "/v1/coin/expirations",
+    "multipart": false,
+    "stream": false,
+    "response": "ListCoinExpirationResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_2650.js",
+    "line": 10
+  },
+  "listCoinTransactions": {
+    "method": "GET",
+    "path": "/v1/coin/transactions",
+    "multipart": false,
+    "stream": false,
+    "response": "ListCoinTransactionResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_2650.js",
+    "line": 9
+  },
+  "listCommentActivities": {
+    "method": "GET",
+    "path": "/v1/comment-activities",
+    "multipart": false,
+    "stream": false,
+    "response": "ListCommentActivityResponse",
+    "source": "analysis/android/v3.51.94/extracted/6512_listCommentActivitiesApi.js",
+    "line": 9
+  },
+  "listCreatorFeedPosts": {
+    "method": "GET",
+    "path": "/v1/creators/:creatorId/feed-posts",
+    "multipart": false,
+    "stream": false,
+    "response": "ListFeedPostResponse",
+    "source": "analysis/android/v3.51.94/extracted/3915_listCreatorFeedPostsApi.js",
+    "line": 9
+  },
+  "listCreatorPlotComments": {
+    "method": "GET",
+    "path": "/v1/creator/comments",
+    "multipart": false,
+    "stream": false,
+    "response": "PageCreatorCommentResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_3925.js",
+    "line": 11
+  },
+  "listCreatorReactions": {
+    "method": "GET",
+    "path": "/v1/creator-reactions",
+    "multipart": false,
+    "stream": false,
+    "response": "ListCreatorReactionResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_4130.js",
+    "line": 8
+  },
+  "listDiceThemes": {
+    "method": "GET",
+    "path": "/v1/dice-themes",
+    "multipart": false,
+    "stream": false,
+    "response": "DiceThemeListResponse",
+    "source": "analysis/android/v3.51.94/extracted/5249_listDiceThemesApi.js",
+    "line": 9
+  },
+  "listFeedCurations": {
+    "method": "GET",
+    "path": "/v1/infinite-plots/curations",
+    "multipart": false,
+    "stream": false,
+    "response": "ListFeedCurationsResponse",
+    "source": "analysis/android/v3.51.94/extracted/3689_listFeedCurationsApi.js",
+    "line": 9
+  },
+  "listFeedPostCommentReplies": {
+    "method": "GET",
+    "path": "/v1/creator-feed/comments/:commentId/replies",
+    "multipart": false,
+    "stream": false,
+    "response": "ListFeedPostCommentResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_3916.js",
+    "line": 12
+  },
+  "listFeedPostComments": {
+    "method": "GET",
+    "path": "/v1/creator-feed/posts/:postId/comments",
+    "multipart": false,
+    "stream": false,
+    "response": "ListFeedPostCommentResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_3916.js",
+    "line": 9
+  },
+  "listFeedPostPollVoters": {
+    "method": "GET",
+    "path": "/v1/creator-feed/posts/:postId/poll/options/:optionId/voters",
+    "multipart": false,
+    "stream": false,
+    "response": "ListFeedPostPollVoterResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_3898.js",
+    "line": 40
+  },
+  "listFollower": {
+    "method": "GET",
+    "path": "/v1/creators/:creatorId/followers",
+    "multipart": false,
+    "stream": false,
+    "response": "ListFollowerResponse",
+    "source": "analysis/android/v3.51.94/extracted/2909_followCreatorApi.js",
+    "line": 11
+  },
+  "listFollowingCreator": {
+    "method": "GET",
+    "path": "/v1/creators/:creatorId/followings",
+    "multipart": false,
+    "stream": false,
+    "response": "ListFollowingCreatorResponse",
+    "source": "analysis/android/v3.51.94/extracted/2909_followCreatorApi.js",
+    "line": 10
+  },
+  "listFrame4cut": {
+    "method": "GET",
+    "path": "/v1/frame-4cuts",
+    "multipart": false,
+    "stream": false,
+    "response": "ListFrame4cutResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_4753.js",
+    "line": 8
+  },
+  "listFrame4cutWall": {
+    "method": "GET",
+    "path": "/v1/frame-4cut/wall",
+    "multipart": false,
+    "stream": false,
+    "response": "ListFrame4cutWallPostResponse",
+    "source": "analysis/android/v3.51.94/extracted/6411_detachFrame4cutFromWallApi.js",
+    "line": 11
+  },
+  "listInfinitePlotsTabs": {
+    "method": "GET",
+    "path": "/v1/infinite-plots/tabs",
+    "multipart": false,
+    "stream": false,
+    "response": "InfinitePlotsTabsResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_3688.js",
+    "line": 9
+  },
+  "listLikedPlotsV2": {
+    "method": "GET",
+    "path": "/v2/plots/liked",
+    "multipart": false,
+    "stream": false,
+    "response": "ListLikedPlotResponseV2",
+    "source": "analysis/android/v3.51.94/extracted/module_3693.js",
+    "line": 10
+  },
+  "listLorebooksForCreator": {
+    "method": "GET",
+    "path": "/v1/lorebooks/creator",
+    "multipart": false,
+    "stream": false,
+    "response": "ListLorebooksForCreatorResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_4059.js",
+    "line": 12
+  },
+  "listMessageBookmark": {
+    "method": "GET",
+    "path": "/v1/rooms/:roomId/bookmarks",
+    "multipart": false,
+    "stream": false,
+    "response": "ListMessageBookmarksResponse",
+    "source": "analysis/android/v3.51.94/extracted/4929_countMessageBookmarkAfterApi.js",
+    "line": 10
+  },
+  "listMessages": {
+    "method": "GET",
+    "path": "/v1/rooms/:roomId/messages",
+    "multipart": false,
+    "stream": false,
+    "response": "ListMessageResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_4835.js",
+    "line": 9
+  },
+  "listMyAccountBlocks": {
+    "method": "GET",
+    "path": "/v1/users/me/account-blocks",
+    "multipart": false,
+    "stream": false,
+    "response": "ListMyAccountBlocksResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_2977.js",
+    "line": 10
+  },
+  "listMyBadge": {
+    "method": "GET",
+    "path": "/v1/users/me/badges",
+    "multipart": false,
+    "stream": false,
+    "response": "ListUserBadgeResponse",
+    "source": "analysis/android/v3.51.94/extracted/4647_listMyBadgeApi.js",
+    "line": 10
+  },
+  "listMyFeedPosts": {
+    "method": "GET",
+    "path": "/v1/creator-feed/posts/me",
+    "multipart": false,
+    "stream": false,
+    "response": "ListMyFeedPostResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_3898.js",
+    "line": 41
+  },
+  "listMyFrame4cutWallPost": {
+    "method": "GET",
+    "path": "/v1/frame-4cut/wall/mine",
+    "multipart": false,
+    "stream": false,
+    "response": "ListFrame4cutWallPostResponse",
+    "source": "analysis/android/v3.51.94/extracted/6411_detachFrame4cutFromWallApi.js",
+    "line": 12
+  },
+  "listMyPlotsByLorebookId": {
+    "method": "GET",
+    "path": "/v1/lorebooks/:lorebookId/my-plots",
+    "multipart": false,
+    "stream": false,
+    "response": "ListMyLorebookPlotsResponse",
+    "source": "analysis/android/v3.51.94/extracted/4061_attachLorebookApi.js",
+    "line": 17
+  },
+  "listMyUsageVouchers": {
+    "method": "GET",
+    "path": "/v1/usage-vouchers/me",
+    "multipart": false,
+    "stream": false,
+    "response": "ListUsageVoucherResponse",
+    "source": "analysis/android/v3.51.94/extracted/4906_listMyUsageVouchersApi.js",
+    "line": 9
+  },
+  "listMyVisibleLorebooks": {
+    "method": "GET",
+    "path": "/v1/lorebooks",
+    "multipart": false,
+    "stream": false,
+    "response": "ListLorebooksResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_4059.js",
+    "line": 10
+  },
+  "listNotifications": {
+    "method": "GET",
+    "path": "/v1/notifications",
+    "multipart": false,
+    "stream": false,
+    "response": "ListNotificationsResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_3766.js",
+    "line": 8
+  },
+  "listPixaiContestPlots": {
+    "method": "GET",
+    "path": "/v1/pixai-contest/plots",
+    "multipart": false,
+    "stream": false,
+    "response": "InfinitePlotsResponse",
+    "source": "analysis/android/v3.51.94/extracted/4501_listPixaiContestPlotsApi.js",
+    "line": 9
+  },
+  "listPlot": {
+    "method": "GET",
+    "path": "/v1/plots",
+    "multipart": false,
+    "stream": false,
+    "response": "PagePlotResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_3071.js",
+    "line": 16
+  },
+  "listPlotCharacterProfileImage": {
+    "method": "GET",
+    "path": "/v2/plots/:plotId/characters/:characterId/images",
+    "multipart": false,
+    "stream": false,
+    "response": "ListPlotCharacterImageResponse",
+    "source": "analysis/android/v3.51.94/extracted/4861_appendPlotDraftCharacterProfileImagesApi.js",
+    "line": 9
+  },
+  "listPlotCharacterProfileImageForCreator": {
+    "method": "GET",
+    "path": "/v2/plots/:plotId/characters/:characterId/images/creator",
+    "multipart": false,
+    "stream": false,
+    "response": "ListPlotCharacterImageResponse",
+    "source": "analysis/android/v3.51.94/extracted/4861_appendPlotDraftCharacterProfileImagesApi.js",
+    "line": 14
+  },
+  "listPlotCommentReplies": {
+    "method": "GET",
+    "path": "/v1/plots/:plotId/comments/:commentId/replies",
+    "multipart": false,
+    "stream": false,
+    "response": "PagePlotCommentResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_3926.js",
+    "line": 12
+  },
+  "listPlotComments": {
+    "method": "GET",
+    "path": "/v1/plots/:plotId/comments",
+    "multipart": false,
+    "stream": false,
+    "response": "PagePlotCommentResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_3926.js",
+    "line": 8
+  },
+  "listPlotCoverImage": {
+    "method": "GET",
+    "path": "/v2/plots/:plotId/images",
+    "multipart": false,
+    "stream": false,
+    "response": "ListPlotCoverImageResponse",
+    "source": "analysis/android/v3.51.94/extracted/5084_appendPlotDraftCoverImagesApi.js",
+    "line": 9
+  },
+  "listPlotCoverImageForCreator": {
+    "method": "GET",
+    "path": "/v2/plots/:plotId/images/creator",
+    "multipart": false,
+    "stream": false,
+    "response": "ListPlotCoverImageResponse",
+    "source": "analysis/android/v3.51.94/extracted/5084_appendPlotDraftCoverImagesApi.js",
+    "line": 14
+  },
+  "listPlotCoverImageForPreview": {
+    "method": "GET",
+    "path": "/v2/plots/:plotId/images/creator/preview",
+    "multipart": false,
+    "stream": false,
+    "response": "ListPlotCoverImageForPreviewResponse",
+    "source": "analysis/android/v3.51.94/extracted/5084_appendPlotDraftCoverImagesApi.js",
+    "line": 15
+  },
+  "listPlotForCreator": {
+    "method": "GET",
+    "path": "/v1/plots/creator",
+    "multipart": false,
+    "stream": false,
+    "response": "PagePlotForCreatorResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_3070.js",
+    "line": 11
+  },
+  "listPlotLikeUsersV2": {
+    "method": "GET",
+    "path": "/v2/plots/:plotId/likes",
+    "multipart": false,
+    "stream": false,
+    "response": "ListPlotLikeUsersResponseV2",
+    "source": "analysis/android/v3.51.94/extracted/module_3693.js",
+    "line": 8
+  },
+  "listPlotPlugin": {
+    "method": "GET",
+    "path": "/v1/plots/:plotId/plugins",
+    "multipart": false,
+    "stream": false,
+    "response": "PlotPluginConfigurationsResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_2968.js",
+    "line": 8
+  },
+  "listPlotRanking": {
+    "method": "GET",
+    "path": "/v1/plots/ranking",
+    "multipart": false,
+    "stream": false,
+    "response": "ListPlotRankingResponse",
+    "source": "analysis/android/v3.51.94/extracted/3687_listPlotRankingApi.js",
+    "line": 9
+  },
+  "listPlotsByLorebookId": {
+    "method": "GET",
+    "path": "/v1/lorebooks/:lorebookId/plots",
+    "multipart": false,
+    "stream": false,
+    "response": "PageLorebookAttachedPlotResponse",
+    "source": "analysis/android/v3.51.94/extracted/4061_attachLorebookApi.js",
+    "line": 16
+  },
+  "listPlotsInPool": {
+    "method": "GET",
+    "path": "/v1/plot-pools/:poolId/plots",
+    "multipart": false,
+    "stream": false,
+    "response": "PagePlotResponse",
+    "source": "analysis/android/v3.51.94/extracted/6270_listPlotsInPoolApi.js",
+    "line": 9
+  },
+  "listPlotSnapshotImages": {
+    "method": "GET",
+    "path": "/v1/plots/:plotId/snapshot-images",
+    "multipart": false,
+    "stream": false,
+    "response": "ListPlotSnapshotImageResponse",
+    "source": "analysis/android/v3.51.94/extracted/4762_listPlotSnapshotImagesApi.js",
+    "line": 9
+  },
+  "listPlugin": {
+    "method": "GET",
+    "path": "/v1/plugins",
+    "multipart": false,
+    "stream": false,
+    "response": "ListPluginResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_2968.js",
+    "line": 10
+  },
+  "listPluginGuide": {
+    "method": "GET",
+    "path": "/v1/plugins/guides",
+    "multipart": false,
+    "stream": false,
+    "response": "ListPluginGuideResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_2968.js",
+    "line": 13
+  },
+  "listPluginIcon": {
+    "method": "GET",
+    "path": "/v1/plugins/icons",
+    "multipart": false,
+    "stream": false,
+    "response": "ListPluginIconResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_2968.js",
+    "line": 12
+  },
+  "listPopups": {
+    "method": "GET",
+    "path": "/v1/popups",
+    "multipart": false,
+    "stream": false,
+    "response": "ListPopupResponse",
+    "source": "analysis/android/v3.51.94/extracted/4488_listPopupsApi.js",
+    "line": 9
+  },
+  "listProducts": {
+    "method": "GET",
+    "path": "/v1/open-stores/:storeType/products",
+    "multipart": false,
+    "stream": false,
+    "response": "ListProductsResponse",
+    "source": "analysis/android/v3.51.94/extracted/3203_listProductsApi.js",
+    "line": 9
+  },
+  "listRandomRecentlyCreatedPlot": {
+    "method": "GET",
+    "path": "/v1/plots/random-recently-created",
+    "multipart": false,
+    "stream": false,
+    "response": "ListPlotResponse",
+    "source": "analysis/android/v3.51.94/extracted/2916_listRandomRecentlyCreatedPlotApi.js",
+    "line": 10
+  },
+  "listRooms": {
+    "method": "GET",
+    "path": "/v1/rooms",
+    "multipart": false,
+    "stream": false,
+    "response": "ListRoomsResponse",
+    "source": "analysis/android/v3.51.94/extracted/2637_cloneRoomApi.js",
+    "line": 10
+  },
+  "listRoomsV2": {
+    "method": "GET",
+    "path": "/v2/rooms",
+    "multipart": false,
+    "stream": false,
+    "response": "ListRoomsResponseV2",
+    "source": "analysis/android/v3.51.94/extracted/3670_listRoomsV2Api.js",
+    "line": 9
+  },
+  "listSavedRooms": {
+    "method": "GET",
+    "path": "/v1/rooms/saved",
+    "multipart": false,
+    "stream": false,
+    "response": "ListSavedRoomsResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_3671.js",
+    "line": 16
+  },
+  "listSimilarPlots": {
+    "method": "GET",
+    "path": "/v1/plots/:plotId/similar-plots",
+    "multipart": false,
+    "stream": false,
+    "response": "ListSimilarPlotsResponse",
+    "source": "analysis/android/v3.51.94/extracted/2916_listRandomRecentlyCreatedPlotApi.js",
+    "line": 9
+  },
+  "listTrickOrTreatDraws": {
+    "method": "GET",
+    "path": "/v1/trick-or-treat/draws",
+    "multipart": false,
+    "stream": false,
+    "response": "TrickOrTreatListDrawsApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_4486.js",
+    "line": 17
+  },
+  "listTrickOrTreatGifts": {
+    "method": "GET",
+    "path": "/v1/trick-or-treat/gifts",
+    "multipart": false,
+    "stream": false,
+    "response": "TrickOrTreatListGiftsApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_4486.js",
+    "line": 16
+  },
+  "listTrickOrTreatRecentWins": {
+    "method": "GET",
+    "path": "/v1/trick-or-treat/recent-wins",
+    "multipart": false,
+    "stream": false,
+    "response": "TrickOrTreatListRecentWinsApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_4486.js",
+    "line": 15
+  },
+  "listTrickOrTreatWinnings": {
+    "method": "GET",
+    "path": "/v1/trick-or-treat/winnings",
+    "multipart": false,
+    "stream": false,
+    "response": "TrickOrTreatListWinningsApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_4486.js",
+    "line": 14
+  },
+  "listUserBadge": {
+    "method": "GET",
+    "path": "/v1/users/:userId/badges",
+    "multipart": false,
+    "stream": false,
+    "response": "ListUserBadgeResponse",
+    "source": "analysis/android/v3.51.94/extracted/4647_listMyBadgeApi.js",
+    "line": 9
+  },
+  "listUserChatProfile": {
+    "method": "GET",
+    "path": "/v1/user-chat-profiles",
+    "multipart": false,
+    "stream": false,
+    "response": "UserChatProfileListResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_2978.js",
+    "line": 8
+  },
+  "loadSavedRoom": {
+    "method": "POST",
+    "path": "/v1/rooms/:roomId/load",
+    "multipart": false,
+    "stream": false,
+    "response": "RoomApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_3671.js",
+    "line": 14
+  },
+  "logout": {
+    "method": "POST",
+    "path": "/v1/users/logout",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_2977.js",
+    "line": 14
+  },
+  "migrateChat": {
+    "method": "POST",
+    "path": "/v1/nutty/migrate",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_6538.js",
+    "line": 13
+  },
+  "option": {
+    "method": "POST",
+    "path": "/v1/rooms/:roomId/options/stream",
+    "multipart": false,
+    "stream": true,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/5026_chatApi.js",
+    "line": 13
+  },
+  "optionRegen": {
+    "method": "POST",
+    "path": "/v1/rooms/:roomId/options/stream/more",
+    "multipart": false,
+    "stream": true,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/5026_chatApi.js",
+    "line": 12
+  },
+  "pagePlotScrapped": {
+    "method": "GET",
+    "path": "/v1/plots/scrapped",
+    "multipart": false,
+    "stream": false,
+    "response": "PagePlotScrappedResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_3684.js",
+    "line": 9
+  },
+  "patchAutoPaymentSetting": {
+    "method": "PATCH",
+    "path": "/v1/coin/auto-payment/settings",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/2649_changeCodaPayAutoPaymentPaymentMethodApi.js",
+    "line": 18
+  },
+  "patchMyUserPlotChatProfile": {
+    "method": "PATCH",
+    "path": "/v1/rooms/:roomId/user-plot-chat-profiles/me",
+    "multipart": false,
+    "stream": false,
+    "response": "UserPlotChatProfileApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_4747.js",
+    "line": 9
+  },
+  "patchPlotDraftByCreator": {
+    "method": "PATCH",
+    "path": "/v1/plots/:plotId",
+    "multipart": false,
+    "stream": false,
+    "response": "PlotForCreatorApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_3070.js",
+    "line": 9
+  },
+  "patchUserChatProfile": {
+    "method": "PATCH",
+    "path": "/v1/user-chat-profiles/:id",
+    "multipart": false,
+    "stream": false,
+    "response": "UserChatProfileApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_2654.js",
+    "line": 12
+  },
+  "patchUserProfile": {
+    "method": "PATCH",
+    "path": "/v1/users/me",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_2977.js",
+    "line": 16
+  },
+  "pinFeedPost": {
+    "method": "PUT",
+    "path": "/v1/creator-feed/posts/:postId/pin",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_3898.js",
+    "line": 19
+  },
+  "pinFeedPostComment": {
+    "method": "PUT",
+    "path": "/v1/creator-feed/posts/:postId/comments/:commentId/pin",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_3916.js",
+    "line": 14
+  },
+  "pinPlotComment": {
+    "method": "PUT",
+    "path": "/v1/creator/plots/:plotId/comments/:commentId/pin",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_3925.js",
+    "line": 14
+  },
+  "pinRoom": {
+    "method": "POST",
+    "path": "/v1/rooms/:roomId/pin",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/2637_cloneRoomApi.js",
+    "line": 21
+  },
+  "postFrame4cutOnWall": {
+    "method": "POST",
+    "path": "/v1/frame-4cuts/:id/wall",
+    "multipart": false,
+    "stream": false,
+    "response": "Frame4cutWallPostApiDto",
+    "source": "analysis/android/v3.51.94/extracted/6411_detachFrame4cutFromWallApi.js",
+    "line": 9
+  },
+  "purchaseBulk": {
+    "method": "PUT",
+    "path": "/v1/open-stores/:storeType/purchases",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/3203_listProductsApi.js",
+    "line": 11
+  },
+  "purchaseFrame4cutVideo": {
+    "method": "POST",
+    "path": "/v1/frame-4cuts/:id/video",
+    "multipart": false,
+    "stream": false,
+    "response": "Frame4cutApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_4753.js",
+    "line": 10
+  },
+  "purchaseProduct": {
+    "method": "POST",
+    "path": "/v1/open-stores/:storeType/products/:productId/purchases",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/3203_listProductsApi.js",
+    "line": 12
+  },
+  "purchaseZetaPassOneDayPassViaAppStore": {
+    "method": "POST",
+    "path": "/v1/zeta-pass/one-day-pass/purchase/app-store",
+    "multipart": false,
+    "stream": false,
+    "response": "ZetaPassOneDayPassResponse",
+    "source": "analysis/android/v3.51.94/extracted/3740_confirmZetaPassOneDayPassWebPaymentApi.js",
+    "line": 13
+  },
+  "purchaseZetaPassOneDayPassViaPlayStore": {
+    "method": "POST",
+    "path": "/v1/zeta-pass/one-day-pass/purchase/play-store",
+    "multipart": false,
+    "stream": false,
+    "response": "ZetaPassOneDayPassResponse",
+    "source": "analysis/android/v3.51.94/extracted/3740_confirmZetaPassOneDayPassWebPaymentApi.js",
+    "line": 12
+  },
+  "purgeRooms": {
+    "method": "POST",
+    "path": "/v1/rooms/purge",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/2637_cloneRoomApi.js",
+    "line": 24
+  },
+  "rateChatSnapshotImage": {
+    "method": "POST",
+    "path": "/v1/rooms/:roomId/messages/:messageId/candidates/:candidateId/snapshot-images/:snapshotImageId/ratings",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_4831.js",
+    "line": 13
+  },
+  "rateGeneratedPlotCharacterImage": {
+    "method": "POST",
+    "path": "/v2/plots/:plotId/characters/:characterId/images/ratings",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/4861_appendPlotDraftCharacterProfileImagesApi.js",
+    "line": 22
+  },
+  "rateGeneratedPlotCoverImage": {
+    "method": "POST",
+    "path": "/v2/plots/:plotId/images/ratings",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/5084_appendPlotDraftCoverImagesApi.js",
+    "line": 21
+  },
+  "reactivateZetaPass": {
+    "method": "POST",
+    "path": "/v1/zeta-pass/reactivate",
+    "multipart": false,
+    "stream": false,
+    "response": "ZetaPassSubscriptionResponse",
+    "source": "analysis/android/v3.51.94/extracted/3038_cancelZetaPassApi.js",
+    "line": 39
+  },
+  "recordPlotFirstImpressionSurveyVisit": {
+    "method": "POST",
+    "path": "/v1/plots/:plotId/first-impression-survey/visits",
+    "multipart": false,
+    "stream": false,
+    "response": "PlotFirstImpressionSurveyVisitResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_3032.js",
+    "line": 8
+  },
+  "redeemAdFreeVoucher": {
+    "method": "POST",
+    "path": "/v1/ad-free/vouchers/:voucherId/redeem",
+    "multipart": false,
+    "stream": false,
+    "response": "RedeemAdFreeVoucherResponse",
+    "source": "analysis/android/v3.51.94/extracted/6716_redeemAdFreeVoucherApi.js",
+    "line": 9
+  },
+  "redeemZetaPassVoucher": {
+    "method": "POST",
+    "path": "/v1/zeta-pass/vouchers/:voucherId/redeem",
+    "multipart": false,
+    "stream": false,
+    "response": "RedeemZetaPassVoucherResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_6718.js",
+    "line": 8
+  },
+  "regen": {
+    "method": "POST",
+    "path": "/v1/rooms/:roomId/messages/:messageId/candidates/stream",
+    "multipart": false,
+    "stream": true,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/5026_chatApi.js",
+    "line": 14
+  },
+  "registerPlotProfileImageGenerationJob": {
+    "method": "POST",
+    "path": "/v1/plots/profile-image/:plotId/job/register",
+    "multipart": false,
+    "stream": false,
+    "response": "RegisterPlotProfileImageGenerationJobResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_5051.js",
+    "line": 12
+  },
+  "replyTrickOrTreatPlay": {
+    "method": "POST",
+    "path": "/v1/trick-or-treat/plays/:playId/reply",
+    "multipart": false,
+    "stream": false,
+    "response": "TrickOrTreatPlayApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_4486.js",
+    "line": 10
+  },
+  "reportCharacterProfileImageGenerationResult": {
+    "method": "POST",
+    "path": "/v1/plots/profile-image/result/:profileImageResultId/report",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_5051.js",
+    "line": 14
+  },
+  "reportChatSnapshotImage": {
+    "method": "POST",
+    "path": "/v1/rooms/:roomId/messages/:messageId/candidates/:candidateId/snapshot-images/:snapshotImageId/reports",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_4831.js",
+    "line": 12
+  },
+  "reportFeedPost": {
+    "method": "POST",
+    "path": "/v1/creator-feed/posts/:postId/reports",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_3898.js",
+    "line": 30
+  },
+  "reportFeedPostComment": {
+    "method": "POST",
+    "path": "/v1/creator-feed/comments/:commentId/reports",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_3916.js",
+    "line": 21
+  },
+  "reportFrame4cut": {
+    "method": "POST",
+    "path": "/v1/frame-4cuts/:id/reports",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/6411_detachFrame4cutFromWallApi.js",
+    "line": 16
+  },
+  "reportPlotComment": {
+    "method": "POST",
+    "path": "/v1/plots/:plotId/comments/:commentId/reports",
+    "multipart": false,
+    "stream": false,
+    "response": "ReportPlotCommentResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_3926.js",
+    "line": 11
+  },
+  "reportUser": {
+    "method": "POST",
+    "path": "/v1/users/:userId/report",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_2977.js",
+    "line": 13
+  },
+  "requestCodaPayOrder": {
+    "method": "POST",
+    "path": "/v1/coda-pay/orders",
+    "multipart": false,
+    "stream": false,
+    "response": "CodaPayCheckoutResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_4259.js",
+    "line": 8
+  },
+  "requestCreatorAssistantBriefOptionsJob": {
+    "method": "POST",
+    "path": "/v2/creator-assistant/brief-options",
+    "multipart": false,
+    "stream": false,
+    "response": "CreatorAssistantSubmitBriefJobResponse",
+    "source": "analysis/android/v3.51.94/extracted/4342_generateCreatorAssistantBriefBackstoriesApi.js",
+    "line": 30
+  },
+  "requestCreatorAssistantBriefPlotJob": {
+    "method": "POST",
+    "path": "/v2/creator-assistant/generate-plot",
+    "multipart": false,
+    "stream": false,
+    "response": "CreatorAssistantSubmitPlotJobResponse",
+    "source": "analysis/android/v3.51.94/extracted/4342_generateCreatorAssistantBriefBackstoriesApi.js",
+    "line": 20
+  },
+  "requestDailyQuiz": {
+    "method": "GET",
+    "path": "/v1/daily-quizzes",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/4178_claimRewardForDailyQuizApi.js",
+    "line": 21
+  },
+  "requestNiceAdditionalAuth": {
+    "method": "POST",
+    "path": "/v2/additional-auth/nice",
+    "multipart": false,
+    "stream": false,
+    "response": "RequestAdditionalAuthResponse",
+    "source": "analysis/android/v3.51.94/extracted/3645_requestNiceAdditionalAuthApi.js",
+    "line": 9
+  },
+  "requestOneDayPassRefund": {
+    "method": "POST",
+    "path": "/v1/zeta-pass/one-day-pass/refund",
+    "multipart": false,
+    "stream": false,
+    "response": "OneDayPassRefundResultResponse",
+    "source": "analysis/android/v3.51.94/extracted/3740_confirmZetaPassOneDayPassWebPaymentApi.js",
+    "line": 9
+  },
+  "requestTossPayments": {
+    "method": "POST",
+    "path": "/v1/toss-payments/orders",
+    "multipart": false,
+    "stream": false,
+    "response": "TossPaymentsResponse",
+    "source": "analysis/android/v3.51.94/extracted/4262_cancelTossPaymentsApi.js",
+    "line": 13
+  },
+  "requestZetaPassOneDayPassWebOrder": {
+    "method": "POST",
+    "path": "/v1/zeta-pass/one-day-pass/purchase/web/orders",
+    "multipart": false,
+    "stream": false,
+    "response": "ZetaPassOneDayPassOrderResponse",
+    "source": "analysis/android/v3.51.94/extracted/3740_confirmZetaPassOneDayPassWebPaymentApi.js",
+    "line": 10
+  },
+  "requestZetaPassRefund": {
+    "method": "POST",
+    "path": "/v1/zeta-pass/refund",
+    "multipart": false,
+    "stream": false,
+    "response": "ZetaPassRefundResultResponse",
+    "source": "analysis/android/v3.51.94/extracted/3038_cancelZetaPassApi.js",
+    "line": 37
+  },
+  "requestZetaPassRenewalReminder": {
+    "method": "POST",
+    "path": "/v1/zeta-pass/renewal-reminder",
+    "multipart": false,
+    "stream": false,
+    "response": "ZetaPassSubscriptionResponse",
+    "source": "analysis/android/v3.51.94/extracted/3038_cancelZetaPassApi.js",
+    "line": 35
+  },
+  "rerollTrickOrTreatPlay": {
+    "method": "POST",
+    "path": "/v1/trick-or-treat/plays/:playId/reroll",
+    "multipart": false,
+    "stream": false,
+    "response": "TrickOrTreatPlayApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_4486.js",
+    "line": 9
+  },
+  "rewardDaily": {
+    "method": "POST",
+    "path": "/v1/coin/daily-rewards",
+    "multipart": false,
+    "stream": false,
+    "response": "CoinDailyRewardResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_2650.js",
+    "line": 8
+  },
+  "scrapPlot": {
+    "method": "PUT",
+    "path": "/v1/plots/:plotId/scraps",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_3684.js",
+    "line": 13
+  },
+  "searchCreator": {
+    "method": "GET",
+    "path": "/v1/creators/search",
+    "multipart": false,
+    "stream": false,
+    "response": "ListCreatorSearchResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_6354.js",
+    "line": 8
+  },
+  "searchLorebooks": {
+    "method": "GET",
+    "path": "/v1/lorebooks/search",
+    "multipart": false,
+    "stream": false,
+    "response": "LorebookSearchResponse",
+    "source": "analysis/android/v3.51.94/extracted/5144_searchLorebooksApi.js",
+    "line": 9
+  },
+  "searchPlot": {
+    "method": "GET",
+    "path": "/v1/plots/search",
+    "multipart": false,
+    "stream": false,
+    "response": "PagePlotSearchResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_3690.js",
+    "line": 8
+  },
+  "searchPlotV2": {
+    "method": "GET",
+    "path": "/v2/plots/search",
+    "multipart": false,
+    "stream": false,
+    "response": "PagePlotSearchV2Response",
+    "source": "analysis/android/v3.51.94/extracted/module_3691.js",
+    "line": 8
+  },
+  "selectUserChatProfile": {
+    "method": "PUT",
+    "path": "/v1/user-chat-profiles/:id/selected",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_2978.js",
+    "line": 11
+  },
+  "sendSms": {
+    "method": "POST",
+    "path": "/v1/nutty/sms",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_6538.js",
+    "line": 11
+  },
+  "setDefaultUserChatProfile": {
+    "method": "PUT",
+    "path": "/v1/user-chat-profiles/:id/default",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_2654.js",
+    "line": 14
+  },
+  "setPreferredGenres": {
+    "method": "PUT",
+    "path": "/v1/users/me/preferred-genres",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_4602.js",
+    "line": 11
+  },
+  "shouldWarnOnWithdrawal": {
+    "method": "GET",
+    "path": "/v1/users/me/should-warn-on-withdrawal",
+    "multipart": false,
+    "stream": false,
+    "response": "ShouldWarnOnWithdrawalResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_2653.js",
+    "line": 10
+  },
+  "submitQuizSelection": {
+    "method": "POST",
+    "path": "/v1/daily-quizzes/:quizId/selection",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/4178_claimRewardForDailyQuizApi.js",
+    "line": 12
+  },
+  "submitTrickOrTreatContact": {
+    "method": "POST",
+    "path": "/v1/trick-or-treat/winnings/:winningId/contact",
+    "multipart": false,
+    "stream": false,
+    "response": "TrickOrTreatWinningApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_4486.js",
+    "line": 8
+  },
+  "subscribeZetaPassViaAppStore": {
+    "method": "POST",
+    "path": "/v1/zeta-pass/subscribe/app-store",
+    "multipart": false,
+    "stream": false,
+    "response": "ZetaPassSubscriptionResponse",
+    "source": "analysis/android/v3.51.94/extracted/3038_cancelZetaPassApi.js",
+    "line": 33
+  },
+  "subscribeZetaPassViaBrandpay": {
+    "method": "POST",
+    "path": "/v1/zeta-pass/subscribe/brandpay",
+    "multipart": false,
+    "stream": false,
+    "response": "ZetaPassSubscriptionResponse",
+    "source": "analysis/android/v3.51.94/extracted/3038_cancelZetaPassApi.js",
+    "line": 31
+  },
+  "subscribeZetaPassViaCodaPay": {
+    "method": "POST",
+    "path": "/v1/zeta-pass/subscribe/coda-pay",
+    "multipart": false,
+    "stream": false,
+    "response": "CodaPayCheckoutResponse",
+    "source": "analysis/android/v3.51.94/extracted/3038_cancelZetaPassApi.js",
+    "line": 29
+  },
+  "subscribeZetaPassViaPlayStore": {
+    "method": "POST",
+    "path": "/v1/zeta-pass/subscribe/play-store",
+    "multipart": false,
+    "stream": false,
+    "response": "ZetaPassSubscriptionResponse",
+    "source": "analysis/android/v3.51.94/extracted/3038_cancelZetaPassApi.js",
+    "line": 27
+  },
+  "testKeyword": {
+    "method": "POST",
+    "path": "/v1/keywords/test",
+    "multipart": false,
+    "stream": false,
+    "response": "TestKeywordResponse",
+    "source": "analysis/android/v3.51.94/extracted/5034_testKeywordApi.js",
+    "line": 9
+  },
+  "translateFeedPost": {
+    "method": "POST",
+    "path": "/v1/creator-feed/posts/:postId/translation",
+    "multipart": false,
+    "stream": false,
+    "response": "FeedPostTranslationApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_3898.js",
+    "line": 28
+  },
+  "translateFeedPostComment": {
+    "method": "POST",
+    "path": "/v1/creator-feed/posts/:postId/comments/:commentId/translation",
+    "multipart": false,
+    "stream": false,
+    "response": "CommentTranslationApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_3916.js",
+    "line": 11
+  },
+  "translatePlotComment": {
+    "method": "POST",
+    "path": "/v1/plots/:plotId/comments/:commentId/translation",
+    "multipart": false,
+    "stream": false,
+    "response": "CommentTranslationApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_3926.js",
+    "line": 10
+  },
+  "translatePromptIntoEnglish": {
+    "method": "POST",
+    "path": "/v1/plots/profile-image/tool/translate",
+    "multipart": false,
+    "stream": false,
+    "response": "GetPlotProfileImagePromptTranslationResponse",
+    "source": "analysis/android/v3.51.94/extracted/5059_extractTagsFromImageApi.js",
+    "line": 12
+  },
+  "unblockHashtag": {
+    "method": "DELETE",
+    "path": "/v1/plots/hashtags/blocks",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/6454_blockHashtagApi.js",
+    "line": 13
+  },
+  "unblockPlot": {
+    "method": "DELETE",
+    "path": "/v1/plots/blocks",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/3686_blockPlotApi.js",
+    "line": 13
+  },
+  "unblockUser": {
+    "method": "DELETE",
+    "path": "/v1/users/blocks",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/3923_blockUserApi.js",
+    "line": 13
+  },
+  "unfollowCreator": {
+    "method": "DELETE",
+    "path": "/v1/creators/:creatorId/follow",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/2909_followCreatorApi.js",
+    "line": 16
+  },
+  "unlikePlotComment": {
+    "method": "DELETE",
+    "path": "/v1/plots/:plotId/comments/:commentId/likes",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_3926.js",
+    "line": 24
+  },
+  "unlikePlotV2": {
+    "method": "DELETE",
+    "path": "/v2/plots/:plotId/likes",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_3693.js",
+    "line": 14
+  },
+  "unpinFeedPost": {
+    "method": "DELETE",
+    "path": "/v1/creator-feed/posts/:postId/pin",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_3898.js",
+    "line": 21
+  },
+  "unpinFeedPostComment": {
+    "method": "DELETE",
+    "path": "/v1/creator-feed/posts/:postId/comments/:commentId/pin",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_3916.js",
+    "line": 15
+  },
+  "unpinPlotComment": {
+    "method": "DELETE",
+    "path": "/v1/creator/plots/:plotId/comments/:commentId/pin",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_3925.js",
+    "line": 15
+  },
+  "unpinRoom": {
+    "method": "DELETE",
+    "path": "/v1/rooms/:roomId/pin",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/2637_cloneRoomApi.js",
+    "line": 22
+  },
+  "unscrapPlot": {
+    "method": "DELETE",
+    "path": "/v1/plots/:plotId/scraps",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_3684.js",
+    "line": 14
+  },
+  "updateAppPushSetting": {
+    "method": "PUT",
+    "path": "/v1/app-push/settings/:pushType",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_2889.js",
+    "line": 17
+  },
+  "updateCandidate": {
+    "method": "PUT",
+    "path": "/v1/rooms/:roomId/messages/:messageId/candidates/:candidateId",
+    "multipart": false,
+    "stream": false,
+    "response": "UpdateCandidateResponse",
+    "source": "analysis/android/v3.51.94/extracted/5026_chatApi.js",
+    "line": 9
+  },
+  "updateDraftPlotChatProfileImage": {
+    "method": "PUT",
+    "path": "/v2/plots/:plotId/chat-profiles/:chatProfileId/images",
+    "multipart": true,
+    "stream": false,
+    "response": "UpdatePlotChatProfileImageResponse",
+    "source": "analysis/android/v3.51.94/extracted/5099_cropPlotDraftChatProfileImageApi.js",
+    "line": 9
+  },
+  "updateFeedPost": {
+    "method": "PUT",
+    "path": "/v1/creator-feed/posts/:postId",
+    "multipart": true,
+    "stream": false,
+    "response": "FeedPostApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_3898.js",
+    "line": 24
+  },
+  "updateFeedPostComment": {
+    "method": "PUT",
+    "path": "/v1/creator-feed/comments/:commentId",
+    "multipart": false,
+    "stream": false,
+    "response": "FeedPostCommentApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_3916.js",
+    "line": 8
+  },
+  "updateFollowingCreatorNotificationEnabled": {
+    "method": "POST",
+    "path": "/v1/creators/:creatorId/follow/notification",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/2909_followCreatorApi.js",
+    "line": 17
+  },
+  "updateHalloweenPluginSkin": {
+    "method": "POST",
+    "path": "/v1/plots/:plotId/plugins/theme/halloween",
+    "multipart": false,
+    "stream": false,
+    "response": "HalloweenPluginSkinApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_5167.js",
+    "line": 9
+  },
+  "updateLorebook": {
+    "method": "PUT",
+    "path": "/v1/lorebooks/:id",
+    "multipart": false,
+    "stream": false,
+    "response": "LorebookApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_4059.js",
+    "line": 9
+  },
+  "updateMessage": {
+    "method": "PUT",
+    "path": "/v1/rooms/:roomId/messages/:messageId",
+    "multipart": false,
+    "stream": false,
+    "response": "PutMessageResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_4835.js",
+    "line": 8
+  },
+  "updateMessageBookmark": {
+    "method": "PUT",
+    "path": "/v1/rooms/:roomId/bookmarks/:bookmarkId",
+    "multipart": false,
+    "stream": false,
+    "response": "MessageBookmarkApiDto",
+    "source": "analysis/android/v3.51.94/extracted/4929_countMessageBookmarkAfterApi.js",
+    "line": 9
+  },
+  "updatePlotComment": {
+    "method": "PATCH",
+    "path": "/v1/plots/:plotId/comments/:commentId",
+    "multipart": false,
+    "stream": false,
+    "response": "CreatePlotCommentResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_3926.js",
+    "line": 14
+  },
+  "updatePlotCommentSetting": {
+    "method": "PATCH",
+    "path": "/v1/creator/plots/:plotId/comment-setting",
+    "multipart": false,
+    "stream": false,
+    "response": "PlotCommentSettingResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_3925.js",
+    "line": 9
+  },
+  "updatePlotCommentSettingForAll": {
+    "method": "PATCH",
+    "path": "/v1/creator/comment-setting",
+    "multipart": false,
+    "stream": false,
+    "response": "PlotCommentSettingResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_3925.js",
+    "line": 10
+  },
+  "updatePlotDraftByCreator": {
+    "method": "PUT",
+    "path": "/v1/plots/:plotId",
+    "multipart": false,
+    "stream": false,
+    "response": "PlotForCreatorApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_3070.js",
+    "line": 8
+  },
+  "updatePlotDraftCharacterProfileImage": {
+    "method": "PUT",
+    "path": "/v2/plots/:plotId/characters/:characterId/images",
+    "multipart": true,
+    "stream": false,
+    "response": "UpdatePlotCharacterImageResponse",
+    "source": "analysis/android/v3.51.94/extracted/4861_appendPlotDraftCharacterProfileImagesApi.js",
+    "line": 10
+  },
+  "updatePlotDraftCoverImage": {
+    "method": "PUT",
+    "path": "/v2/plots/:plotId/images",
+    "multipart": true,
+    "stream": false,
+    "response": "UpdatePlotCoverImageResponse",
+    "source": "analysis/android/v3.51.94/extracted/5084_appendPlotDraftCoverImagesApi.js",
+    "line": 10
+  },
+  "updatePlotIntroImageCaption": {
+    "method": "PUT",
+    "path": "/v1/plots/:plotId/intro-images/caption",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_5019.js",
+    "line": 10
+  },
+  "updatePlotIntroImages": {
+    "method": "PUT",
+    "path": "/v1/plots/:plotId/intro-images",
+    "multipart": true,
+    "stream": false,
+    "response": "UpdatePlotIntroImagesResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_5019.js",
+    "line": 8
+  },
+  "updatePlotIsPrivate": {
+    "method": "PATCH",
+    "path": "/v1/plots/:plotId/private",
+    "multipart": false,
+    "stream": false,
+    "response": "PlotForCreatorApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_3071.js",
+    "line": 21
+  },
+  "updatePlotPlugin": {
+    "method": "PUT",
+    "path": "/v1/plots/:plotId/plugins",
+    "multipart": false,
+    "stream": false,
+    "response": "PlotPluginDeclarationApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_2968.js",
+    "line": 9
+  },
+  "updatePlotStatusByCreator": {
+    "method": "PATCH",
+    "path": "/v1/plots/:plotId/status",
+    "multipart": false,
+    "stream": false,
+    "response": "PlotForCreatorApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_3071.js",
+    "line": 19
+  },
+  "updatePlotUnlimited": {
+    "method": "PUT",
+    "path": "/v1/plots/:plotId/unlimited",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_3071.js",
+    "line": 14
+  },
+  "updateRoom": {
+    "method": "PUT",
+    "path": "/v1/rooms/:roomId",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/2637_cloneRoomApi.js",
+    "line": 17
+  },
+  "updateRoomModelSetting": {
+    "method": "PUT",
+    "path": "/v1/rooms/:roomId/model-setting",
+    "multipart": false,
+    "stream": false,
+    "response": "RoomModelSettingApiDto",
+    "source": "analysis/android/v3.51.94/extracted/module_4908.js",
+    "line": 9
+  },
+  "updateStoreAgeSignal": {
+    "method": "PATCH",
+    "path": "/v1/users/me/store-age-signal",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_2977.js",
+    "line": 17
+  },
+  "updateUserCoverImage": {
+    "method": "PUT",
+    "path": "/v1/users/me/profile/cover-images",
+    "multipart": true,
+    "stream": false,
+    "response": "UpdateUserCoverImageResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_4120.js",
+    "line": 9
+  },
+  "updateUserProfileImage": {
+    "method": "PUT",
+    "path": "/v1/users/me/profile/images",
+    "multipart": true,
+    "stream": false,
+    "response": "UpdateUserProfileImageResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_4120.js",
+    "line": 8
+  },
+  "validateNiceAdditionalAuth": {
+    "method": "GET",
+    "path": "/v2/additional-auth/nice/validate",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/3645_requestNiceAdditionalAuthApi.js",
+    "line": 12
+  },
+  "verifySmsCode": {
+    "method": "POST",
+    "path": "/v1/nutty/sms/verify",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_6538.js",
+    "line": 12
+  },
+  "verifyToken": {
+    "method": "POST",
+    "path": "/v1/nutty/token/verify",
+    "multipart": false,
+    "stream": false,
+    "response": null,
+    "source": "analysis/android/v3.51.94/extracted/module_6538.js",
+    "line": 10
+  },
+  "voteFeedPostPoll": {
+    "method": "POST",
+    "path": "/v1/creator-feed/posts/:postId/poll/votes",
+    "multipart": false,
+    "stream": false,
+    "response": "VoteFeedPostPollResponse",
+    "source": "analysis/android/v3.51.94/extracted/module_3898.js",
+    "line": 32
+  }
+}

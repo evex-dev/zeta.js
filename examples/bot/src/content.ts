@@ -1,4 +1,4 @@
-import type { ChatStreamEvent, Message, MessageContent, Plot, TalkSpeakerProfile } from "@evex/zeta";
+import type { ChatStreamEvent, Message, MessageChunkContent, Plot, TalkSpeakerProfile } from "@evex/zeta";
 import type { PlotPersona } from "./types.ts";
 
 export type TextSegment = {
@@ -123,13 +123,14 @@ export function truncate(value: string, maxLength: number): string {
   return `${value.slice(0, Math.max(0, maxLength - 1))}…`;
 }
 
-function contentsToSegments(contents: MessageContent[] | undefined): TextSegment[] {
+function contentsToSegments(contents: MessageChunkContent[] | undefined): TextSegment[] {
   if (!Array.isArray(contents)) {
     return [];
   }
 
   return contents.flatMap((content) => {
-    const text = content.text?.trim();
+    if (content.type !== "TEXT") return [];
+    const text = content.text.trim();
     return text ? [{ text, speakerName: content.speakerName }] : [];
   });
 }

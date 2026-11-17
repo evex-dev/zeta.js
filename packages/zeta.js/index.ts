@@ -13,6 +13,7 @@ import type {
   LorebookListQuery,
   MultipartImageBody,
   PlotDraftRequest,
+  Plot,
   PlotListResponse,
   PlotListQuery,
   RoomCreateRequest,
@@ -23,7 +24,7 @@ import type {
   UserListQuery,
 } from "./src/domainTypes.ts";
 
-export { BaseClient, DEFAULT_BASE_URL, fetchLatestIosClientVersion, interpolatePath, serializeQuery, webClientOptions } from "./src/core/client.ts";
+export { BaseClient, DEFAULT_BASE_URL, DEFAULT_CLIENT_VERSION, WEB_CLIENT_VERSION, fetchLatestIosClientVersion, interpolatePath, serializeQuery, webClientOptions } from "./src/core/client.ts";
 export { ApiError } from "./src/core/types.ts";
 export type * from "./src/core/types.ts";
 export type * from "./src/core/stream.ts";
@@ -49,6 +50,12 @@ export { ChatProfileResource, ChatProfilesApi, ProfileApi, UserResource } from "
 export { RankingApi } from "./src/ranking.ts";
 export { SearchApi } from "./src/search.ts";
 export { Talk, TalkApi } from "./src/talk.ts";
+export type { TalkStreamOptions } from "./src/talk.ts";
+export { snapshotEndpoints } from "./src/snapshot.ts";
+export type * from "./src/snapshot.ts";
+export * from "./src/generated/enums.ts";
+export { createFeedPostForm, FeedApi } from "./src/feed.ts";
+export type { FeedPostBlock, FeedPostInput } from "./src/feed.ts";
 
 export class TalkCollection {
   constructor(private readonly api: TalkApi) { }
@@ -93,7 +100,7 @@ export class PlotsCollection {
     return this.api.listCreatorPlots(query);
   }
 
-  listLiked(query?: PlotListQuery): Promise<ApiResult<PlotListResponse>> {
+  listLiked(query?: PlotListQuery): Promise<ApiResult<PlotListResponse & { items: Plot[] }>> {
     return this.api.listLikedPlots(query);
   }
 }
@@ -196,6 +203,8 @@ export class ProfileCollection {
 
 export class ZetaClient {
   readonly baseClient: BaseClient;
+  readonly api: BaseClient["api"];
+  readonly feed: BaseClient["feed"];
   readonly talk: TalkCollection;
   readonly plots: PlotsCollection;
   readonly lorebooks: LorebooksCollection;
@@ -214,6 +223,8 @@ export class ZetaClient {
 
   constructor(options: ZetaClientOptions = {}) {
     this.baseClient = new BaseClient(options);
+    this.api = this.baseClient.api;
+    this.feed = this.baseClient.feed;
     this.talk = new TalkCollection(this.baseClient.talk);
     this.plots = new PlotsCollection(this.baseClient.plots);
     this.lorebooks = new LorebooksCollection(this.baseClient.lorebooks);

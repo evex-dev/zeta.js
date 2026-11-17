@@ -17,10 +17,12 @@ export class HomeApi {
     return this.client.get<InfinitePlotsResponse>("/v1/infinite-plots", { query });
   }
 
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
   getHomeLayout(query?: LayoutQuery): Promise<ApiResult<LayoutResponse>> {
     return this.client.get<LayoutResponse>("/v1/layouts/main", { query });
   }
 
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
   getHomeLayoutSections(query?: LayoutQuery): Promise<ApiResult<LayoutSection>> {
     return this.client.get<LayoutSectionResponse>("/v1/layout-sections/home", { query });
   }
@@ -37,6 +39,7 @@ export class HomeApi {
     return this.client.get<PopupListResponse>("/v1/popups", { query });
   }
 
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
   getPopup(query?: LayoutQuery): Promise<ApiResult<PopupListResponse>> {
     return this.client.get<PopupListResponse>("/v1/popup", { query });
   }

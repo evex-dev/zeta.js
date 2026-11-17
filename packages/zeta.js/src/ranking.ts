@@ -28,6 +28,7 @@ export class RankingApi {
     return this.client.get<PlotListResponse>("/v1/topics/:topicId/plot-rankings", { path: { topicId }, query });
   }
 
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
   getHashtagTopicPlots(hashtagTopicId: string, query?: PlotListQuery): Promise<ApiResult<PlotListResponse>> {
     return this.client.get<PlotListResponse>("/v1/hashtag-topics/:hashtagTopicId/plots", { path: { hashtagTopicId }, query });
   }

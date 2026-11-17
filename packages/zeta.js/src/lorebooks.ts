@@ -126,6 +126,7 @@ export class LorebooksApi {
     return this.client.get<LorebookListResponse>("/v1/lorebooks/creator", { query });
   }
 
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
   reportLorebook(lorebookId: string, body?: ReportRequest): Promise<ApiResult<unknown>> {
     return this.client.post("/v1/lorebooks/:lorebookId/reports", body, { path: { lorebookId } });
   }
@@ -154,6 +155,7 @@ export class LorebooksApi {
     return this.client.get<LorebookListResponse>("/v1/lorebooks/search", { query });
   }
 
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
   searchCreatorCenterLorebooks(query?: LorebookListQuery): Promise<ApiResult<LorebookListResponse>> {
     return this.client.get<LorebookListResponse>("/v1/lorebooks/creator-center/search", { query });
   }
@@ -162,6 +164,7 @@ export class LorebooksApi {
     return this.client.get<LorebookListResponse>("/v1/lorebooks/discovery/recommend", { query });
   }
 
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
   getRecommendedLorebookKeywords(query?: LorebookListQuery): Promise<ApiResult<{ [key: string]: unknown; keywords?: string[]; }>> {
     return this.client.get<{ keywords?: string[]; [key: string]: unknown }>("/v1/lorebooks/discovery/recommend-keyword-list", { query });
   }
@@ -174,6 +177,7 @@ export class LorebooksApi {
     return this.client.get<LorebookListResponse>("/v1/lorebooks/discovery/popular", { query });
   }
 
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
   getPopularLorebooksByChat(query?: LorebookListQuery): Promise<ApiResult<LorebookListResponse>> {
     return this.client.get<LorebookListResponse>("/v1/lorebooks/discovery/popular_by_chat", { query });
   }

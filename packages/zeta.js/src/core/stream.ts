@@ -14,11 +14,13 @@ export async function* readEventStream<T = unknown>(response: Response): AsyncGe
   const reader = response.body.getReader();
   const decoder = new TextDecoder();
   let buffer = "";
+  let completed = false;
 
   try {
     while (true) {
       const { value, done } = await reader.read();
       if (done) {
+        completed = true;
         break;
       }
 
@@ -30,9 +32,11 @@ export async function* readEventStream<T = unknown>(response: Response): AsyncGe
 
     buffer += decoder.decode();
     if (buffer.trim()) {
-      yield parseEvent<T>(buffer);
+      const event = parseEvent<T>(buffer);
+      if (event) yield event;
     }
   } finally {
+    if (!completed) await reader.cancel().catch(() => {});
     reader.releaseLock();
   }
 }
@@ -50,7 +54,8 @@ function* drainEvents<T>(buffer: string, setBuffer: (rest: string) => void): Gen
     const raw = buffer.slice(cursor, next.index);
     cursor = next.after;
     if (raw.trim()) {
-      yield parseEvent<T>(raw);
+      const event = parseEvent<T>(raw);
+      if (event) yield event;
     }
   }
 }
@@ -70,7 +75,7 @@ function findBoundary(buffer: string, start: number): { index: number; after: nu
   return { index: lf, after: lf + 2 };
 }
 
-function parseEvent<T>(raw: string): StreamEvent<T> {
+function parseEvent<T>(raw: string): StreamEvent<T> | undefined {
   const dataLines: string[] = [];
   let event: string | undefined;
   let id: string | undefined;
@@ -100,6 +105,7 @@ function parseEvent<T>(raw: string): StreamEvent<T> {
   }
 
   const text = dataLines.join("\n");
+  if (dataLines.length === 0) return undefined;
   return {
     data: parseData<T>(text),
     event,

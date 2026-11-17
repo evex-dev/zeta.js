@@ -7,6 +7,8 @@ export interface QueryObject {
 }
 export type QueryParams = QueryObject;
 export type UnknownRecord = Record<string, unknown>;
+export type JsonValue = string | number | boolean | null | JsonValue[] | { [key: string]: JsonValue };
+export type JsonObject = { [key: string]: JsonValue };
 export type FetchLike = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
 export type UserLanguage = "KOREAN" | "JAPANESE" | "ENGLISH";
 export type ClientType = "app" | "web" | (string & {});
@@ -33,6 +35,15 @@ export type TokenPair = {
   refreshToken?: string;
 };
 
+export type RefreshPolicy = {
+  /** Refresh JWTs this long before expiration. Opaque tokens remain reactive. */
+  leewayMs?: number;
+  /** Attempts for network errors, 408, 429 and 5xx responses only. */
+  maxAttempts?: number;
+  baseDelayMs?: number;
+  cooldownMs?: number;
+};
+
 export type ZetaClientOptions = {
   baseUrl?: string;
   token?: string;
@@ -46,6 +57,7 @@ export type ZetaClientOptions = {
   defaultHeaders?: HeadersInit;
   fetch?: FetchLike;
   onTokenUpdate?: (tokens: TokenPair) => void | Promise<void>;
+  refreshPolicy?: RefreshPolicy;
 };
 
 export type BaseClientOptions = ZetaClientOptions;

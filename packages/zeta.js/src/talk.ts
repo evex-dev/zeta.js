@@ -1,6 +1,6 @@
 import type { BaseClient } from "./core/client.ts";
 import type { StreamEvent } from "./core/stream.ts";
-import type { ApiResult } from "./core/types.ts";
+import type { ApiResult, RequestOptions, JsonObject } from "./core/types.ts";
 import { ApiError } from "./core/types.ts";
 import type {
   ActiveRoomIdQuery,
@@ -21,6 +21,9 @@ import type {
   MessageListResponse,
   MessageUpdateRequest,
   ModelSetting,
+  RoomModelSettingUpdateRequest,
+  RoomCyoaSetting,
+  RoomInfoBoxSetting,
   MultipartImageBody,
   Room,
   RoomBookmarkListResponse,
@@ -45,6 +48,8 @@ import type {
   UserPlotChatProfileDraftRequest,
   UserPlotChatProfileListResponse,
 } from "./domainTypes.ts";
+
+export type TalkStreamOptions = Omit<RequestOptions, "path" | "body">;
 
 export class Talk {
   private roomData?: Room;
@@ -104,24 +109,24 @@ export class Talk {
     return this.api.deleteRoomMessages(this.id, body);
   }
 
-  streamMessage<T = ChatStreamEvent>(body: ChatSendMessageRequest): Promise<AsyncGenerator<StreamEvent<T>, any, any>> {
-    return this.api.streamMessage<T>(this.id, body);
+  streamMessage<T = ChatStreamEvent>(body: ChatSendMessageRequest, options: TalkStreamOptions = {}): Promise<AsyncGenerator<StreamEvent<T>, any, any>> {
+    return this.api.streamMessage<T>(this.id, body, options);
   }
 
-  sendTextMessage(text: string, extra?: Omit<ChatTextRequest, "type" | "text">): Promise<AsyncGenerator<StreamEvent<ChatStreamEvent>, any, any>> {
-    return this.api.sendTextMessage(this.id, text, extra);
+  sendTextMessage(text: string, extra?: Omit<ChatTextRequest, "type" | "text">, options: TalkStreamOptions = {}): Promise<AsyncGenerator<StreamEvent<ChatStreamEvent>, any, any>> {
+    return this.api.sendTextMessage(this.id, text, extra, options);
   }
 
-  streamCandidate<T = ChatStreamEvent>(messageId: string, body?: ChatSendMessageRequest): Promise<AsyncGenerator<StreamEvent<T>, any, any>> {
-    return this.api.streamCandidate<T>(this.id, messageId, body);
+  streamCandidate<T = ChatStreamEvent>(messageId: string, body?: JsonObject, options: TalkStreamOptions = {}): Promise<AsyncGenerator<StreamEvent<T>, any, any>> {
+    return this.api.streamCandidate<T>(this.id, messageId, body, options);
   }
 
-  streamOptions<T = ChatStreamEvent>(body?: ChatOptionsStreamRequest): Promise<AsyncGenerator<StreamEvent<T>, any, any>> {
-    return this.api.streamOptions<T>(this.id, body);
+  streamOptions<T = ChatStreamEvent>(body?: ChatOptionsStreamRequest, options: TalkStreamOptions = {}): Promise<AsyncGenerator<StreamEvent<T>, any, any>> {
+    return this.api.streamOptions<T>(this.id, body, options);
   }
 
-  streamMoreOptions<T = ChatStreamEvent>(body?: ChatOptionsStreamRequest): Promise<AsyncGenerator<StreamEvent<T>, any, any>> {
-    return this.api.streamMoreOptions<T>(this.id, body);
+  streamMoreOptions<T = ChatStreamEvent>(body?: ChatOptionsStreamRequest, options: TalkStreamOptions = {}): Promise<AsyncGenerator<StreamEvent<T>, any, any>> {
+    return this.api.streamMoreOptions<T>(this.id, body, options);
   }
 
   listCandidates(messageId: string, query?: CandidateListQuery): Promise<ApiResult<CandidateListResponse>> {
@@ -136,7 +141,7 @@ export class Talk {
     return this.api.getModelSetting(this.id);
   }
 
-  updateModelSetting(body?: ModelSetting): Promise<ApiResult<ModelSetting>> {
+  updateModelSetting(body?: RoomModelSettingUpdateRequest): Promise<ApiResult<ModelSetting>> {
     return this.api.updateModelSetting(this.id, body);
   }
 
@@ -172,19 +177,19 @@ export class Talk {
     return this.api.markRecommendedMessagesPurchaseHandled(this.id, body);
   }
 
-  getCyoaEditSetting(): Promise<ApiResult<ModelSetting>> {
+  getCyoaEditSetting(): Promise<ApiResult<RoomCyoaSetting>> {
     return this.api.getCyoaEditSetting(this.id);
   }
 
-  updateCyoaEditSetting(body?: ModelSetting): Promise<ApiResult<ModelSetting>> {
+  updateCyoaEditSetting(body?: RoomCyoaSetting): Promise<ApiResult<RoomCyoaSetting>> {
     return this.api.updateCyoaEditSetting(this.id, body);
   }
 
-  getInfoBoxCharacterSetting(): Promise<ApiResult<ModelSetting>> {
+  getInfoBoxCharacterSetting(): Promise<ApiResult<RoomInfoBoxSetting>> {
     return this.api.getInfoBoxCharacterSetting(this.id);
   }
 
-  updateInfoBoxCharacterSetting(body?: ModelSetting): Promise<ApiResult<ModelSetting>> {
+  updateInfoBoxCharacterSetting(body?: RoomInfoBoxSetting): Promise<ApiResult<RoomInfoBoxSetting>> {
     return this.api.updateInfoBoxCharacterSetting(this.id, body);
   }
 
@@ -271,7 +276,7 @@ export class TalkApi {
   }
 
   listRooms(query?: RoomListQuery): Promise<ApiResult<RoomListResponse>> {
-    return this.client.get<RoomListResponse>("/v1/rooms", { query });
+    return this.client.get<RoomListResponse>("/v2/rooms", { query });
   }
 
   createRoom(body: RoomCreateRequest): Promise<ApiResult<Room>> {
@@ -376,26 +381,27 @@ export class TalkApi {
     return this.client.request("DELETE", "/v1/rooms/:roomId/room-messages", { path: { roomId }, body });
   }
 
-  streamMessage<T = ChatStreamEvent>(roomId: string, body: ChatSendMessageRequest): Promise<AsyncGenerator<StreamEvent<T>, any, any>> {
-    return this.client.stream<T, ChatSendMessageRequest>("/v1/rooms/:roomId/messages/stream", body, { path: { roomId } });
+  streamMessage<T = ChatStreamEvent>(roomId: string, body: ChatSendMessageRequest, options: TalkStreamOptions = {}): Promise<AsyncGenerator<StreamEvent<T>, any, any>> {
+    return this.client.stream<T, ChatSendMessageRequest>("/v1/rooms/:roomId/messages/stream", body, { ...options, path: { roomId } });
   }
 
-  sendTextMessage(roomId: string, text: string, extra?: Omit<ChatTextRequest, "type" | "text">): Promise<AsyncGenerator<StreamEvent<ChatStreamEvent>, any, any>> {
-    return this.client.stream<ChatStreamEvent, ChatTextRequest>("/v1/rooms/:roomId/messages/stream", { ...extra, type: "TEXT", text }, { path: { roomId } });
+  sendTextMessage(roomId: string, text: string, extra?: Omit<ChatTextRequest, "type" | "text">, options: TalkStreamOptions = {}): Promise<AsyncGenerator<StreamEvent<ChatStreamEvent>, any, any>> {
+    return this.client.stream<ChatStreamEvent, ChatTextRequest>("/v1/rooms/:roomId/messages/stream", { ...extra, type: "TEXT", text }, { ...options, path: { roomId } });
   }
 
-  streamCandidate<T = ChatStreamEvent>(roomId: string, messageId: string, body?: ChatSendMessageRequest): Promise<AsyncGenerator<StreamEvent<T>, any, any>> {
-    return this.client.stream<T, ChatSendMessageRequest | undefined>("/v1/rooms/:roomId/messages/:messageId/candidates/stream", body, { path: { roomId, messageId } });
+  streamCandidate<T = ChatStreamEvent>(roomId: string, messageId: string, body?: JsonObject, options: TalkStreamOptions = {}): Promise<AsyncGenerator<StreamEvent<T>, any, any>> {
+    return this.client.stream<T, JsonObject | undefined>("/v1/rooms/:roomId/messages/:messageId/candidates/stream", body, { ...options, path: { roomId, messageId } });
   }
 
-  streamOptions<T = ChatStreamEvent>(roomId: string, body?: ChatOptionsStreamRequest): Promise<AsyncGenerator<StreamEvent<T>, any, any>> {
-    return this.client.stream<T, ChatOptionsStreamRequest | undefined>("/v1/rooms/:roomId/options/stream", body, { path: { roomId } });
+  streamOptions<T = ChatStreamEvent>(roomId: string, body?: ChatOptionsStreamRequest, options: TalkStreamOptions = {}): Promise<AsyncGenerator<StreamEvent<T>, any, any>> {
+    return this.client.stream<T, ChatOptionsStreamRequest | undefined>("/v1/rooms/:roomId/options/stream", body, { ...options, path: { roomId } });
   }
 
-  streamMoreOptions<T = ChatStreamEvent>(roomId: string, body?: ChatOptionsStreamRequest): Promise<AsyncGenerator<StreamEvent<T>, any, any>> {
-    return this.client.stream<T, ChatOptionsStreamRequest | undefined>("/v1/rooms/:roomId/options/stream/more", body, { path: { roomId } });
+  streamMoreOptions<T = ChatStreamEvent>(roomId: string, body?: ChatOptionsStreamRequest, options: TalkStreamOptions = {}): Promise<AsyncGenerator<StreamEvent<T>, any, any>> {
+    return this.client.stream<T, ChatOptionsStreamRequest | undefined>("/v1/rooms/:roomId/options/stream/more", body, { ...options, path: { roomId } });
   }
 
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
   listCandidates(roomId: string, messageId: string, query?: CandidateListQuery): Promise<ApiResult<CandidateListResponse>> {
     return this.client.get<CandidateListResponse>("/v1/rooms/:roomId/messages/:messageId/candidates", { path: { roomId, messageId }, query });
   }
@@ -404,10 +410,12 @@ export class TalkApi {
     return this.client.put("/v1/rooms/:roomId/messages/:messageId/candidates/:candidateId", body, { path: { roomId, messageId, candidateId } });
   }
 
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
   sendCandidateFeedback(roomId: string, messageId: string, candidateId: string, body?: CandidateFeedbackRequest): Promise<ApiResult<unknown>> {
     return this.client.post("/v1/rooms/:roomId/messages/:messageId/candidates/:candidateId/feedback", body, { path: { roomId, messageId, candidateId } });
   }
 
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
   sendCandidateFeedbackModal(roomId: string, messageId: string, candidateId: string, body?: CandidateFeedbackRequest): Promise<ApiResult<unknown>> {
     return this.client.post("/v1/rooms/:roomId/messages/:messageId/candidates/:candidateId/feedback-modal", body, { path: { roomId, messageId, candidateId } });
   }
@@ -424,10 +432,12 @@ export class TalkApi {
     return this.client.post("/v1/rooms/:roomId/messages/:messageId/candidates/:candidateId/snapshot-images/:snapshotImageId/reports", body, { path: { roomId, messageId, candidateId, snapshotImageId } });
   }
 
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
   reportMessage(roomId: string, messageId: string, body?: CandidateFeedbackRequest): Promise<ApiResult<unknown>> {
     return this.client.post("/v1/rooms/:roomId/messages/:messageId/reports", body, { path: { roomId, messageId } });
   }
 
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
   selectOption(roomId: string, id: string, body?: ChatOptionSelectRequest): Promise<ApiResult<unknown>> {
     return this.client.post("/v1/rooms/:roomId/options/:id", body, { path: { roomId, id } });
   }
@@ -436,8 +446,8 @@ export class TalkApi {
     return this.client.get<ModelSetting>("/v1/rooms/:roomId/model-setting", { path: { roomId } });
   }
 
-  updateModelSetting(roomId: string, body?: ModelSetting): Promise<ApiResult<ModelSetting>> {
-    return this.client.put<ModelSetting, ModelSetting | undefined>("/v1/rooms/:roomId/model-setting", body, { path: { roomId } });
+  updateModelSetting(roomId: string, body?: RoomModelSettingUpdateRequest): Promise<ApiResult<ModelSetting>> {
+    return this.client.put<ModelSetting, RoomModelSettingUpdateRequest | undefined>("/v1/rooms/:roomId/model-setting", body, { path: { roomId } });
   }
 
   getIntroBeforeSelection(roomId: string): Promise<ApiResult<RoomIntroBeforeSelectionResponse>> {
@@ -464,46 +474,57 @@ export class TalkApi {
     return this.client.delete("/v1/rooms/:roomId/bookmarks/:bookmarkId", { path: { roomId, bookmarkId } });
   }
 
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
   createRecommendedMessages(roomId: string, body?: RoomRecommendedMessagesRequest): Promise<ApiResult<unknown>> {
     return this.client.post("/v1/rooms/:roomId/recommended-messages/multi", body, { path: { roomId } });
   }
 
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
   markRecommendedMessagesPurchaseHandled(roomId: string, body?: RoomRecommendedMessagesRequest): Promise<ApiResult<unknown>> {
     return this.client.post("/v1/rooms/:roomId/recommended-messages/purchase-already-handled", body, { path: { roomId } });
   }
 
-  getCyoaEditSetting(roomId: string): Promise<ApiResult<ModelSetting>> {
-    return this.client.get<ModelSetting>("/v1/rooms/:roomId/settings/cyoa", { path: { roomId } });
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
+  getCyoaEditSetting(roomId: string): Promise<ApiResult<RoomCyoaSetting>> {
+    return this.client.get<RoomCyoaSetting>("/v1/rooms/:roomId/settings/cyoa", { path: { roomId } });
   }
 
-  updateCyoaEditSetting(roomId: string, body?: ModelSetting): Promise<ApiResult<ModelSetting>> {
-    return this.client.put<ModelSetting, ModelSetting | undefined>("/v1/rooms/:roomId/settings/cyoa", body, { path: { roomId } });
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
+  updateCyoaEditSetting(roomId: string, body?: RoomCyoaSetting): Promise<ApiResult<RoomCyoaSetting>> {
+    return this.client.put<RoomCyoaSetting, RoomCyoaSetting | undefined>("/v1/rooms/:roomId/settings/cyoa", body, { path: { roomId } });
   }
 
-  getInfoBoxCharacterSetting(roomId: string): Promise<ApiResult<ModelSetting>> {
-    return this.client.get<ModelSetting>("/v1/rooms/:roomId/settings/info-box", { path: { roomId } });
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
+  getInfoBoxCharacterSetting(roomId: string): Promise<ApiResult<RoomInfoBoxSetting>> {
+    return this.client.get<RoomInfoBoxSetting>("/v1/rooms/:roomId/settings/info-box", { path: { roomId } });
   }
 
-  updateInfoBoxCharacterSetting(roomId: string, body?: ModelSetting): Promise<ApiResult<ModelSetting>> {
-    return this.client.put<ModelSetting, ModelSetting | undefined>("/v1/rooms/:roomId/settings/info-box", body, { path: { roomId } });
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
+  updateInfoBoxCharacterSetting(roomId: string, body?: RoomInfoBoxSetting): Promise<ApiResult<RoomInfoBoxSetting>> {
+    return this.client.put<RoomInfoBoxSetting, RoomInfoBoxSetting | undefined>("/v1/rooms/:roomId/settings/info-box", body, { path: { roomId } });
   }
 
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
   listUserPlotChatProfiles(roomId: string, query?: ChatProfileListQuery): Promise<ApiResult<UserPlotChatProfileListResponse>> {
     return this.client.get<UserPlotChatProfileListResponse>("/v1/rooms/:roomId/user-plot-chat-profiles", { path: { roomId }, query });
   }
 
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
   createUserPlotChatProfile(roomId: string, body?: UserPlotChatProfileDraftRequest): Promise<ApiResult<UserPlotChatProfile>> {
     return this.client.post<UserPlotChatProfile, UserPlotChatProfileDraftRequest | undefined>("/v1/rooms/:roomId/user-plot-chat-profiles", body, { path: { roomId } });
   }
 
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
   selectUserPlotChatProfile(roomId: string, id: string): Promise<ApiResult<UserPlotChatProfile>> {
     return this.client.put<UserPlotChatProfile>("/v1/rooms/:roomId/user-plot-chat-profiles/:id/selected", undefined, { path: { roomId, id } });
   }
 
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
   getSelectedUserPlotChatProfile(roomId: string): Promise<ApiResult<UserPlotChatProfile>> {
     return this.client.get<UserPlotChatProfile>("/v1/rooms/:roomId/user-plot-chat-profiles/selected", { path: { roomId } });
   }
 
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
   getSelectedUserPlotChatProfileCharacterIds(roomId: string): Promise<ApiResult<{ [key: string]: unknown; selectedCharacterIds?: string[]; }>> {
     return this.client.get<{ selectedCharacterIds?: string[]; [key: string]: unknown }>("/v1/rooms/:roomId/user-plot-chat-profiles/selectedCharacterIds", { path: { roomId } });
   }
@@ -516,6 +537,7 @@ export class TalkApi {
     return this.client.patch<UserPlotChatProfile, UserPlotChatProfileDraftRequest | undefined>("/v1/rooms/:roomId/user-plot-chat-profiles/me", body, { path: { roomId } });
   }
 
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
   createAndSelectUserPlotChatProfile(roomId: string, body?: UserPlotChatProfileDraftRequest): Promise<ApiResult<UserPlotChatProfile>> {
     return this.client.post<UserPlotChatProfile, UserPlotChatProfileDraftRequest | undefined>("/v1/rooms/:roomId/user-plot-chat-profiles/selected", body, { path: { roomId } });
   }

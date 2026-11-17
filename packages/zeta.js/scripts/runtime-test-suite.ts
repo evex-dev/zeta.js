@@ -10,6 +10,33 @@ export function registerRuntimeTests(adapter: RuntimeTestAdapter): void {
   const { describe, test } = adapter;
 
   describe("runtime compatibility", () => {
+    test("uses generated snapshot wrappers without runtime-specific dependencies", async () => {
+      const client = new ZetaClient({
+        baseUrl: "https://example.test",
+        fetch: async (input, init) => {
+          assertEqual(String(input), "https://example.test/v1/rooms/room%2Fid");
+          assertEqual(init?.method, "GET");
+          return jsonResponse({ id: "room/id", createdAt: "2026-11-14T00:00:00Z" });
+        },
+      });
+      const result = await client.api.getRoom({ path: { roomId: "room/id" } });
+      assertEqual(result.data.id, "room/id");
+      assertEqual(result.data.createdAt, "2026-11-14T00:00:00Z");
+    });
+
+    test("refreshes an expiring JWT before sending a request", async () => {
+      const token = `header.${btoa(JSON.stringify({ exp: Date.now() / 1_000 + 5 }))}.signature`;
+      const urls: string[] = [];
+      const client = new ZetaClient({ token, refreshToken: "refresh", baseUrl: "https://example.test", fetch: async (input, init) => {
+        urls.push(String(input));
+        if (String(input).endsWith("/auth/tokens")) return jsonResponse({ accessToken: "fresh" });
+        assertEqual(new Headers(init?.headers).get("Authorization"), "Bearer fresh");
+        return jsonResponse({ id: "room" });
+      } });
+      await client.api.getRoom({ path: { roomId: "room" } });
+      assertDeepEqual(urls, ["https://example.test/v1/auth/tokens", "https://example.test/v1/rooms/room"]);
+    });
+
     test("runs the client through Web standard APIs", async () => {
       const fetchImpl: FetchLike = async (input, init) => {
         return jsonResponse({

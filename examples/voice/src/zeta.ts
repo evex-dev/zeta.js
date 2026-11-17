@@ -2,6 +2,7 @@ import {
   fetchLatestIosClientVersion,
   ZetaClient,
   type ChatStreamEvent,
+  type MessageChunkContent,
   type Message,
   type Plot,
   type Room,
@@ -157,7 +158,7 @@ export async function* sendMessage(roomId: string, text: string): AsyncGenerator
     const nextText = nextSegments.map((segment) => segment.text).join("\n") || (event.event !== "ERROR" && typeof event.message === "string" ? event.message.trim() : "");
     if (nextText) latestText = nextText;
     if (nextSegments.length > 0) latestSegments = nextSegments;
-    if (typeof message?.id === "string" && message.id) messageId = message.id;
+    if (event.replyMessage?.id) messageId = event.replyMessage.id;
     if (event.event === "ERROR") throw new Error(typeof event.message === "string" ? event.message : "Zeta stream error");
     const complete = event.event === "CHAT_COMPLETE" || event.event === "CANDIDATE_COMPLETE";
     if (latestText) yield { text: latestText, messageId, complete, segments: latestSegments };
@@ -170,9 +171,10 @@ function messageText(message: Partial<Message> | null | undefined): string {
   return (message?.text ?? message?.content ?? "").trim();
 }
 
-export function messageSegments(message: Partial<Message> | null | undefined): SpeechSegment[] {
+export function messageSegments(message: { contents?: MessageChunkContent[] } | null | undefined): SpeechSegment[] {
   return (message?.contents ?? []).flatMap((content) => {
-    const text = content.text?.trim();
+    if (content.type !== "TEXT") return [];
+    const text = content.text.trim();
     return text ? [{ text, speakerName: content.speakerName, position: content.position }] : [];
   });
 }

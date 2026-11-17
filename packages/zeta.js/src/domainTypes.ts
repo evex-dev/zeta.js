@@ -1,4 +1,8 @@
 import type { CursorPage, QueryParams, UnknownRecord } from "./core/types.ts";
+import type { MessageContent, RoomModelSetting } from "./chatTypes.ts";
+import type { SnapshotDto } from "./generated/dtos.ts";
+import type { PlotSearchOrder } from "./generated/enums.ts";
+export type * from "./chatTypes.ts";
 
 export type AnyData = UnknownRecord;
 /** Use a concrete request body type or MultipartImageBody. */
@@ -55,6 +59,19 @@ export type PlotSearchQuery = PlotListQuery & {
   keyword?: string;
   hashtags?: string[];
 };
+
+export type PlotSearchV2Query = QueryParams & {
+  keyword?: string;
+  query?: string;
+  q?: string;
+  order?: PlotSearchOrder;
+  source?: string;
+  cursor?: string;
+  limit?: number;
+};
+export type PlotSearchItem = { type: "ZETA"; plot: Plot }
+  | { type: "LABS"; plot: SnapshotDto<"ZLabsPlotSummaryApiDto">; eventBadge?: string };
+export type PlotSearchPage = { items: PlotSearchItem[]; nextCursor?: string | null; requestId?: string };
 
 export type LayoutQuery = LocaleQuery & PlatformQuery & {
   placement?: string;
@@ -164,6 +181,11 @@ export type ReportRequest = AnyData & {
 
 export type EmptyRequest = Record<string, never>;
 
+/** JSON input whose fields were erased from the distributed client. */
+export type SignupCheckRequest = { externalToken: UnknownRecord };
+export type SignupCheckResponse = { existingUserIssuer?: string | null };
+export type KeywordTestRequest = UnknownRecord & { keyword?: string };
+
 export type MultipartImageBody = FormData;
 
 export type User = AnyData & {
@@ -236,9 +258,9 @@ export type Plot = AnyData & {
   interactionCountWithRegen?: number;
   verified?: boolean;
   supportedFeatures?: string[];
-  createdAt?: IsoDateString | Date;
-  releasedAt?: IsoDateString | Date;
-  updatedAt?: IsoDateString | Date;
+  createdAt?: IsoDateString;
+  releasedAt?: IsoDateString;
+  updatedAt?: IsoDateString;
   infoBoxSetting?: unknown;
   cyoaSetting?: unknown;
 };
@@ -249,10 +271,13 @@ export type Room = AnyData & {
   plotId?: string;
   plot?: Plot;
   lastMessage?: Message;
-  createdAt?: IsoDateString | Date;
-  updatedAt?: IsoDateString | Date;
-  savedAt?: IsoDateString | Date | null;
-  pinnedAt?: IsoDateString | Date | null;
+  createdAt?: IsoDateString;
+  updatedAt?: IsoDateString;
+  savedAt?: IsoDateString | null;
+  pinnedAt?: IsoDateString | null;
+  isPinned?: boolean;
+  unreadCount?: number;
+  plotVersion?: number;
 };
 
 export type Message = AnyData & {
@@ -268,61 +293,11 @@ export type Message = AnyData & {
   voice?: unknown;
   edited?: boolean;
   candidateId?: string | null;
-  messageTime?: IsoDateString | Date;
+  messageTime?: IsoDateString;
   voicePrice?: number | null;
   isIntro?: boolean;
-  createdAt?: IsoDateString | Date;
-  updatedAt?: IsoDateString | Date;
-};
-
-export type MessageContent = AnyData & {
-  type?: string;
-  text?: string;
-  speakerName?: string;
-  position?: string;
-};
-
-export type ChatTextRequest = AnyData & {
-  type: "TEXT";
-  text: string;
-};
-
-export type ChatCyoaRequest = AnyData & {
-  type: "CYOA";
-  optionId?: string;
-  text?: string;
-};
-
-export type ChatSendMessageRequest = ChatTextRequest | ChatCyoaRequest | AnyData;
-
-export type ChatStreamEventName =
-  | "IN_PROGRESS"
-  | "CHAT_COMPLETE"
-  | "CANDIDATE_COMPLETE"
-  | "EXAMPLE_CHAT_COMPLETE"
-  | "CHAT_OPTION_COMPLETE"
-  | "RECOMMENDED_MESSAGE_COMPLETE"
-  | "DETECT_ABUSING"
-  | "ERROR"
-  | string;
-
-export type ChatStreamChunkMessage = AnyData & {
-  contents?: MessageContent[];
-};
-
-export type ChatStreamEvent = AnyData & {
-  event?: ChatStreamEventName;
-  chunkMessage?: ChatStreamChunkMessage;
-  requestMessage?: Message;
-  replyMessage?: Message;
-  candidate?: AnyData;
-  replyOption?: AnyData;
-  shouldNudgeSlowChat?: boolean;
-  shouldGenerateConsecutive?: boolean;
-  shouldRequestFeedback?: boolean;
-  feedbackPredefinedComments?: unknown[];
-  index?: number | null;
-  message?: string;
+  createdAt?: IsoDateString;
+  updatedAt?: IsoDateString;
 };
 
 export type Lorebook = AnyData & {
@@ -331,16 +306,14 @@ export type Lorebook = AnyData & {
   description?: string;
   contents?: unknown;
   creator?: User;
-  createdAt?: IsoDateString | Date;
-  updatedAt?: IsoDateString | Date;
+  createdAt?: IsoDateString;
+  updatedAt?: IsoDateString;
 };
 
 export type RoomCreateRequest = AnyData & {
   plotId: string;
-  chatProfile?: {
-    type: "chatProfileId" | "userChatProfileId" | string;
-    id: string;
-  };
+  chatProfile?: { type: "userChatProfileId"; id: string }
+    | ({ type: "plotChatProfileContent" } & UnknownRecord);
   chatProfileId?: string;
   userChatProfileId?: string;
   title?: string | null;
@@ -404,11 +377,10 @@ export type ChatOptionSelectRequest = AnyData & {
   optionId?: string;
 };
 
-export type ModelSetting = AnyData & {
-  model?: string;
-  temperature?: number;
-  maxTokens?: number;
-};
+/** Compatibility name for the actual room model-setting response. */
+export type ModelSetting = RoomModelSetting;
+export type RoomCyoaSetting = SnapshotDto<"RoomCyoaSettingApiDto">;
+export type RoomInfoBoxSetting = SnapshotDto<"RoomInfoBoxSettingApiDto">;
 
 export type SavedRoomStatusResponse = AnyData & {
   saved?: boolean;
@@ -943,11 +915,12 @@ export type CreatorAssistantVibesResponse = AnyData & {
   styles?: string[];
 };
 
-export type NiceAdditionalAuthValidateRequest = AnyData & {
-  token?: string;
-  requestId?: string;
-  password?: string;
+export type NiceAdditionalAuthValidateRequest = QueryParams & {
+  request_id: string;
+  web_transaction_id: string;
 };
+
+export type NiceAdditionalAuthResponse = { authUrl: string };
 
 export type NiceAdditionalAuthValidateResponse = AnyData & {
   valid?: boolean;

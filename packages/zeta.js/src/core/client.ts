@@ -14,6 +14,8 @@ import { ProfileApi } from "../profile.ts";
 import { RankingApi } from "../ranking.ts";
 import { SearchApi } from "../search.ts";
 import { TalkApi } from "../talk.ts";
+import { createSnapshotApi, type SnapshotApi } from "../snapshot.ts";
+import { FeedApi } from "../feed.ts";
 import {
   ApiError,
   type ApiResult,
@@ -29,11 +31,13 @@ import {
 } from "./types.ts";
 
 export const DEFAULT_BASE_URL = "https://api.zeta-ai.io";
-const DEFAULT_CLIENT_VERSION = "3.39.14";
-const WEB_CLIENT_VERSION = "3.39.17";
+export const DEFAULT_CLIENT_VERSION = "3.51.94";
+export const WEB_CLIENT_VERSION = DEFAULT_CLIENT_VERSION;
 const IOS_APP_STORE_LOOKUP_URL = "https://itunes.apple.com/lookup?id=1619030760";
 
 export class BaseClient {
+  readonly api: SnapshotApi = createSnapshotApi(this);
+  readonly feed: FeedApi = new FeedApi(this);
   readonly baseUrl: string;
   readonly session: AuthManager;
   readonly auth: AuthApi = new AuthApi(this);
@@ -61,10 +65,11 @@ export class BaseClient {
       refreshToken: options.refreshToken,
       deviceId: options.deviceId,
       onTokenUpdate: options.onTokenUpdate,
+      refreshPolicy: options.refreshPolicy,
     });
 
     const clientType = options.clientType ?? "app";
-    const deviceType = options.deviceType ?? "ios";
+    const deviceType = options.deviceType ?? (clientType === "web" ? detectWebDeviceType() : "android");
     const clientVersion = options.clientVersion ?? DEFAULT_CLIENT_VERSION;
     const nativeClientVersion = options.clientNativeVersion ?? clientVersion;
 
@@ -124,22 +129,9 @@ export class BaseClient {
       });
     }
 
-    const response = await this.fetchImpl(`${this.baseUrl}/v1/auth/tokens`, {
-      method: "POST",
-      headers: this.buildHeaders({ auth: false, body: {} }),
-      body: JSON.stringify({
-        type: "refresh",
-        refreshToken,
-        ...(deviceId ? { deviceId } : {}),
-      }),
-    });
-    const data = await parseResponseBody(response);
-
-    if (!response.ok) {
-      throw toApiError(response, data, "Refresh token request failed.");
-    }
-
-    return this.session.acceptTokenResponse(data as UnknownRecord);
+    const tokens = await this.session.refresh((body) => this.fetchRefreshTokens(body), { refreshToken, deviceId });
+    if (deviceId) this.setDeviceId(deviceId);
+    return tokens;
   }
 
   async startAnonymousSession(deviceId: string = this.ensureDeviceId()): Promise<TokenPair> {
@@ -157,7 +149,7 @@ export class BaseClient {
       throw toApiError(response, data, "Anonymous token request failed.");
     }
 
-    return this.session.acceptTokenResponse(data as UnknownRecord);
+    return this.session.acceptTokenResponse(data as UnknownRecord, { refreshToken: undefined });
   }
 
   async stream<T = unknown, TBody = unknown>(
@@ -181,6 +173,10 @@ export class BaseClient {
     options: RequestOptions<TBody>,
     allowRefreshRetry: boolean,
   ): Promise<ApiResult<T>> {
+    options.signal?.throwIfAborted();
+    if (allowRefreshRetry) await this.prepareSession(options);
+    options.signal?.throwIfAborted();
+    const tokenAtRequest = this.session.token;
     const response = await this.fetchImpl(this.buildUrl(path, options), {
       method,
       headers: this.buildHeaders(options),
@@ -191,7 +187,7 @@ export class BaseClient {
 
     if (!response.ok) {
       if (allowRefreshRetry && options.auth !== false && options.retryOnAuthExpired !== false && isAuthExpired(response.status, data)) {
-        await this.refreshAccessToken();
+        if (tokenAtRequest === this.session.token) await waitForRefresh(this.refreshAccessToken(), options.signal);
         return this.send<T, TBody>(method, path, options, false);
       }
 
@@ -211,6 +207,10 @@ export class BaseClient {
     options: RequestOptions<TBody>,
     allowRefreshRetry: boolean,
   ): Promise<Response> {
+    options.signal?.throwIfAborted();
+    if (allowRefreshRetry) await this.prepareSession(options);
+    options.signal?.throwIfAborted();
+    const tokenAtRequest = this.session.token;
     const response = await this.fetchImpl(this.buildUrl(path, options), {
       method: "POST",
       headers: this.buildHeaders({
@@ -228,7 +228,7 @@ export class BaseClient {
 
     const data = await parseResponseBody(response.clone());
     if (allowRefreshRetry && options.auth !== false && options.retryOnAuthExpired !== false && isAuthExpired(response.status, data)) {
-      await this.refreshAccessToken();
+      if (tokenAtRequest === this.session.token) await waitForRefresh(this.refreshAccessToken(), options.signal);
       return this.fetchStream(path, body, options, false);
     }
 
@@ -239,10 +239,22 @@ export class BaseClient {
     await this.session.refresh((body) => this.fetchRefreshTokens(body));
   }
 
+  private async prepareSession(options: RequestOptions): Promise<void> {
+    if (options.auth === false || options.retryOnAuthExpired === false || !this.session.shouldRefresh()) return;
+    try {
+      await waitForRefresh(this.refreshAccessToken(), options.signal);
+    } catch (error) {
+      options.signal?.throwIfAborted();
+      const transient = this.session.isTransientRefreshFailure(error);
+      if (!transient || !this.session.canUseCurrentToken()) throw error;
+      // A transient preflight failure need not discard a still-valid token.
+    }
+  }
+
   private async fetchRefreshTokens(body: UnknownRecord): Promise<UnknownRecord> {
     const response = await this.fetchImpl(`${this.baseUrl}/v1/auth/tokens`, {
       method: "POST",
-      headers: this.buildHeaders({ auth: false, body }),
+      headers: this.buildHeaders({ auth: false, body, headers: typeof body.deviceId === "string" ? { "X-Sticky": body.deviceId } : undefined }),
       body: JSON.stringify(body),
     });
     const data = await parseResponseBody(response);
@@ -271,13 +283,28 @@ export class BaseClient {
       headers.set("Authorization", `Bearer ${this.session.token}`);
     }
 
-    if (options.multipart) {
+    if (options.multipart || options.body instanceof FormData) {
       headers.delete("Content-Type");
     } else if (options.body !== undefined && !headers.has("Content-Type")) {
       headers.set("Content-Type", "application/json");
     }
 
     return headers;
+  }
+}
+
+async function waitForRefresh(refresh: Promise<void>, signal?: AbortSignal): Promise<void> {
+  if (!signal) return refresh;
+  let onAbort: () => void;
+  const aborted = new Promise<never>((_resolve, reject) => {
+    onAbort = () => reject(signal.reason);
+    signal.addEventListener("abort", onAbort, { once: true });
+    if (signal.aborted) onAbort();
+  });
+  try {
+    await Promise.race([refresh, aborted]);
+  } finally {
+    signal.removeEventListener("abort", onAbort!);
   }
 }
 
@@ -290,10 +317,16 @@ export function webClientOptions<T extends BaseClientOptions>(options: T = {} as
   return {
     ...options,
     clientType: "web",
-    deviceType: options.deviceType ?? "pc_web",
+    deviceType: options.deviceType ?? detectWebDeviceType(),
     clientVersion: options.clientVersion ?? WEB_CLIENT_VERSION,
     clientNativeVersion: options.clientNativeVersion ?? options.clientVersion ?? WEB_CLIENT_VERSION,
   };
+}
+
+function detectWebDeviceType(): DeviceType {
+  return typeof navigator !== "undefined" && /Android.*Mobile|iPhone|iPod|IEMobile|Opera Mini/i.test(navigator.userAgent)
+    ? "web"
+    : "pc_web";
 }
 
 export async function fetchLatestIosClientVersion(fetcher: FetchLike = fetch): Promise<string> {
@@ -370,7 +403,8 @@ function appendQuery(parts: string[], prefix: string, value: unknown): void {
     return;
   }
 
-  if (value && typeof value === "object" && !(value instanceof Date) && !(value instanceof Blob) && !(value instanceof File)) {
+  if (value && typeof value === "object" && !(value instanceof Date) && !(value instanceof Blob)
+    && (typeof File === "undefined" || !(value instanceof File))) {
     for (const [key, nested] of Object.entries(value as Record<string, unknown>)) {
       appendQuery(parts, prefix ? `${prefix}.${key}` : key, nested);
     }
@@ -390,7 +424,7 @@ function buildBody(options: RequestOptions): BodyInit | undefined {
     return undefined;
   }
 
-  if (options.multipart) {
+  if (options.multipart || options.body instanceof FormData) {
     return toFormData(options.body);
   }
 

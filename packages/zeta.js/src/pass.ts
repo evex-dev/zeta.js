@@ -127,26 +127,32 @@ export class PassApi {
     return this.client.get<ZetaPassEligibilityResponse>("/v1/zeta-pass/one-day-pass/refund/eligibility", { query });
   }
 
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
   listWebOrders(query?: WebOrderListQuery): Promise<ApiResult<ZetaPassWebOrdersResponse>> {
     return this.client.get<ZetaPassWebOrdersResponse>("/v1/zeta-pass/web/orders", { query });
   }
 
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
   createWebOrder(body?: ZetaPassWebOrderRequest): Promise<ApiResult<ZetaPassWebOrder>> {
     return this.client.post<ZetaPassWebOrder, ZetaPassWebOrderRequest | undefined>("/v1/zeta-pass/web/orders", body);
   }
 
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
   getWebOrder(orderId: string): Promise<ApiResult<ZetaPassWebOrder>> {
     return this.client.get<ZetaPassWebOrder>("/v1/zeta-pass/web/orders/:orderId", { path: { orderId } });
   }
 
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
   getSubscriptionStatus(): Promise<ApiResult<SubscriptionStatusResponse>> {
     return this.client.get<SubscriptionStatusResponse>("/v1/subscriptions/status/");
   }
 
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
   getSubscriptionEntitlements(): Promise<ApiResult<SubscriptionEntitlementsResponse>> {
     return this.client.get<SubscriptionEntitlementsResponse>("/v1/subscriptions/entitlements/");
   }
 
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
   bindSubscriptionUser(body?: SubscriptionBindUserRequest): Promise<ApiResult<unknown>> {
     return this.client.post("/v1/subscriptions/bind-user/", body);
   }

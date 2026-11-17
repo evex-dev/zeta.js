@@ -25,15 +25,15 @@ describe("path and query helpers", () => {
 });
 
 describe("BaseClient request", () => {
-  test("defaults to iOS app headers", async () => {
+  test("defaults to the saved Android 3.51.94 headers", async () => {
     const client = new BaseClient({
       baseUrl: "https://example.test",
       fetch: async (_url, init) => {
         const headers = new Headers(init?.headers);
         expect(headers.get("X-Client-Type")).toBe("app");
-        expect(headers.get("X-Device-Type")).toBe("ios");
-        expect(headers.get("X-Client-Version")).toBe("3.39.14");
-        expect(headers.get("X-Client-Native-Version")).toBe("3.39.14");
+        expect(headers.get("X-Device-Type")).toBe("android");
+        expect(headers.get("X-Client-Version")).toBe("3.51.94");
+        expect(headers.get("X-Client-Native-Version")).toBe("3.51.94");
         return jsonResponse({ ok: true });
       },
     });
@@ -220,8 +220,8 @@ describe("BaseClient request", () => {
         const headers = new Headers(init?.headers);
         expect(headers.get("X-Client-Type")).toBe("web");
         expect(headers.get("X-Device-Type")).toBe("pc_web");
-        expect(headers.get("X-Client-Version")).toBe("3.39.17");
-        expect(headers.get("X-Client-Native-Version")).toBe("3.39.17");
+        expect(headers.get("X-Client-Version")).toBe("3.51.94");
+        expect(headers.get("X-Client-Native-Version")).toBe("3.51.94");
         return jsonResponse({ accessToken: "anon-access", refreshToken: "anon-refresh" });
       },
     });

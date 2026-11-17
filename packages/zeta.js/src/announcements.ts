@@ -22,6 +22,7 @@ export class AnnouncementsApi {
     return this.client.get<AnnouncementBannerResponse>("/v1/announcements/banner");
   }
 
+  /** @deprecated Not observed in the 3.51.94 snapshot; retained for older clients. Use client.api for current contracts. */
   listSupportAnnouncements(query?: AnnouncementQuery): Promise<ApiResult<SupportAnnouncementListResponse>> {
     return this.client.get<SupportAnnouncementListResponse>("/v1/support-announcements", { query });
   }

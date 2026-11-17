@@ -36,7 +36,7 @@ describe("content helpers", () => {
     expect(streamEventToText({
       event: "CHAT_COMPLETE",
       replyMessage: { text: "Done" },
-      chunkMessage: { contents: [{ text: "partial" }] },
+      chunkMessage: { contents: [{ type: "TEXT", text: "partial" }] },
     })).toEqual({ complete: true, text: "Done" });
   });
 });
